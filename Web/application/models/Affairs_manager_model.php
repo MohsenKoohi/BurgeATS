@@ -29,6 +29,7 @@ class Affairs_manager_model extends CI_Model
 
 	public function uninstall()
 	{
+		
 		return;
 
 	}

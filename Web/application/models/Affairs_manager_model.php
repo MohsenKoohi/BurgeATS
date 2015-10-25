@@ -40,7 +40,7 @@ class Affairs_manager_model extends CI_Model
 		$lang=$CI->language->get();
 		
 		$CI->load->library('parser');
-		$ret=$CI->parser->parse($CI->get_admin_view_file("hit_counter_dashboard"),$data,TRUE);
+		$ret=$CI->parser->parse($CI->get_admin_view_file("example_dashboard"),$data,TRUE);
 		
 		return $ret;		
 	}

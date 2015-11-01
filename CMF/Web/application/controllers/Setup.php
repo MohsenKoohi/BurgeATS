@@ -35,6 +35,8 @@ class Setup extends CI_Controller {
 
 		$this->module_manager_model->install_module("post_manager");
 
+		$this->module_manager_model->install_module("customer_manager");
+
 		$default_lang=array_keys(LANGUAGES())[0];
 		$modules_info=$this->module_manager_model->get_all_modules_info($default_lang);
 		$modules=array();
@@ -51,7 +53,7 @@ class Setup extends CI_Controller {
 		$this->logger->info("[ admin/setup/uninstall ]");
 		echo "<h1>Uninstalling Burge CMF</h1>";
 
-		$table_names=array("user","module","module_name","access","hit_counter","post","post_content");
+		$table_names=array("user","module","module_name","access","hit_counter","post","post_content","customer");
 		foreach($table_names as $tn)
 		{
 			$table_name=$this->db->dbprefix($tn); 

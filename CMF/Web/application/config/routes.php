@@ -56,6 +56,7 @@ $route[ADMIN_URL_FOLDER."/module"]			="module";
 $route[ADMIN_URL_FOLDER."/hit_counter"]	="hit_counter";
 
 $route[ADMIN_URL_FOLDER."/post"]			="post";
+$route[ADMIN_URL_FOLDER."/customer"]	="customer";
 
 
 $route[urlencode('ثبت')]="register";

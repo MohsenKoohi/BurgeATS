@@ -9,7 +9,7 @@ class Customer_manager_model extends CI_Model
 	{
 		parent::__construct();
 
-		$this->customer_log_dir=HOME_DIR."/application/logs/customer/";
+		$this->customer_log_dir=HOME_DIR."/application/logs/customer";
 		/*
 		eval('$res= '.DATE_FUNCTION.'("Y m");');
 		list($year,$month)=explode(' ', $res);
@@ -29,7 +29,7 @@ class Customer_manager_model extends CI_Model
 				,`customer_type` enum($customer_types) 
 				,`customer_email` varchar(100) NOT NULL UNIQUE
 				,`customer_pass` char(32) DEFAULT NULL
-				,`customer_salt` char(32) NOT NULL
+				,`customer_salt` char(32) DEFAULT NULL
 				,`customer_name` varchar(255) NOT NULL
 				,`customer_code` char(10) DEFAULT NULL
 				,`customer_province` varchar(255) DEFAULT NULL
@@ -41,10 +41,10 @@ class Customer_manager_model extends CI_Model
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
-		if(!file_exists($this->customer_log_dir))
+		if(make_dir_and_check_permission($this->customer_log_dir)<0)
 		{
-			mkdir($this->customer_log_dir);
-			chmod($this->customer_log_dir, 0777);
+			echo "Error: ".$this->customer_log_dir." cant be used, please check permissions, and try again";
+			exit;
 		}
 
 		$this->load->model("module_manager_model");
@@ -60,7 +60,6 @@ class Customer_manager_model extends CI_Model
 	
 		return;
 	}
-
 
 	public function get_dashbord_info()
 	{
@@ -83,6 +82,21 @@ class Customer_manager_model extends CI_Model
 		$ret=$CI->parser->parse($CI->get_admin_view_file("hit_counter_dashboard"),$data,TRUE);
 		
 		return $ret;		
+	}
+
+	public function get_customer_types()
+	{
+		return $this->customer_types;
+	}
+
+	public function add_customer($name,$type,$desc="")
+	{
+		$this->db->insert("customer",array(
+			"customer_name"=>$name
+			,"customer_type"=>$type
+		));
+
+		$this->logger->info("[add_customer] [name:".$name."] [result:1]");
 	}
 
 

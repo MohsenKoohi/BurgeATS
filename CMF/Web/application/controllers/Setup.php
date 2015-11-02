@@ -4,10 +4,51 @@ class Setup extends CI_Controller {
 
 	function __construct()
 	{
+		//check directories permssion
+		$this->check_directories_permission();
+
 		parent::__construct();
 
 		if(ENVIRONMENT!=='development')
 			redirect(get_link("admin_no_access"));
+	}
+
+	function check_directories_permission()
+	{
+		$dirs=array(LOG_DIR, CAPTCHA_DIR);
+		$result=TRUE;
+
+		foreach($dirs as $dir)
+		{
+			$result=$this->make_dir_and_check_permission($dir);
+			switch ($result) {
+				case 2:
+					echo "Okay, ".$dir." exists and is writable<br>";
+					break;
+				
+				case 1:
+					echo "Okay, ".$dir." made and is writable<br>";
+					break;
+
+				case -1:
+					echo "Error, ".$dir." exists but isn't writable, please check the permission<br>";
+					$result=FALSE;
+					break;
+
+				case -2:
+					echo "Error, ".$dir." can't be created, please check the permission of its parent<br>";
+					$result=FALSE;
+					break;	
+			}
+		}
+
+		if(!$result)
+		{
+			echo "<h2>Please check the errors, and try again.";
+			exit;
+		}
+
+		return;
 	}
 
 	public function install()
@@ -45,6 +86,7 @@ class Setup extends CI_Controller {
 		$this->load->model("access_manager_model");
 		$this->access_manager_model->set_allowed_modules_for_user($user->get_id(),$modules);
 
+
 		return;
 	}
 
@@ -64,4 +106,26 @@ class Setup extends CI_Controller {
 
 		return;
 	}
+
+	//returns 2=> exists and writable
+	//returns 1=> made and writable
+	//returns -1=> exists and not writable
+	//returns -2=> doesn't not exist and can't be made
+
+	private function make_dir_and_check_permission($dir)
+	{
+		if(file_exists($dir))
+		{
+			if(is_writable($dir))
+				return 2;
+			else
+				return -1;
+		}
+		else
+			if(!@mkdir($dir,0777))
+				return -2;
+			
+		return 1;
+	}
+
 }

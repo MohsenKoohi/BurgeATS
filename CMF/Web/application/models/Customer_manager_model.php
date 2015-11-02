@@ -3,16 +3,19 @@ class Customer_manager_model extends CI_Model
 {
 	private $customer_table_name="customer";
 	private $customer_types=array("regular","agent");
+	private $customer_log_dir;
 	
 	public function __construct()
 	{
 		parent::__construct();
 
+		$this->customer_log_dir=HOME_DIR."/application/logs/customer/";
+		/*
 		eval('$res= '.DATE_FUNCTION.'("Y m");');
 		list($year,$month)=explode(' ', $res);
 		$this->year=$year;
 		$this->month=$month;
-		
+		*/
 		return;
 	}
 
@@ -37,6 +40,12 @@ class Customer_manager_model extends CI_Model
 				,PRIMARY KEY (customer_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
+
+		if(!file_exists($this->customer_log_dir))
+		{
+			mkdir($this->customer_log_dir);
+			chmod($this->customer_log_dir, 0777);
+		}
 
 		$this->load->model("module_manager_model");
 

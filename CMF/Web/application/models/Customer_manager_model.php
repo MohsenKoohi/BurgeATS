@@ -4,18 +4,18 @@ class Customer_manager_model extends CI_Model
 	private $customer_table_name="customer";
 	private $customer_types=array("regular","agent");
 	private $customer_log_dir;
+	private $customer_log_file_extension="txt";
+	private $customer_log_types=array(
+		"UNKOWN"					=>0
+		,"ADDING_CUSTOMER"	=>1
+	);
 	
 	public function __construct()
 	{
 		parent::__construct();
 
 		$this->customer_log_dir=HOME_DIR."/application/logs/customer";
-		/*
-		eval('$res= '.DATE_FUNCTION.'("Y m");');
-		list($year,$month)=explode(' ', $res);
-		$this->year=$year;
-		$this->month=$month;
-		*/
+		
 		return;
 	}
 
@@ -27,7 +27,7 @@ class Customer_manager_model extends CI_Model
 			"CREATE TABLE IF NOT EXISTS $table (
 				`customer_id` int AUTO_INCREMENT NOT NULL
 				,`customer_type` enum($customer_types) 
-				,`customer_email` varchar(100) NOT NULL UNIQUE
+				,`customer_email` varchar(100) NOT NULL 
 				,`customer_pass` char(32) DEFAULT NULL
 				,`customer_salt` char(32) DEFAULT NULL
 				,`customer_name` varchar(255) NOT NULL
@@ -95,9 +95,69 @@ class Customer_manager_model extends CI_Model
 			"customer_name"=>$name
 			,"customer_type"=>$type
 		));
+		$id=$this->db->insert_id();
 
-		$this->logger->info("[add_customer] [name:".$name."] [result:1]");
+		$this->logger->info("[add_customer] [name:".$name."] [id:".$id."] [result:1]");
+
+		$log_desc=array(
+			"cutomer_name"	=>	$name
+			,"customer_type"	=>	$type
+			,"desc"	=>	$desc
+		);
+
+		$this->add_customer_log($id,'ADDING_CUSTOMER',$log_desc);
+
+		return TRUE;
 	}
 
 
+	public function add_customer_log($customer_id,$log_type,$desc)
+	{
+		$log_path=$this->get_customer_log_path($customer_id,$log_type);
+
+		$string='{"log_type":"'.$log_type.'"';
+		foreach($desc as $index=>$val)
+			$string.=',"'.trim(preg_replace('/(\s)+/', "_", $index)).'":"'.trim(preg_replace('/(\s)+/', " ", $val)).'"';
+		$string.="}";
+
+		file_put_contents($log_path, $string);
+		
+		return;
+	}
+
+
+	private function get_customer_log_path($customer_id,$log_type)
+	{
+		$customer_dir=$this->get_customer_directory($customer_id);
+		
+		if(isset($this->customer_log_types[$log_type]))
+			$type_index=$this->customer_log_types[$log_type];
+		else
+			$type_index=0;
+
+		$dtf=DATE_FUNCTION;
+		$dt=$dtf("Y-m-d,H-i-s");
+		
+		$ext=$this->customer_log_file_extension;
+
+		$log_path=$customer_dir."/".sprintf("%02d",$type_index).",".$dt.".".$ext;
+		
+		return $log_path;
+	}
+
+	private function get_customer_directory($customer_id)
+	{
+		$dir1=(int)($customer_id/1000);
+		$dir2=$customer_id % 1000;
+		
+		$path1=$this->customer_log_dir."/".$dir1;
+		if(!file_exists($path1))
+			mkdir($path1,0777);
+
+		$path2=$this->customer_log_dir."/".$dir1."/".$dir2;
+		if(!file_exists($path2))
+			mkdir($path2,0777);
+
+		return $path2;
+	}
 }

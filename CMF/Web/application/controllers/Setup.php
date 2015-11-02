@@ -11,6 +11,7 @@ class Setup extends CI_Controller {
 
 		if(ENVIRONMENT!=='development')
 			redirect(get_link("admin_no_access"));
+
 	}
 
 	function check_directories_permission()

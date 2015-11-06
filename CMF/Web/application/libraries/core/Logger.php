@@ -364,16 +364,6 @@ class Logger extends AbstractLogger
         if(!$logDirectory)
         {
             $logDirectory=LOG_DIR;
-            
-            //we don't want people to access logger directly
-            //they should call $CI->log_manager_model
-            //one of our criticisms to CI is this work of 
-            //1)auto initialization of classes when it loads them
-            //2)and then assigning it to the $CI instance as a property
-
-            $CI=&get_instance();
-            unset($CI->logger);
-
             return;
         }
 
@@ -606,7 +596,7 @@ class Logger extends AbstractLogger
         $ret.=',"event_id":"'.$context['event_id'].'"';
         $ret.=',"event_name":"'.$context['event_name'].'"';
         if($message !== $context['event_name'])
-            $ret.=',"declared_event_name":"'.$this->clear_text($message).'"';
+            $ret.=',"declared_event_name":"'.$this->clear_value($message).'"';
 
         foreach ($context as $key => $value)
         {

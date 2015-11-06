@@ -6,8 +6,8 @@ class Customer_manager_model extends CI_Model
 	private $customer_log_dir;
 	private $customer_log_file_extension="txt";
 	private $customer_log_types=array(
-		"UNKOWN"					=>0
-		,"ADDING_CUSTOMER"	=>1
+		"UNKOWN"						=>0
+		,"CUSTOMER_ADD"			=>1000
 	);
 	
 	public function __construct()
@@ -97,15 +97,18 @@ class Customer_manager_model extends CI_Model
 		));
 		$id=$this->db->insert_id();
 
-		$this->logger->info("[add_customer] [name:".$name."] [id:".$id."] [result:1]");
+		$this->log_manager_model->info("CUSTOMER_ADD",array(
+			"customer_name"		=>	$name
+			,"customer_id"			=>	$id
+			,"customer_type"		=>	$type
+			,"desc"					=>	$desc
+		));
 
-		$log_desc=array(
-			"cutomer_name"	=>	$name
+		$this->add_customer_log($id,'ADDING_CUSTOMER',array(
+			"cutomer_name"		=>	$name
 			,"customer_type"	=>	$type
-			,"desc"	=>	$desc
-		);
-
-		$this->add_customer_log($id,'ADDING_CUSTOMER',$log_desc);
+			,"desc"				=>	$desc
+		));
 
 		return TRUE;
 	}
@@ -113,7 +116,12 @@ class Customer_manager_model extends CI_Model
 
 	public function add_customer_log($customer_id,$log_type,$desc)
 	{
-		$log_path=$this->get_customer_log_path($customer_id,$log_type);
+		if(isset($this->customer_log_types[$log_type]))
+			$type_index=$this->customer_log_types[$log_type];
+		else
+			$type_index=0;		
+		
+		$log_path=$this->get_customer_log_path($customer_id,$type_index);
 
 		$string='{"log_type":"'.$log_type.'"';
 		foreach($desc as $index=>$val)
@@ -126,21 +134,17 @@ class Customer_manager_model extends CI_Model
 	}
 
 
-	private function get_customer_log_path($customer_id,$log_type)
+	private function get_customer_log_path($customer_id,$type_index)
 	{
 		$customer_dir=$this->get_customer_directory($customer_id);
 		
-		if(isset($this->customer_log_types[$log_type]))
-			$type_index=$this->customer_log_types[$log_type];
-		else
-			$type_index=0;
-
-		$dtf=DATE_FUNCTION;
-		$dt=$dtf("Y-m-d,H-i-s");
+		$dtf=DATE_FUNCTION;	
+		$dt=$dtf("Y-m-d,H-i-s");	
 		
 		$ext=$this->customer_log_file_extension;
+		$tp=sprintf("%02d",$type_index);
 
-		$log_path=$customer_dir."/".sprintf("%02d",$type_index).",".$dt.".".$ext;
+		$log_path=$customer_dir."/".$dt."#".$tp.".".$ext;
 		
 		return $log_path;
 	}

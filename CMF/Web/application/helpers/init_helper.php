@@ -27,9 +27,9 @@ function &get_links()
 		,'admin_hit_counter'		=> ADMIN_SURL_LANG."/hit_counter"
 		
 		,'admin_post'				=> ADMIN_SURL_LANG."/post"
+		,'admin_log'				=> ADMIN_SURL_LANG."/log"
+
 		,'admin_customer'			=> ADMIN_SURL_LANG."/customer"
-
-
 	);
 	
 	return $LINKS;

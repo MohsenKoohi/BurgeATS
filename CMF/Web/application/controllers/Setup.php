@@ -57,8 +57,8 @@ class Setup extends CI_Controller {
 		$user_pass="badmin";
 
 		echo "<h1>Installing Burge CMF</h1>";
-		
-		$this->logger->info("[admin/setup/install]");
+
+		$this->log_manager_model->info("CMF_INSTALL");
 
 		$this->load->model("module_manager_model");
 
@@ -77,7 +77,11 @@ class Setup extends CI_Controller {
 
 		$this->module_manager_model->install_module("post_manager");
 
+<<<<<<< HEAD
 		$this->module_manager_model->install_module("customer_manager");
+=======
+		$this->module_manager_model->install_module("log_manager");
+>>>>>>> 4a98b26cd4cd52cc362a27c8d69bf06afcf91d47
 
 		$default_lang=array_keys(LANGUAGES())[0];
 		$modules_info=$this->module_manager_model->get_all_modules_info($default_lang);
@@ -87,13 +91,12 @@ class Setup extends CI_Controller {
 		$this->load->model("access_manager_model");
 		$this->access_manager_model->set_allowed_modules_for_user($user->get_id(),$modules);
 
-
 		return;
 	}
 
 	public function uninstall()
 	{
-		$this->logger->info("[ admin/setup/uninstall ]");
+		$this->log_manager_model->info("CMF_UNINSTALL");
 		echo "<h1>Uninstalling Burge CMF</h1>";
 
 		$table_names=array("user","module","module_name","access","hit_counter","post","post_content","customer");

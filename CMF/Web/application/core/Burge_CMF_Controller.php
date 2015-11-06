@@ -10,7 +10,7 @@ class Burge_CMF_Controller extends CI_Controller{
 	protected $all_langs;
 
 	protected $data;
-	protected $in_admin_env=FALSE;
+	public $in_admin_env=FALSE;
 
 	public function __construct()
 	{
@@ -55,7 +55,7 @@ class Burge_CMF_Controller extends CI_Controller{
 		}
 		else
 		{
-			//since we are in customer env, we should count this hit
+			//since we are in customer env., we should count this hit
 
 			$this->load->model("hit_counter_model");
 			$this->hit_counter_model->count($parts);

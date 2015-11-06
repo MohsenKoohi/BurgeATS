@@ -7,7 +7,7 @@ class Customer_manager_model extends CI_Model
 	private $customer_log_file_extension="txt";
 	private $customer_log_types=array(
 		"UNKOWN"						=>0
-		,"CUSTOMER_ADD"			=>1000
+		,"CUSTOMER_ADD"			=>1001
 	);
 	
 	public function __construct()
@@ -57,7 +57,42 @@ class Customer_manager_model extends CI_Model
 
 	public function uninstall()
 	{
-	
+		
+		return;
+	}
+
+	public function get_total_customers($filter)
+	{
+		$this->db->select("COUNT(*) as count");
+		$this->db->from($this->customer_table_name);
+		$this->set_search_where_clause($filter);
+
+		$query=$this->db->get();
+
+		$row=$query->row_array();
+
+		return $row['count'];
+	}
+
+	public function get_customers($filter)
+	{
+		$this->db->select("*");
+		$this->db->from($this->customer_table_name);
+		$this->set_search_where_clause($filter);
+
+		$query=$this->db->get();
+
+		return $query->result_array();
+	}
+
+	private function set_search_where_clause($filter)
+	{
+		if(isset($filter['order_by']))
+			$this->db->order_by($filter['order_by']);
+
+		if(isset($filter['start']) && isset($filter['length']))
+			$this->db->limit((int)$filter['length'],(int)$filter['start']);
+
 		return;
 	}
 
@@ -91,7 +126,7 @@ class Customer_manager_model extends CI_Model
 
 	public function add_customer($name,$type,$desc="")
 	{
-		$this->db->insert("customer",array(
+		$this->db->insert($this->customer_table_name,array(
 			"customer_name"=>$name
 			,"customer_type"=>$type
 		));
@@ -104,7 +139,7 @@ class Customer_manager_model extends CI_Model
 			,"desc"					=>	$desc
 		));
 
-		$this->add_customer_log($id,'ADDING_CUSTOMER',array(
+		$this->add_customer_log($id,'CUSTOMER_ADD',array(
 			"cutomer_name"		=>	$name
 			,"customer_type"	=>	$type
 			,"desc"				=>	$desc
@@ -124,6 +159,8 @@ class Customer_manager_model extends CI_Model
 		$log_path=$this->get_customer_log_path($customer_id,$type_index);
 
 		$string='{"log_type":"'.$log_type.'"';
+		$string.=',"log_type_index":"'.$type_index.'"';
+
 		foreach($desc as $index=>$val)
 			$string.=',"'.trim(preg_replace('/(\s)+/', "_", $index)).'":"'.trim(preg_replace('/(\s)+/', " ", $val)).'"';
 		$string.="}";

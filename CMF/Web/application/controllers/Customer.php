@@ -21,7 +21,8 @@ class Customer extends Burge_CMF_Controller {
 			if("add_customer" === $this->input->post("post_type"))
 				$this->add_customer();
 		}
-		//$this->data['users_info']=$this->user_manager_model->get_all_users_info();
+		
+		$this->set_data_customers();
 	
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_customer",TRUE));
 		$this->data['header_title']=$this->lang->line("customers");
@@ -30,6 +31,31 @@ class Customer extends Burge_CMF_Controller {
 		$this->send_admin_output("customer");
 
 		return;	 
+	}
+
+	private function set_data_customers()
+	{
+		$items_per_page=10;
+		$page=1;
+		if($this->input->get("page"))
+			$page=(int)$this->input->get("page");
+
+		$filter=array();
+
+		$total=$this->customer_manager_model->get_total_customers($filter);
+		$this->data['customers_total']=$total;
+		$this->data['customers_total_pages']=ceil($total/$items_per_page);
+		$this->data['customers_current_page']=$page;
+
+		$start=($page-1)*$items_per_page;
+		$filter['start']=$start;
+		$filter['length']=$items_per_page;
+
+		$filter['order_by']="customer_id DESC";
+
+		$this->data['customers_info']=$this->customer_manager_model->get_customers($filter);
+
+		return;
 	}
 
 	private function add_customer()

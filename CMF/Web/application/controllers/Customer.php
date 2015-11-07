@@ -23,6 +23,7 @@ class Customer extends Burge_CMF_Controller {
 		}
 		
 		$this->set_data_customers();
+		$this->data['raw_page_url']=get_link("admin_customer");
 	
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_customer",TRUE));
 		$this->data['header_title']=$this->lang->line("customers");
@@ -41,6 +42,19 @@ class Customer extends Burge_CMF_Controller {
 			$page=(int)$this->input->get("page");
 
 		$filter=array();
+		$this->data['filter']=array();
+
+		if($this->input->get("name"))
+		{
+			$filter['name']=$this->input->get("name");
+			$this->data['filter']['name']=$this->input->get("name");
+		}
+
+		if($this->input->get("type"))
+		{
+			$filter['type']=$this->input->get("type");
+			$this->data['filter']['type']=$this->input->get("type");
+		}
 
 		$total=$this->customer_manager_model->get_total_customers($filter);
 		$this->data['customers_total']=$total;
@@ -50,6 +64,19 @@ class Customer extends Burge_CMF_Controller {
 		$start=($page-1)*$items_per_page;
 		$filter['start']=$start;
 		$filter['length']=$items_per_page;
+
+		
+		$end=$start+$items_per_page;
+		if($end>$total)
+			$end=$total-1;
+		$this->data['customers_start']=$start+1;
+		$this->data['customers_end']=$end+1;
+		if(!$total)
+		{
+			$this->data['customers_start']=0;
+			$this->data['customers_end']=0;
+		}
+
 
 		$filter['order_by']="customer_id DESC";
 

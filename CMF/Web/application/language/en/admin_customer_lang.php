@@ -7,7 +7,8 @@ $lang['name']="Full Name";
 $lang['type']="Type";
 $lang['desc']="Description";
 $lang['add']="Add";
-$lang['page']="Customer Page";
+$lang['page']="Page";
+$lang['customer_page']="Customer Page";
 $lang['view']="View";
 
 $lang['type_regular']="Regular";
@@ -15,5 +16,6 @@ $lang['type_agent']="Agent";
 
 $lang['added_successfully']="The new customer added successfully.";
 
-$lang['total']="Total";
-
+$lang['total_results']="Total results";
+$lang['to']="to";
+$lang['search_again']="Search";

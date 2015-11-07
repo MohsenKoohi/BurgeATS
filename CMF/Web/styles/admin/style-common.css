@@ -784,3 +784,22 @@ body.ltr .dash-ul li:before
 	color:#0C7B77;
 	transition: color, .6s;
 }
+
+body.rtl .results-page-select,body.rtl .results-search-again
+{
+	float:left;
+}
+
+body.ltr .results-page-select,body.ltr .results-search-again
+{
+	float:right;
+}
+
+div.results-count
+{
+	margin-top:40px;
+	font-size:1.2em;
+	padding:5px 15px;
+	border-radius: 5px;
+
+}

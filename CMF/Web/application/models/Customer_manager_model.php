@@ -87,11 +87,22 @@ class Customer_manager_model extends CI_Model
 
 	private function set_search_where_clause($filter)
 	{
+		if(isset($filter['name']))
+		{
+			$this->db->where("customer_name LIKE '%".str_replace(' ', '%', $filter['name'])."%'");
+		}
+
+		if(isset($filter['type']))
+		{
+			$this->db->where("customer_type",$filter['type']);
+		}
+
 		if(isset($filter['order_by']))
 			$this->db->order_by($filter['order_by']);
 
 		if(isset($filter['start']) && isset($filter['length']))
 			$this->db->limit((int)$filter['length'],(int)$filter['start']);
+
 
 		return;
 	}

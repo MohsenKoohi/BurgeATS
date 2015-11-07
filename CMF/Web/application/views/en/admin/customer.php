@@ -4,12 +4,11 @@
 
 		<style type="text/css">
 			.row.even-odd-bg span
-				{
-					font-size: .8em;
-					//color:#555;
-				}
+			{
+				font-size: .8em;
+				//color:#555;
+			}
 		</style>
-
 
 		<div class="container separated">
 			<h2>{customers_list_text}</h2>
@@ -31,7 +30,7 @@
 					</div>
 				</div>
 				<div clas="row">
-					<div class="three columns results-search-again">
+					<div class="two columns results-search-again">
 						<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
 					</div>
 				</div>
@@ -128,7 +127,7 @@
 						<span>{type_text}</span>
 						<label><?php echo ${"type_".$cs['customer_type']."_text"};?></label>
 					</div>
-					<div class="three columns">
+					<div class="two columns">
 						<span>{customer_page_text} </span>
 						<input value="{view_text}" type="submit" class="button-primary full-width"/>
 					</div>

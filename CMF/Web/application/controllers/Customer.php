@@ -25,7 +25,7 @@ class Customer extends Burge_CMF_Controller {
 		$this->set_data_customers();
 		$this->data['raw_page_url']=get_link("admin_customer");
 	
-		$this->data['lang_pages']=get_lang_pages(get_link("admin_customer",TRUE));
+		$this->data['lang_pages']=get_lang_pages(get_link("admin_customer",TRUE)."?".$this->data['url_queries']);
 		$this->data['header_title']=$this->lang->line("customers");
 		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();
 
@@ -36,6 +36,7 @@ class Customer extends Burge_CMF_Controller {
 
 	private function set_data_customers()
 	{
+		$this->data['url_queries']="";
 		$items_per_page=10;
 		$page=1;
 		if($this->input->get("page"))
@@ -48,40 +49,50 @@ class Customer extends Burge_CMF_Controller {
 		{
 			$filter['name']=$this->input->get("name");
 			$this->data['filter']['name']=$this->input->get("name");
+			$this->data['url_queries'].="&name=".urlencode($filter['name']);
 		}
 
 		if($this->input->get("type"))
 		{
 			$filter['type']=$this->input->get("type");
 			$this->data['filter']['type']=$this->input->get("type");
+			$this->data['url_queries'].="&filter=".urlencode($filter['type']);
 		}
 
 		$total=$this->customer_manager_model->get_total_customers($filter);
 		$this->data['customers_total']=$total;
 		$this->data['customers_total_pages']=ceil($total/$items_per_page);
-		$this->data['customers_current_page']=$page;
+		if($total)
+		{
+			if($page > $this->data['customers_total_pages'])
+				$page=$this->data['customers_total_pages'];
+			$this->data['customers_current_page']=$page;
+			if($page!=1)
+				$this->data['url_queries'].="&page=".$page;
 
-		$start=($page-1)*$items_per_page;
-		$filter['start']=$start;
-		$filter['length']=$items_per_page;
+			$start=($page-1)*$items_per_page;
+			$filter['start']=$start;
+			$filter['length']=$items_per_page;
 
-		
-		$end=$start+$items_per_page;
-		if($end>$total)
-			$end=$total-1;
-		$this->data['customers_start']=$start+1;
-		$this->data['customers_end']=$end+1;
-		if(!$total)
+			$end=$start+$items_per_page-1;
+			if($end>($total-1))
+				$end=$total-1;
+			$this->data['customers_start']=$start+1;
+			$this->data['customers_end']=$end+1;		
+	
+			$filter['order_by']="customer_id DESC";
+
+			$this->data['customers_info']=$this->customer_manager_model->get_customers($filter);
+
+		}
+		else
 		{
 			$this->data['customers_start']=0;
 			$this->data['customers_end']=0;
+			$this->data['customers_info']=array();
 		}
 
-
-		$filter['order_by']="customer_id DESC";
-
-		$this->data['customers_info']=$this->customer_manager_model->get_customers($filter);
-
+		
 		return;
 	}
 

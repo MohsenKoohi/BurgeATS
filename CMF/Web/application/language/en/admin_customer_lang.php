@@ -17,5 +17,6 @@ $lang['type_agent']="Agent";
 $lang['added_successfully']="The new customer added successfully.";
 
 $lang['total_results']="Total results";
+$lang['results']="Results";
 $lang['to']="to";
 $lang['search_again']="Search";

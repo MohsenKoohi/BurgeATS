@@ -8,6 +8,7 @@ class Customer_manager_model extends CI_Model
 	private $customer_log_types=array(
 		"UNKOWN"						=>0
 		,"CUSTOMER_ADD"			=>1001
+		,"CUSTOMER_INFO_CHANGE"	=>1002
 	);
 	
 	public function __construct()
@@ -98,6 +99,7 @@ class Customer_manager_model extends CI_Model
 	{
 		if(isset($filter['name']))
 		{
+			$filter['name']=persian_normalize($filter['name']);
 			$this->db->where("customer_name LIKE '%".str_replace(' ', '%', $filter['name'])."%'");
 		}
 
@@ -151,7 +153,10 @@ class Customer_manager_model extends CI_Model
 	}
 
 	public function add_customer($name,$type,$desc="")
-	{
+	{	
+		$name=persian_normalize_word($name);
+		$desc=persian_normalize_word($desc);
+
 		$this->db->insert($this->customer_table_name,array(
 			"customer_name"=>$name
 			,"customer_type"=>$type
@@ -174,6 +179,34 @@ class Customer_manager_model extends CI_Model
 		return TRUE;
 	}
 
+	public function set_customer_properties($customer_id, $args, $desc)
+	{
+		$allowed_props=array(
+			"name","type","email","code","province","city","address","phone","mobile"
+		);
+
+		$props=array();
+		foreach($allowed_props as $prop)
+		{
+			$index="customer_".$prop;
+			if(isset($args[$index]))
+				$props[$index]=$args[$index];
+		}
+
+		persian_normalize($props);
+
+		$this->db->where("customer_id",(int)$customer_id);
+		$this->db->update($this->customer_table_name,$props);
+
+		$props['customer_id']=$customer_id;
+		$props['desc']=$desc;
+
+		$this->log_manager_model->info("CUSTOMER_INFO_CHANGE",$props);
+
+		$this->add_customer_log($customer_id,'CUSTOMER_INFO_CHANGE',$props);
+
+		return;
+	}
 
 	public function add_customer_log($customer_id,$log_type,$desc)
 	{
@@ -195,7 +228,6 @@ class Customer_manager_model extends CI_Model
 		
 		return;
 	}
-
 
 	private function get_customer_log_path($customer_id,$type_index)
 	{
@@ -228,6 +260,28 @@ class Customer_manager_model extends CI_Model
 		return $path2;
 	}
 
+	public function get_provinces()
+	{
+		$this->db->select("*");
+		$this->db->from("province");
+		$this->db->order_by("province_name ASC");
+		$query=$this->db->get();
+		return $query->result_array();
+	}
+
+	public function get_cities()
+	{
+		$this->db->from("city");
+		$this->db->join("province","city_province_id = province_id","left");
+		$this->db->order_by("province_id asc, city_id asc");
+		$query=$this->db->get();	
+
+		$ret=array();
+		foreach($query->result_array() as $row)
+			$ret[$row['province_name']][]=$row['city_name'];
+
+		return $ret;		
+	}
 
 	private function insert_province_and_citiy_tables_to_db()
 	{

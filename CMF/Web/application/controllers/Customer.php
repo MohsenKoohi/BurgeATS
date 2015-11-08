@@ -123,13 +123,14 @@ class Customer extends Burge_CMF_Controller {
 		$customer_id=(int)$customer_id;
 
 		$this->lang->load('admin_customer_details',$this->selected_lang);
+		$this->data['message']=get_message();
 		
 		if($this->input->post())
 		{
 			$this->lang->load('error',$this->selected_lang);
 
-			if("add_customer" === $this->input->post("post_type"))
-				$this->add_customer();
+			if("customer_properties" === $this->input->post("post_type"))
+				$this->save_customer_new_properties();
 		}
 		
 		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();		
@@ -137,12 +138,40 @@ class Customer extends Burge_CMF_Controller {
 		if(NULL == $this->data['customer_info'])
 			$this->data['message']=$this->lang->line("customer_not_found");
 
+		$this->data['provinces']=$this->customer_manager_model->get_provinces();
+		$this->data['cities']=$this->customer_manager_model->get_cities();
+
 		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,TRUE));
 		$this->data['header_title']=$this->lang->line("customer_details");
 
 		$this->send_admin_output("customer_details");
 
 		return;	 		
+	}
+
+	private function save_customer_new_properties()
+	{
+		$customer_id=$this->input->post("customer_id");
+
+		$args=array(
+			"customer_name"		=>$this->input->post("customer_name")
+			,"customer_type"		=>$this->input->post("customer_type")
+			,"customer_email"		=>$this->input->post("customer_email")
+			,"customer_code"		=>$this->input->post("customer_code")
+			,"customer_province"	=>$this->input->post("customer_province")
+			,"customer_city"		=>$this->input->post("customer_city")
+			,"customer_address"	=>$this->input->post("customer_address")
+			,"customer_phone"		=>$this->input->post("customer_phone")
+			,"customer_mobile"	=>$this->input->post("customer_mobile")
+		);
+
+		$desc=$this->input->post("desc");
+
+		$result=$this->customer_manager_model->set_customer_properties($customer_id,$args,$desc);
+
+		set_message($this->lang->line("saved_successfully"));
+
+		redirect(get_admin_customer_details_link($customer_id));
 	}
 
 }

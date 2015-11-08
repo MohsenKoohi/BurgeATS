@@ -97,7 +97,7 @@ class Setup extends CI_Controller {
 		$this->log_manager_model->info("CMF_UNINSTALL");
 		echo "<h1>Uninstalling Burge CMF</h1>";
 
-		$table_names=array("user","module","module_name","access","hit_counter","post","post_content","customer");
+		$table_names=array("user","module","module_name","access","hit_counter","post","post_content","customer","province","city");
 		foreach($table_names as $tn)
 		{
 			$table_name=$this->db->dbprefix($tn); 

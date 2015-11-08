@@ -41,6 +41,7 @@ class Log_manager_model extends CI_Model
 		,"USER_LOGOUT"				=>405
 
 		,"CUSTOMER_ADD"			=>1001
+		,"CUSTOMER_INFO_CHANGE"	=>1002
 		);
 
 	public function __construct()

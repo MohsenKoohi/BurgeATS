@@ -147,13 +147,14 @@
 		</div>
 		<br>
 		-->
-		<?php bprint_r($customer_info);?>
 		<div class="container separated">
 			<h2>{properties_text}</h2>	
 				<?php if($customer_info) { ?>
-					<?php echo form_open(get_link("admin_customer"),array()); ?>
+					<?php echo form_open(get_admin_customer_details_link($customer_info['customer_id']),array()); ?>
 					<input type="hidden" name="post_type" value="customer_properties" />	
-						<div class="row even-odd-bg" >
+					<input type="hidden" name="customer_id" value="<?php echo $customer_info['customer_id'] ?>" />	
+					
+						<div class="row even-odd-bg dont-magnify" >
 							<div class="three columns">
 								<label>{name_text}</label>
 								<input value="<?php echo $customer_info['customer_name'];?>" 
@@ -185,13 +186,18 @@
 							</div>
 							<div class="three columns">
 								<label>{province_text}</label>
-								<input value="<?php echo $customer_info['customer_province'];?>" 
-									type="text" name="customer_email" class="full-width" />
+								<select name="customer_province" class="full-width" onchange="setCities($(this).val());">
+									<?php 
+										foreach($provinces as $pv)
+											echo "<option value='".$pv['province_name']."'>".$pv['province_name']."</option>";
+									?>
+								</select>
 							</div>
+
 							<div class="three columns">
 								<label>{city_text}</label>
-								<input value="<?php echo $customer_info['customer_city'];?>" 
-									type="text" name="customer_email" class="full-width" />
+								<select name="customer_city" class="full-width">
+								</select>
 							</div>
 							<div class="six columns">
 								<label>{address_text}</label>
@@ -208,8 +214,9 @@
 								<input value="<?php echo $customer_info['customer_mobile'];?>" 
 									type="text" name="customer_mobile" class="full-width eng ltr" />
 							</div>
-
-							<div class="three columns">
+						</div>
+						<div class="row even-odd-bg dont-magnify" >
+							<div class="six columns">
 								<label>{desc_text}</label>
 								<input type="text" name="desc" class="full-width" />
 							</div>					
@@ -220,6 +227,28 @@
 								<input type="submit" class=" button-primary four columns" value="{save_text}"/>
 						</div>				
 					</form>
+					<script type="text/javascript">
+						var cities=JSON.parse('<?php echo json_encode($cities);?>');
+
+						function setCities(province)
+						{
+							var html='';//<option value="">--- انتخاب نمایید ---</option>';
+							var provinceCities=cities[province];
+							for(var i in provinceCities)
+								html+='<option value="'+provinceCities[i]+'">'+provinceCities[i]+'</option>';
+							$("select[name=customer_city]").html(html);
+						}
+
+						$(function()
+						{
+							var province="<?php echo $customer_info['customer_province'];?>";
+							var city="<?php echo $customer_info['customer_city'];?>";
+							$("select[name=customer_province]").val(province);
+							setCities(province);
+							$("select[name=customer_city]").val(city);
+
+						})
+					</script>
 				<?php } ?>				
 				
 		</div>

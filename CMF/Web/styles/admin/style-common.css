@@ -583,7 +583,9 @@ input[type="file"] > input[type="button"]::-moz-focus-inner
 	background-color: #bbb;
 }
 
-.even-odd-bg:hover, .even-odd-bg:focus, .even-odd-bg:active
+.even-odd-bg:not(.dont-magnify):hover,
+.even-odd-bg:not(.dont-magnify):focus,
+.even-odd-bg:not(.dont-magnify):active
 {
 	box-shadow: 2px 2px 2px #555,-2px -2px 2px #555;
 	font-size:1.1em;

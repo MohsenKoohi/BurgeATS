@@ -147,35 +147,81 @@
 		</div>
 		<br>
 		-->
+		<?php bprint_r($customer_info);?>
 		<div class="container separated">
-			<h2>{add_customer_text}</h2>	
-			<?php echo form_open(get_link("admin_customer"),array()); ?>
-				<input type="hidden" name="post_type" value="add_customer" />	
-				<div class="row even-odd-bg" >
-					<div class="three columns">
-						<label>{name_text}</label>
-						<input type="text" name="customer_name" class="full-width" />
-					</div>
-					<div class="three columns half-col-margin">
-						<label>{type_text}</label>
-						<select name="customer_type" class="full-width">
-							<?php
-								foreach ($customer_types as $type)
-									echo "<option value='$type'>".${"type_".$type."_text"}."</option>";
-							?>
-						</select>
-					</div>
-					<div class="three columns half-col-margin">
-						<label>{desc_text}</label>
-						<input type="text" name="desc" class="full-width" />
-					</div>					
-				</div>
-				<br><br>
-				<div class="row">
-						<div class="four columns">&nbsp;</div>
-						<input type="submit" class=" button-primary four columns" value="{add_text}"/>
-				</div>				
-			</form>
+			<h2>{properties_text}</h2>	
+				<?php if($customer_info) { ?>
+					<?php echo form_open(get_link("admin_customer"),array()); ?>
+					<input type="hidden" name="post_type" value="customer_properties" />	
+						<div class="row even-odd-bg" >
+							<div class="three columns">
+								<label>{name_text}</label>
+								<input value="<?php echo $customer_info['customer_name'];?>" 
+									type="text" name="customer_name" class="full-width" />
+							</div>
+							<div class="three columns">
+								<label>{type_text}</label>
+								<select name="customer_type" class="full-width">
+									<?php
+										foreach ($customer_types as $type)
+										{
+											$sel="";
+											if($type==$customer_info['customer_type'])
+												$sel="selected";
+											echo "<option value='$type' $sel>".${"type_".$type."_text"}."</option>";
+										}
+									?>
+								</select>
+							</div>
+							<div class="three columns">
+								<label>{email_text}</label>
+								<input value="<?php echo $customer_info['customer_email'];?>" 
+									type="text" name="customer_email" class="full-width" />
+							</div>
+							<div class="three columns">
+								<label>{code_text}</label>
+								<input value="<?php echo $customer_info['customer_code'];?>" 
+									type="text" name="customer_code" class="full-width" />
+							</div>
+							<div class="three columns">
+								<label>{province_text}</label>
+								<input value="<?php echo $customer_info['customer_province'];?>" 
+									type="text" name="customer_email" class="full-width" />
+							</div>
+							<div class="three columns">
+								<label>{city_text}</label>
+								<input value="<?php echo $customer_info['customer_city'];?>" 
+									type="text" name="customer_email" class="full-width" />
+							</div>
+							<div class="six columns">
+								<label>{address_text}</label>
+								<input value="<?php echo $customer_info['customer_address'];?>" 
+									type="text" name="customer_address" class="full-width" />
+							</div>
+							<div class="three columns">
+								<label>{phone_text}</label>
+								<input value="<?php echo $customer_info['customer_phone'];?>" 
+									type="text" name="customer_phone" class="full-width eng ltr" />
+							</div>
+							<div class="three columns">
+								<label>{mobile_text}</label>
+								<input value="<?php echo $customer_info['customer_mobile'];?>" 
+									type="text" name="customer_mobile" class="full-width eng ltr" />
+							</div>
+
+							<div class="three columns">
+								<label>{desc_text}</label>
+								<input type="text" name="desc" class="full-width" />
+							</div>					
+						</div>
+						<br><br>
+						<div class="row">
+								<div class="four columns">&nbsp;</div>
+								<input type="submit" class=" button-primary four columns" value="{save_text}"/>
+						</div>				
+					</form>
+				<?php } ?>				
+				
 		</div>
 		
 	</div>

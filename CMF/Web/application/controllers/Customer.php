@@ -132,11 +132,13 @@ class Customer extends Burge_CMF_Controller {
 				$this->add_customer();
 		}
 		
+		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();		
 		$this->data['customer_info']=$this->customer_manager_model->get_customer_info($customer_id);
-				
+		if(NULL == $this->data['customer_info'])
+			$this->data['message']=$this->lang->line("customer_not_found");
+
 		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,TRUE));
 		$this->data['header_title']=$this->lang->line("customer_details");
-		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();
 
 		$this->send_admin_output("customer_details");
 

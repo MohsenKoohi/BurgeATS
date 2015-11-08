@@ -221,7 +221,17 @@ class Customer_manager_model extends CI_Model
 		$string.=',"log_type_index":"'.$type_index.'"';
 
 		foreach($desc as $index=>$val)
-			$string.=',"'.trim(preg_replace('/(\s)+/', "_", $index)).'":"'.trim(preg_replace('/(\s)+/', " ", $val)).'"';
+		{
+			$index=trim($index);
+			$index=preg_replace('/[\\\'\"]+/', "", $index);
+			$index=preg_replace('/\s+/', "_", $index);
+
+			$val=trim($val);
+			$val=preg_replace('/[\\\'\"]+/', "", $val);
+			$val=preg_replace('/\s+/', " ", $val);
+			
+			$string.=',"'.$index.'":"'.$val.'"';
+		}
 		$string.="}";
 
 		file_put_contents($log_path, $string);

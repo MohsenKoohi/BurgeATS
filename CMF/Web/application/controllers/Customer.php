@@ -24,8 +24,12 @@ class Customer extends Burge_CMF_Controller {
 		
 		$this->set_data_customers();
 		$this->data['raw_page_url']=get_link("admin_customer");
-	
-		$this->data['lang_pages']=get_lang_pages(get_link("admin_customer",TRUE)."?".$this->data['url_queries']);
+		
+		$page_raw_lang_url=get_link("admin_customer",TRUE);
+		if($this->data['url_queries'])
+			$page_raw_lang_url.="?".$this->data['url_queries'];
+		$this->data['lang_pages']=get_lang_pages($page_raw_lang_url);
+
 		$this->data['header_title']=$this->lang->line("customers");
 		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();
 
@@ -112,6 +116,31 @@ class Customer extends Burge_CMF_Controller {
 		}
 
 		return;
+	}
+
+	public function customer_details($customer_id)
+	{
+		$customer_id=(int)$customer_id;
+
+		$this->lang->load('admin_customer_details',$this->selected_lang);
+		
+		if($this->input->post())
+		{
+			$this->lang->load('error',$this->selected_lang);
+
+			if("add_customer" === $this->input->post("post_type"))
+				$this->add_customer();
+		}
+		
+		$this->data['customer_info']=$this->customer_manager_model->get_customer_info($customer_id);
+				
+		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,TRUE));
+		$this->data['header_title']=$this->lang->line("customer_details");
+		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();
+
+		$this->send_admin_output("customer_details");
+
+		return;	 		
 	}
 
 }

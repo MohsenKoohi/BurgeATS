@@ -29,10 +29,17 @@ function &get_links()
 		,'admin_post'				=> ADMIN_SURL_LANG."/post"
 		,'admin_log'				=> ADMIN_SURL_LANG."/log"
 
-		,'admin_customer'			=> ADMIN_SURL_LANG."/customer"
+		,'admin_customer'						=> ADMIN_SURL_LANG."/customer"
+		,'admin_customer_details_format'	=> ADMIN_SURL_LANG."/customer/details/customer_id"
 	);
 	
 	return $LINKS;
+}
+
+function get_admin_customer_details_link($customer_id, $do_not_set_lang=FALSE)
+{
+	$format_link=get_link("admin_customer_details_format",$do_not_set_lang);
+	return str_replace("customer_id", $customer_id, $format_link);
 }
 
 function get_link($page,$do_not_set_lang=FALSE)

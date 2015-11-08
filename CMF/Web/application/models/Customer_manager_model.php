@@ -61,7 +61,7 @@ class Customer_manager_model extends CI_Model
 		return;
 	}
 
-	public function get_total_customers($filter)
+	public function get_total_customers($filter=array())
 	{
 		$this->db->select("COUNT(*) as count");
 		$this->db->from($this->customer_table_name);
@@ -107,25 +107,21 @@ class Customer_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_customer_info($customer_id)
+	{
+
+	}
+
 	public function get_dashbord_info()
 	{
-		return "";
 		$CI=& get_instance();
 		$lang=$CI->language->get();
-		$CI->lang->load('admin_hit_counter',$lang);		
+		$CI->lang->load('admin_customer',$lang);		
 		
-		$data=array();
-		$data['month_text']=$CI->lang->line("monthly_visit");
-		$data['year_text']=$CI->lang->line("yearly_visit");
-		$data['total_text']=$CI->lang->line("total_visit");
-
-		$counts=$this->get_all_counts();
-		$data['total_count']=$counts[0]['total_count'];
-		$data['year_count']=$counts[0]['year_count'];
-		$data['month_count']=$counts[0]['month_count'];
+		$data['customer_count']=$this->get_total_customers();
 		
 		$CI->load->library('parser');
-		$ret=$CI->parser->parse($CI->get_admin_view_file("hit_counter_dashboard"),$data,TRUE);
+		$ret=$CI->parser->parse($CI->get_admin_view_file("customer_dashboard"),$data,TRUE);
 		
 		return $ret;		
 	}

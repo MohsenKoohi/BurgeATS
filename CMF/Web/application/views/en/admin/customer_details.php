@@ -1,6 +1,6 @@
 <div class="main">
 	<div class="container">
-		<h1>{customers_text}</h1>
+		<h1>{customer_details_text}</h1>
 
 		<style type="text/css">
 			.row.even-odd-bg span
@@ -15,7 +15,7 @@
 				padding:0;
 			}
 		</style>
-
+		<!--
 		<div class="container separated">
 			<h2>{customers_list_text}</h2>
 			<div class="container separated">
@@ -146,6 +146,7 @@
 			<?php } ?>
 		</div>
 		<br>
+		-->
 		<div class="container separated">
 			<h2>{add_customer_text}</h2>	
 			<?php echo form_open(get_link("admin_customer"),array()); ?>

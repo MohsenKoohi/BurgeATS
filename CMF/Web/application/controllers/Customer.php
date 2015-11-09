@@ -165,8 +165,16 @@ class Customer extends Burge_CMF_Controller {
 			$this->data['logs_current_page']=$page;
 			$this->data['logs_total_pages']=ceil($total/$logs_pp);
 			$this->data['logs_total']=$total;
-			$this->data['logs_start']=$start+1;
-			$this->data['logs_end']=$end+1;		
+			if($total)
+			{
+				$this->data['logs_start']=$start+1;
+				$this->data['logs_end']=$end+1;		
+			}
+			else
+			{
+				$this->data['logs_start']=0;
+				$this->data['logs_end']=0;
+			}
 		}
 
 				

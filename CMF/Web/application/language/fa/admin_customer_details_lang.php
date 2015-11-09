@@ -1,6 +1,6 @@
 <?php 
 
-$lang['customer_details']="مشتری";
+$lang['customer_details']="اطلاعات مشتری";
 $lang['properties']="مشخصات";
 $lang['name']="نام و نام خانوادگی";
 $lang['type']="نوع";

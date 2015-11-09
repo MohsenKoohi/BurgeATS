@@ -27,250 +27,347 @@
 				text-overflow: ellipsis;
 			}
 
+			.tab
+			{
+				padding:20px;
+				background-color: white;
+				margin:0 20px 20px 20px;
+				min-height: 500px;
+			}
+
+			.tabs
+			{
+				margin:5px 20px 0 20px;
+			}
+
+			.tabs li {
+				list-style:none;
+				display:inline;				
+			}
+
+			body.rtl .tabs li
+			{
+				margin-left:5px;
+			}
+
+
+			body.ltr .tabs li
+			{
+				margin-right:5px;
+			}
+
+			.tabs a {		
+				font-size: 1.2em;
+				padding:10px 20px;
+				display:inline-block;
+				background:#666;
+				color:#fff;
+				text-decoration:none;
+				border-radius: 5px 5px 0 0;
+			}
+
+			.tabs a.active {
+				background:#fff;
+				color:#000;
+			}
+
+			.tab-container
+			{
+				background-color: #ccc;
+				padding:10px;
+				border-radius: 10px;
+			}
+
+
 		</style>
 
-		<div class="container separated">
-			<h2>{customer_logs_text}</h2>
-			<?php if($customer_info) { ?>
-				<div class="container separated">
-					<div class="row filter">
-						<div class="three columns">
-							<label>{log_type_text}</label>
-							<select name="log_type" class="full-width en ltr">
-								<option value=""></option>
-								<?php
-									foreach ($log_types as $text=>$type)
-										echo "<option value='$text'>$text</option>";
-								?>
-							</select>
-						</div>
-						<div class="two columns results-search-again">
-							<label></label>
-							<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
-						</div>
-					</div>
-					
-					<div class="row results-count" >
-						<div class="six columns">
-							<label>
-								{results_text} {logs_start} {to_text} {logs_end} - {total_results_text}: {logs_total}
-							</label>
-						</div>
-						<div class="three columns results-page-select">
-							<select class="full-width" onchange="pageChanged($(this).val());">
-								<?php 
-									for($i=1;$i<=$logs_total_pages;$i++)
-									{
-										$sel="";
-										if($i == $logs_current_page)
-											$sel="selected";
+		<div class="tab-container">
+			<ul class="tabs">
+				<li><a href="#props">{properties_text}</a></li>
+				<li><a href="#logs">{customer_logs_text}</a></li>
+			</ul>
+			<script type="text/javascript">
+				$(function(){
+				   $('ul.tabs').each(function(){
+						var $active, $content, $links = $(this).find('a');
+						$active = $($links.filter('[href="'+location.hash+'"]')[0] || $links[0]);
+						$active.addClass('active');
 
-										echo "<option value='$i' $sel>$page_text $i</option>";
-									}
-								?>
-							</select>
-						</div>
-					</div>
+						$content = $($active[0].hash);
 
-					<script type="text/javascript">
-						var initialFilters=[];
-						<?php
-							foreach($filter as $key => $val)
-								echo 'initialFilters["'.$key.'"]="'.$val.'";';
-						?>
-						var rawPageUrl="{raw_page_url}";
-
-						$(function()
-						{
-							$(".filter input, .filter select").keypress(function(ev)
-							{
-								if(13 != ev.keyCode)
-									return;
-
-								searchAgain();
-							});
-
-							for(i in initialFilters)
-								$(".filter [name='"+i+"']").val(initialFilters[i]);
+						$links.not($active).each(function () {
+						   $(this.hash).hide();
 						});
 
-						function searchAgain()
-						{
-							document.location=getCustomerSearchUrl(getSearchConditions());
-						}
+						$(this).on('click', 'a', function(e){
+						   $active.removeClass('active');
+						   $content.hide();
 
-						function getSearchConditions()
-						{
-							var conds=[];
+						   $active = $(this);
+						   $content = $(this.hash);
 
-							$(".filter input, .filter select").each(
-								function(index,el)
-								{
-									var el=$(el);
+						   $active.addClass('active');
 
-									if(el.prop("type")=="button")
-										return;
+						   $content.show();						   	
 
-									if(el.val())
-										conds[el.prop("name")]=el.val();
-
-								}
-							);
-							
-							return conds;
-						}
-
-						function getCustomerSearchUrl(filters)
-						{
-							var ret=rawPageUrl+"?";
-							for(i in filters)
-								ret+="&"+i+"="+encodeURIComponent(filters[i].trim().replace(/\s+/g," "));
-							return ret;
-						}
-
-						function pageChanged(pageNumber)
-						{
-							document.location=getCustomerSearchUrl(initialFilters)+"&page="+pageNumber;
-						}
-					</script>
-				</div>		
-
-				<?php $i=$logs_start;foreach($customer_logs as $log) { ?>
-					<div class="row even-odd-bg" >
-						<div class="three columns">
-							<label class="big-font">#<?php echo $i++;?></label>
-						</div>
-						<?php 
-							if($log)
-							foreach ($log as $key => $value) { 
-						?>
-							<div class="three columns eng ltr">
-								<span><?php echo $key;?></span>
-								<label class="eng ltr"><?php echo $value;?></label>
-							</div>
-						<?php } ?>				
-					</div>
-				<?php } ?>
-				<script type="text/javascript">
-					$(function()
-					{
-						$(".row.even-odd-bg div label").each(
-							function(index,el)
-							{
-								$(el).prop("title",$(el).text());
-							}
-						);
+						   e.preventDefault();
+						});
 					});
-				</script>
-			<?php } ?>
-		</div>			
+				});
+			</script>
+			<div class="tab" id="props" style="">
+				<div class="container">
+					<h2>{properties_text}</h2>	
+						<?php if($customer_info) { ?>
+							<?php echo form_open(get_admin_customer_details_link($customer_info['customer_id']),array()); ?>
+							<input type="hidden" name="post_type" value="customer_properties" />	
+							<input type="hidden" name="customer_id" value="<?php echo $customer_info['customer_id'] ?>" />	
+							
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										<label>{name_text}</label>
+										<input value="<?php echo $customer_info['customer_name'];?>" 
+											type="text" name="customer_name" class="full-width" />
+									</div>
+									<div class="three columns">
+										<label>{type_text}</label>
+										<select name="customer_type" class="full-width">
+											<?php
+												foreach ($customer_types as $type)
+												{
+													$sel="";
+													if($type==$customer_info['customer_type'])
+														$sel="selected";
+													echo "<option value='$type' $sel>".${"type_".$type."_text"}."</option>";
+												}
+											?>
+										</select>
+									</div>
+									<div class="three columns">
+										<label>{email_text}</label>
+										<input value="<?php echo $customer_info['customer_email'];?>" 
+											type="text" name="customer_email" class="full-width" />
+									</div>
+									<div class="three columns">
+										<label>{code_text}</label>
+										<input value="<?php echo $customer_info['customer_code'];?>" 
+											type="text" name="customer_code" class="full-width" />
+									</div>
+									<div class="three columns">
+										<label>{province_text}</label>
+										<select name="customer_province" class="full-width" onchange="setCities($(this).val());">
+											<?php 
+												foreach($provinces as $pv)
+													echo "<option value='".$pv['province_name']."'>".$pv['province_name']."</option>";
+											?>
+										</select>
+									</div>
+
+									<div class="three columns">
+										<label>{city_text}</label>
+										<select name="customer_city" class="full-width">
+										</select>
+									</div>
+									<div class="six columns">
+										<label>{address_text}</label>
+										<input value="<?php echo $customer_info['customer_address'];?>" 
+											type="text" name="customer_address" class="full-width" />
+									</div>
+									<div class="three columns">
+										<label>{phone_text}</label>
+										<input value="<?php echo $customer_info['customer_phone'];?>" 
+											type="text" name="customer_phone" class="full-width eng ltr" />
+									</div>
+									<div class="three columns">
+										<label>{mobile_text}</label>
+										<input value="<?php echo $customer_info['customer_mobile'];?>" 
+											type="text" name="customer_mobile" class="full-width eng ltr" />
+									</div>
+								</div>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="six columns">
+										<label>{desc_text}</label>
+										<input type="text" name="desc" class="full-width" />
+									</div>					
+								</div>
+								<br><br>
+								<div class="row">
+										<div class="four columns">&nbsp;</div>
+										<input type="submit" class=" button-primary four columns" value="{save_text}"/>
+								</div>				
+							</form>
+							<script type="text/javascript">
+								var cities=JSON.parse('<?php echo json_encode($cities);?>');
+
+								function setCities(province)
+								{
+									var html='';//<option value="">--- انتخاب نمایید ---</option>';
+									var provinceCities=cities[province];
+									for(var i in provinceCities)
+										html+='<option value="'+provinceCities[i]+'">'+provinceCities[i]+'</option>';
+									$("select[name=customer_city]").html(html);
+								}
+
+								$(function()
+								{
+									var province="<?php echo $customer_info['customer_province'];?>";
+									var city="<?php echo $customer_info['customer_city'];?>";
+									$("select[name=customer_province]").val(province);
+									setCities(province);
+									$("select[name=customer_city]").val(city);
+
+								})
+							</script>
+						<?php } ?>				
+						
+				</div>
+			</div>
+
+			<div class="tab" id="logs">
+				<div class="container">
+					<h2>{customer_logs_text}</h2>
+					<?php if($customer_info) { ?>
+						<div class="container separated">
+							<div class="row filter">
+								<div class="three columns">
+									<label>{log_type_text}</label>
+									<select name="log_type" class="full-width en ltr">
+										<option value=""></option>
+										<?php
+											foreach ($log_types as $text=>$type)
+												echo "<option value='$text'>$text</option>";
+										?>
+									</select>
+								</div>
+								<div class="two columns results-search-again">
+									<label></label>
+									<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
+								</div>
+							</div>
+							
+							<div class="row results-count" >
+								<div class="six columns">
+									<label>
+										{results_text} {logs_start} {to_text} {logs_end} - {total_results_text}: {logs_total}
+									</label>
+								</div>
+								<div class="three columns results-page-select">
+									<select class="full-width" onchange="pageChanged($(this).val());">
+										<?php 
+											for($i=1;$i<=$logs_total_pages;$i++)
+											{
+												$sel="";
+												if($i == $logs_current_page)
+													$sel="selected";
+
+												echo "<option value='$i' $sel>$page_text $i</option>";
+											}
+										?>
+									</select>
+								</div>
+							</div>
+
+							<script type="text/javascript">
+								var initialFilters=[];
+								<?php
+									foreach($filter as $key => $val)
+										echo 'initialFilters["'.$key.'"]="'.$val.'";';
+								?>
+								var rawPageUrl="{raw_page_url}";
+
+								$(function()
+								{
+									$(".filter input, .filter select").keypress(function(ev)
+									{
+										if(13 != ev.keyCode)
+											return;
+
+										searchAgain();
+									});
+
+									for(i in initialFilters)
+										$(".filter [name='"+i+"']").val(initialFilters[i]);
+								});
+
+								function searchAgain()
+								{
+									document.location=getCustomerSearchUrl(getSearchConditions())+"#logs";
+								}
+
+								function getSearchConditions()
+								{
+									var conds=[];
+
+									$(".filter input, .filter select").each(
+										function(index,el)
+										{
+											var el=$(el);
+
+											if(el.prop("type")=="button")
+												return;
+
+											if(el.val())
+												conds[el.prop("name")]=el.val();
+
+										}
+									);
+									
+									return conds;
+								}
+
+								function getCustomerSearchUrl(filters)
+								{
+									var ret=rawPageUrl+"?";
+									for(i in filters)
+										ret+="&"+i+"="+encodeURIComponent(filters[i].trim().replace(/\s+/g," "));
+									return ret;
+								}
+
+								function pageChanged(pageNumber)
+								{
+									document.location=getCustomerSearchUrl(initialFilters)+"&page="+pageNumber+"#logs";
+								}
+							</script>
+						</div>		
+						<br>
+						<?php $i=$logs_start;foreach($customer_logs as $log) { ?>
+							<div class="row even-odd-bg" >
+								<div class="three columns">
+									<label class="big-font">#<?php echo $i++;?></label>
+								</div>
+								<?php 
+									if($log)
+									foreach ($log as $key => $value) { 
+								?>
+									<div class="three columns eng ltr">
+										<span><?php echo $key;?></span>
+										<label class="eng ltr"><?php echo $value;?></label>
+									</div>
+								<?php } ?>				
+							</div>
+						<?php } ?>
+						<script type="text/javascript">
+							$(function()
+							{
+								$(".row.even-odd-bg div label").each(
+									function(index,el)
+									{
+										$(el).prop("title",$(el).text());
+									}
+								);
+							});
+						</script>
+					<?php } ?>
+				</div>
+			<div>
+		</div>
+
+		
+		
+		<br>
+					
 		<br>
 		
-		<div class="container separated">
-			<h2>{properties_text}</h2>	
-				<?php if($customer_info) { ?>
-					<?php echo form_open(get_admin_customer_details_link($customer_info['customer_id']),array()); ?>
-					<input type="hidden" name="post_type" value="customer_properties" />	
-					<input type="hidden" name="customer_id" value="<?php echo $customer_info['customer_id'] ?>" />	
-					
-						<div class="row even-odd-bg dont-magnify" >
-							<div class="three columns">
-								<label>{name_text}</label>
-								<input value="<?php echo $customer_info['customer_name'];?>" 
-									type="text" name="customer_name" class="full-width" />
-							</div>
-							<div class="three columns">
-								<label>{type_text}</label>
-								<select name="customer_type" class="full-width">
-									<?php
-										foreach ($customer_types as $type)
-										{
-											$sel="";
-											if($type==$customer_info['customer_type'])
-												$sel="selected";
-											echo "<option value='$type' $sel>".${"type_".$type."_text"}."</option>";
-										}
-									?>
-								</select>
-							</div>
-							<div class="three columns">
-								<label>{email_text}</label>
-								<input value="<?php echo $customer_info['customer_email'];?>" 
-									type="text" name="customer_email" class="full-width" />
-							</div>
-							<div class="three columns">
-								<label>{code_text}</label>
-								<input value="<?php echo $customer_info['customer_code'];?>" 
-									type="text" name="customer_code" class="full-width" />
-							</div>
-							<div class="three columns">
-								<label>{province_text}</label>
-								<select name="customer_province" class="full-width" onchange="setCities($(this).val());">
-									<?php 
-										foreach($provinces as $pv)
-											echo "<option value='".$pv['province_name']."'>".$pv['province_name']."</option>";
-									?>
-								</select>
-							</div>
-
-							<div class="three columns">
-								<label>{city_text}</label>
-								<select name="customer_city" class="full-width">
-								</select>
-							</div>
-							<div class="six columns">
-								<label>{address_text}</label>
-								<input value="<?php echo $customer_info['customer_address'];?>" 
-									type="text" name="customer_address" class="full-width" />
-							</div>
-							<div class="three columns">
-								<label>{phone_text}</label>
-								<input value="<?php echo $customer_info['customer_phone'];?>" 
-									type="text" name="customer_phone" class="full-width eng ltr" />
-							</div>
-							<div class="three columns">
-								<label>{mobile_text}</label>
-								<input value="<?php echo $customer_info['customer_mobile'];?>" 
-									type="text" name="customer_mobile" class="full-width eng ltr" />
-							</div>
-						</div>
-						<div class="row even-odd-bg dont-magnify" >
-							<div class="six columns">
-								<label>{desc_text}</label>
-								<input type="text" name="desc" class="full-width" />
-							</div>					
-						</div>
-						<br><br>
-						<div class="row">
-								<div class="four columns">&nbsp;</div>
-								<input type="submit" class=" button-primary four columns" value="{save_text}"/>
-						</div>				
-					</form>
-					<script type="text/javascript">
-						var cities=JSON.parse('<?php echo json_encode($cities);?>');
-
-						function setCities(province)
-						{
-							var html='';//<option value="">--- انتخاب نمایید ---</option>';
-							var provinceCities=cities[province];
-							for(var i in provinceCities)
-								html+='<option value="'+provinceCities[i]+'">'+provinceCities[i]+'</option>';
-							$("select[name=customer_city]").html(html);
-						}
-
-						$(function()
-						{
-							var province="<?php echo $customer_info['customer_province'];?>";
-							var city="<?php echo $customer_info['customer_city'];?>";
-							$("select[name=customer_province]").val(province);
-							setCities(province);
-							$("select[name=customer_city]").val(city);
-
-						})
-					</script>
-				<?php } ?>				
-				
-		</div>
 		
 	</div>
 </div>

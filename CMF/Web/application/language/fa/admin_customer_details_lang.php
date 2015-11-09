@@ -19,7 +19,7 @@ $lang['type_regular']="عادی";
 $lang['type_agent']="نماینده";
 $lang['desc']="توضیح";
 
-$lang['customer_logs']="فعالیت های مشتری";
+$lang['customer_logs']="فعالیت‌ها";
 $lang['log_type']="نوع فعالیت";
 $lang['search_again']="جستجوی مجدد";
 

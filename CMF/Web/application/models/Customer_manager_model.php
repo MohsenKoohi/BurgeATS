@@ -293,7 +293,8 @@ class Customer_manager_model extends CI_Model
 
 			//reading log
 			$log=json_decode(file_get_contents($dir."/".$fn));
-			$log->timestamp=$date_time;
+			if($log)
+				$log->timestamp=$date_time;
 			$logs[]=$log;
 		}
 

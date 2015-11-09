@@ -95,7 +95,6 @@ class Customer extends Burge_CMF_Controller {
 			$this->data['customers_end']=0;
 			$this->data['customers_info']=array();
 		}
-
 		
 		return;
 	}

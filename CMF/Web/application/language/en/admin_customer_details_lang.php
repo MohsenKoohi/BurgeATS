@@ -5,7 +5,7 @@ $lang['properties']="Properties";
 $lang['name']="Full Name";
 $lang['type']="Type";
 
-$lang['customer_not_found']="Customer not found";
+$lang['customer_not_found']="Customer not found.";
 $lang['code']="Code";
 $lang['province']="Province";
 $lang['city']="City";

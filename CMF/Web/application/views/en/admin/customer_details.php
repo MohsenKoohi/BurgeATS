@@ -26,59 +26,6 @@
 				overflow:hidden;
 				text-overflow: ellipsis;
 			}
-
-			.tab
-			{
-				padding:20px;
-				background-color: white;
-				margin:0 20px 20px 20px;
-				min-height: 500px;
-			}
-
-			.tabs
-			{
-				margin:5px 20px 0 20px;
-			}
-
-			.tabs li {
-				list-style:none;
-				display:inline;				
-			}
-
-			body.rtl .tabs li
-			{
-				margin-left:5px;
-			}
-
-
-			body.ltr .tabs li
-			{
-				margin-right:5px;
-			}
-
-			.tabs a {		
-				font-size: 1.2em;
-				padding:10px 20px;
-				display:inline-block;
-				background:#666;
-				color:#fff;
-				text-decoration:none;
-				border-radius: 5px 5px 0 0;
-			}
-
-			.tabs a.active {
-				background:#fff;
-				color:#000;
-			}
-
-			.tab-container
-			{
-				background-color: #ccc;
-				padding:10px;
-				border-radius: 10px;
-			}
-
-
 		</style>
 
 		<div class="tab-container">

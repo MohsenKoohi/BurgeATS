@@ -208,6 +208,11 @@ class Customer_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_customer_log_types()
+	{
+		return $this->customer_log_types;
+	}
+
 	public function add_customer_log($customer_id,$log_type,$desc)
 	{
 		if(isset($this->customer_log_types[$log_type]))
@@ -277,7 +282,7 @@ class Customer_manager_model extends CI_Model
 			//now we have timestamp and log_type of this log
 			//and we can filter logs we don't want here;
 			if(isset($filter['log_type']))
-				if($log_type != $filter['log_type'])
+				if($log_type != $this->customer_log_types[$filter['log_type']])
 					continue;
 
 			$count++;

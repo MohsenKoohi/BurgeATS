@@ -20,3 +20,10 @@ $lang['type_agent']="نماینده";
 $lang['desc']="توضیح";
 
 $lang['customer_logs']="فعالیت های مشتری";
+$lang['log_type']="نوع فعالیت";
+$lang['search_again']="جستجوی مجدد";
+
+$lang['page']="صفحه";
+$lang['total_results']="تعداد کل نتایج";
+$lang['results']="نتایج";
+$lang['to']="تا";

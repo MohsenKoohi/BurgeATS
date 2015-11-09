@@ -20,3 +20,10 @@ $lang['type_agent']="Agent";
 $lang['desc']="Description";
 
 $lang['customer_logs']="Customer Logs";
+$lang['log_type']="Log Type";
+$lang['search_again']="Search";
+
+$lang['page']="Page";
+$lang['total_results']="Total Results";
+$lang['results']="Results";
+$lang['to']="to";

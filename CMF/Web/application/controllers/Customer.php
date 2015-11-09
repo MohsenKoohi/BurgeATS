@@ -132,21 +132,55 @@ class Customer extends Burge_CMF_Controller {
 			if("customer_properties" === $this->input->post("post_type"))
 				$this->save_customer_new_properties();
 		}
-		
-		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();		
+
+		$filter=array();
+
+		if($this->input->get('log_type'))
+		{
+			$filter['log_type']=$this->input->get('log_type');
+		}
+
 		$this->data['customer_info']=$this->customer_manager_model->get_customer_info($customer_id);
 		if(NULL == $this->data['customer_info'])
+		{
 			$this->data['message']=$this->lang->line("customer_not_found");
+		}
+		else
+		{
+			$logs_pp=10;
+			$page=1;
+			if($this->input->get("page"))
+				$page=(int)$this->input->get("page");
 
-		$log_res=$this->customer_manager_model->get_customer_logs($customer_id);
-		$total=$log_res['total'];
-		$this->data['customer_logs']=$log_res['results'];
+			$start=($page-1)*$logs_pp;
+			$filter['start']=$start;
+			$filter['length']=$logs_pp;
+			
+			$log_res=$this->customer_manager_model->get_customer_logs($customer_id,$filter);
+			unset($filter['start'],$filter['length']);
+			
+			$total=$log_res['total'];
+			$this->data['customer_logs']=$log_res['results'];
+			$end=$start+sizeof($this->data['customer_logs'])-1;
+
+			$this->data['logs_current_page']=$page;
+			$this->data['logs_total_pages']=ceil($total/$logs_pp);
+			$this->data['logs_total']=$total;
+			$this->data['logs_start']=$start+1;
+			$this->data['logs_end']=$end+1;		
+		}
+
+				
+		$this->data['filter']=$filter;
+		$this->data['raw_page_url']=get_admin_customer_details_link($customer_id);
+		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,TRUE));
 
 
+		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();		
+		$this->data['log_types']=$this->customer_manager_model->get_customer_log_types();
 		$this->data['provinces']=$this->customer_manager_model->get_provinces();
 		$this->data['cities']=$this->customer_manager_model->get_cities();
 
-		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,TRUE));
 		$this->data['header_title']=$this->lang->line("customer_details");
 
 		$this->send_admin_output("customer_details");

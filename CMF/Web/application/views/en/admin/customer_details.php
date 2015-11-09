@@ -14,7 +14,49 @@
 				font-size: 1.1em;
 				padding:0;
 			}
+
+			.row.even-odd-bg div:first-child label
+			{
+				font-size: 2em;
+				color:#0C7B77;
+			}
+
+			.row.even-odd-bg div label
+			{
+				overflow:hidden;
+				text-overflow: ellipsis;
+			}
+
 		</style>
+
+		<div class="container separated">
+			<h2>{customer_logs_text}</h2>
+			<?php $i=1;foreach($customer_logs as $log) { ?>
+				<div class="row even-odd-bg" >
+					<div class="three columns">
+						<label>#<?php echo $i++;?></label>
+					</div>
+					<?php foreach ($log as $key => $value) { 
+					?>
+						<div class="three columns eng ltr">
+							<span><?php echo $key;?></span>
+							<label class="eng ltr"><?php echo $value;?></label>
+						</div>
+					<?php } ?>				
+				</div>
+			<?php } ?>
+			<script type="text/javascript">
+				$(function()
+				{
+					$(".row.even-odd-bg div label").each(
+						function(index,el)
+						{
+							$(el).prop("title",$(el).text());
+						}
+					);
+				});
+			</script>
+		</div>
 		<!--
 		<div class="container separated">
 			<h2>{customers_list_text}</h2>

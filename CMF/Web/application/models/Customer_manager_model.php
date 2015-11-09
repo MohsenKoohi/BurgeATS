@@ -213,7 +213,14 @@ class Customer_manager_model extends CI_Model
 		if(isset($this->customer_log_types[$log_type]))
 			$type_index=$this->customer_log_types[$log_type];
 		else
-			$type_index=0;		
+			$type_index=0;
+
+		$CI=&get_instance();
+		if(isset($CI->in_admin_env) && $CI->in_admin_env)
+		{
+			$desc["active_user_id"]=$CI->user->get_id();
+			$desc["active_user_email"]=$CI->user->get_email();
+		}		
 		
 		$log_path=$this->get_customer_log_path($customer_id,$type_index);
 
@@ -237,6 +244,60 @@ class Customer_manager_model extends CI_Model
 		file_put_contents($log_path, $string);
 		
 		return;
+	}
+
+	//it returns an array with two index, 'results' which specifies  logs
+	//and total which indicates the total number of logs 
+	public function get_customer_logs($customer_id,$filter=array())
+	{
+		$dir=$this->get_customer_directory($customer_id);
+		$file_names=scandir($dir, SCANDIR_SORT_DESCENDING);
+
+		$logs=array();
+		$count=-1;
+		$start=0;
+		if(isset($filter['start']))
+			$start=(int)$filter['start'];
+		$length=sizeof($file_names);
+		if(isset($filter['length']))
+			$length=(int)$filter['length'];
+
+		foreach($file_names as $fn)
+		{
+			if("." === $fn|| ".." === $fn)
+				continue;
+
+			$tmp=explode(".", $fn);
+			list($date_time,$log_type)=explode("#",$tmp[0]);
+			list($date,$time)=explode(",",$date_time);
+			$time=str_replace("-", ":", $time);
+			$date=str_replace("-", "/", $date);
+			$date_time=$date." ".$time;
+
+			//now we have timestamp and log_type of this log
+			//and we can filter logs we don't want here;
+			if(isset($filter['log_type']))
+				if($log_type != $filter['log_type'])
+					continue;
+
+			$count++;
+			if($count < $start)
+				continue;
+			if($count >= ($start+$length))
+				continue;
+
+			//reading log
+			$log=json_decode(file_get_contents($dir."/".$fn));
+			$log->timestamp=$date_time;
+			$logs[]=$log;
+		}
+
+		$total=$count+1;
+
+		return  array(
+			"results"	=> $logs
+			,"total"		=> $total
+		);
 	}
 
 	private function get_customer_log_path($customer_id,$type_index)

@@ -138,6 +138,11 @@ class Customer extends Burge_CMF_Controller {
 		if(NULL == $this->data['customer_info'])
 			$this->data['message']=$this->lang->line("customer_not_found");
 
+		$log_res=$this->customer_manager_model->get_customer_logs($customer_id);
+		$total=$log_res['total'];
+		$this->data['customer_logs']=$log_res['results'];
+
+
 		$this->data['provinces']=$this->customer_manager_model->get_provinces();
 		$this->data['cities']=$this->customer_manager_model->get_cities();
 

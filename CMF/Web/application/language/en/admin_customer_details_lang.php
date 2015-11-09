@@ -18,3 +18,5 @@ $lang['saved_successfully']="The new properties saved successfully.";
 $lang['type_regular']="Regular";
 $lang['type_agent']="Agent";
 $lang['desc']="Description";
+
+$lang['customer_logs']="Customer Logs";

@@ -84,7 +84,7 @@ class Customer extends Burge_CMF_Controller {
 			$this->data['customers_start']=$start+1;
 			$this->data['customers_end']=$end+1;		
 	
-			$filter['order_by']="customer_id DESC";
+			$filter['order_by']="customer_name ASC";
 
 			$this->data['customers_info']=$this->customer_manager_model->get_customers($filter);
 

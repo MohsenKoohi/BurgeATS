@@ -50,7 +50,7 @@ class Access_manager_model extends CI_Model
 		$this->db->insert_batch("access",$batch);
 
 		$this->log_manager_model->info("ACCESS_ALLOW_USER",array(
-			"modules"=>implode(",", $modules),
+			"modules"=>implode(" , ", $modules),
 			"for_user"=>$user_id
 		));
 
@@ -85,7 +85,7 @@ class Access_manager_model extends CI_Model
 		$this->db->insert_batch("access",$batch);
 
 		$this->log_manager_model->info("ACCESS_ALLOW_USER",array(
-			"for_user_ids"=>implode(",", $users)
+			"for_user_ids"=>implode(" , ", $users)
 			,"module_id"=>$module_id
 		));
 

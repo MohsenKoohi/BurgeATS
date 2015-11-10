@@ -11,3 +11,4 @@ $lang['post']="Posts";
 $lang['log']="Logs";
 
 $lang['customer']="Customers";
+$lang['task']="Tasks";

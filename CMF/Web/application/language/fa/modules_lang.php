@@ -11,3 +11,4 @@ $lang['post']="پست‌ها";
 $lang['log']="فعالیت‌ها";
 
 $lang['customer']="مشتریان";
+$lang['task']="وظایف";

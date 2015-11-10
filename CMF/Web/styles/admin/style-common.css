@@ -99,14 +99,25 @@ input.req
 	text-align: center;
 	margin:10px 2.5% 0px 2.5%;
 	padding:0;
-	background-color: white;
+	min-height:130px;
 }
 
 .footer img
 {
 	border-radius: 10px;
 	width:100%;
-	max-width: 300px;
+	max-width: 200px;
+	transition: max-width .3s, opacity .3s;
+	opacity: .7;
+	background-color: white;
+}
+
+.footer:hover img
+{
+	background-color: white;
+	opacity:1;
+	max-width: 250px;
+	transition: max-width .3s,opacity .3s;
 }
 
 .header .logo

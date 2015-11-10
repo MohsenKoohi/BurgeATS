@@ -362,6 +362,11 @@ class Customer_manager_model extends CI_Model
 
 	private function insert_province_and_citiy_tables_to_db()
 	{
+		$result=$this->db->query("show tables like '%city' ");
+		if(sizeof($result->result_array()))
+			return;
+
+
 		$table=$this->db->dbprefix("province"); 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS $table (

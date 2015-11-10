@@ -94,6 +94,21 @@ input.req
 	position: relative;
 }
 
+.footer
+{
+	text-align: center;
+	margin:10px 2.5% 0px 2.5%;
+	padding:0;
+	background-color: white;
+}
+
+.footer img
+{
+	border-radius: 10px;
+	width:100%;
+	max-width: 300px;
+}
+
 .header .logo
 {
 	display:inline-block;

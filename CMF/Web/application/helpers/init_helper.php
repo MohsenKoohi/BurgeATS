@@ -32,10 +32,17 @@ function &get_links()
 		,'admin_customer'						=> ADMIN_SURL_LANG."/customer"
 		,'admin_customer_details_format'	=> ADMIN_SURL_LANG."/customer/details/customer_id"
 
-		,'admin_task'				=> ADMIN_SURL_LANG."/task"
+		,'admin_task'						=> ADMIN_SURL_LANG."/task"
+		,'admin_task_details_format'	=> ADMIN_SURL_LANG."/task/details/task_id"
 	);
 	
 	return $LINKS;
+}
+
+function get_admin_task_details_link($task_id, $do_not_set_lang=FALSE)
+{
+	$format_link=get_link("admin_task_details_format",$do_not_set_lang);
+	return str_replace("task_id", $task_id, $format_link);
 }
 
 function get_admin_customer_details_link($customer_id, $do_not_set_lang=FALSE)

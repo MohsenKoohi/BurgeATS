@@ -3,31 +3,39 @@
 		<h1>{tasks_text}</h1>
 
 		<div class="container separated">
-			<h2>{users_list_text}</h2>		
-			<?php echo form_open(get_link("admin_user"),array()); ?>
-				<input type="hidden" name="post_type" value="users_list" />
-				<?php foreach($users_info as $user) {?>
-					<div class="row even-odd-bg" >
-						<div class="three columns">
-							<label>{email_text}</label>
-							<?php echo $user['user_email'];?>
-						</div>
-						<div class="three columns">
-							<label>{new_password_text}</label>
-							<input name="pass_user_id_<?php echo $user['user_id']?>" type="password" class="ltr eng"/>
-						</div>
-						<div class="three columns">
-							<label>{delete_text} </label>
-							<input name="delete_user_id_<?php echo $user['user_id']?>" type="checkbox" class="graphical" />
-						</div>
+			<h2>{tasks_list_text}</h2>		
+			<?php foreach($tasks_info as $task) {?>
+				<div class="row even-odd-bg" >
+					<div class="three columns">
+						<label>{task_name_text}</label>
+						<span><?php echo $task['task_name'];?></span>
 					</div>
-				<?php } ?>
-				<br><br>
-				<div class="row">
-						<div class="four columns">&nbsp;</div>
-						<input type="submit" class=" button-primary four columns" value="{submit_text}"/>
-				</div>				
-			</form>
+					<div class="three columns">
+						<label>{task_desc_text}</label>
+						<span><?php echo nl2br($task['task_desc']);?></span>
+					</div>
+					<div class="three columns">
+						<label>{task_active_text} </label>
+						<span>
+							<?php
+								if($task['task_active'])
+									echo $yes_text;
+								else
+									echo $no_text;
+							?>
+						</span>
+					</div>
+					<div class="three columns">
+						<label>{task_page_text} </label>
+						<a 
+						href="<?php echo get_admin_task_details_link($task['task_id']); ?>"
+						class="button button-primary sub-primary full-width"
+						>
+							{view_text}
+						</a>
+					</div>
+				</div>
+			<?php } ?>
 		</div>
 
 		<div class="container separated">

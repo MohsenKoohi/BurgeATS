@@ -48,6 +48,14 @@ class Task_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_all_tasks()
+	{
+		$this->db->from($this->task_table);
+		$result=$this->db->get();
+
+		return $result->result_array();
+	}
+
 	public function add_task($props)
 	{
 		$props_array=array();

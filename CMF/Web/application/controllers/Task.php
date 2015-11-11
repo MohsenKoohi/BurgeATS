@@ -24,7 +24,7 @@ class Task extends Burge_CMF_Controller {
 		if($message)
 			$this->data['message']=$message;
 
-		//$this->data['tasks_info']=$this->task_manager_model->get_all_tasks();
+		$this->data['tasks_info']=$this->task_manager_model->get_all_tasks();
 	
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_task",TRUE));
 		$this->data['header_title']=$this->lang->line("tasks");

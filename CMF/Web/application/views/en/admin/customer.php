@@ -2,20 +2,6 @@
 	<div class="container">
 		<h1>{customers_text}</h1>
 
-		<style type="text/css">
-			.row.even-odd-bg span
-			{
-				font-size: .8em;
-				//color:#555;
-			}
-
-			.row.even-odd-bg .button-primary
-			{
-				font-size: 1.1em;
-				padding:0;
-			}
-		</style>
-
 		<div class="container separated">
 			<h2>{customers_list_text}</h2>
 			<div class="container separated">
@@ -126,18 +112,18 @@
 			<?php foreach($customers_info as $cs) {?>
 				<div class="row even-odd-bg" >
 					<div class="three columns">
-						<span>{name_text}</span>
-						<label><?php echo $cs['customer_name'];?></label>
+						<label>{name_text}</label>
+						<span><?php echo $cs['customer_name'];?></span>
 					</div>
 					<div class="three columns">
-						<span>{type_text}</span>
-						<label><?php echo ${"type_".$cs['customer_type']."_text"};?></label>
+						<label>{type_text}</label>
+						<span><?php echo ${"type_".$cs['customer_type']."_text"};?></span>
 					</div>
 					<div class="two columns">
-						<span>{customer_page_text} </span>
+						<label>{customer_page_text} </label>
 						<a 
 						href="<?php echo get_admin_customer_details_link($cs['customer_id']); ?>"
-						class="button button-primary full-width"
+						class="button button-primary sub-primary full-width"
 						>
 							{view_text}
 						</a>

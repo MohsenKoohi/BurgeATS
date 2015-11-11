@@ -47,4 +47,15 @@ class Task extends Burge_CMF_Controller {
 
 		redirect(get_link("admin_task"));
 	}
+
+	public function task_details($task_id)
+	{
+		$this->data['task_info']=$this->task_manager_model->get_task_details($task_id);
+		$this->data['task_users']=$this->task_manager_model->get_task_users($task_id);
+		
+		$this->data['potential_users']=$this->access_manager_model->get_users_have_access_to_module("task_exec");
+
+
+		return;
+	}
 }

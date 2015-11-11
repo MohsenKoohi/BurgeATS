@@ -3,7 +3,7 @@
 		<h1>{tasks_text}</h1>
 
 		<div class="container separated">
-			<h2>{tasks_list_text}</h2>		
+			<h2>{tasks_list_text}</h2>	
 			<?php foreach($tasks_info as $task) {?>
 				<div class="row even-odd-bg" >
 					<div class="three columns">

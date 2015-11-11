@@ -51,6 +51,27 @@ class Task_manager_model extends CI_Model
 	public function get_all_tasks()
 	{
 		$this->db->from($this->task_table);
+		$this->db->order_by("task_id ASC");
+		$result=$this->db->get();
+
+		return $result->result_array();
+	}
+
+	//returns all fields of a task without its users
+	public function get_task_details($task_id)
+	{
+		$result=$this->db->get_where($this->task_table,array("task_id"=>$task_id));
+
+		return $result->result_array();
+	}
+
+	//returns all users of a task
+	public function get_task_users($task_id)
+	{	
+		$this->db->select("task_user.* , user.user_email");
+		$this->db->from("task_user");
+		$this->db->join("user","tu_user_id = user.user_id","left");
+		$this->db->where("tu_task_id",$task_id);
 		$result=$this->db->get();
 
 		return $result->result_array();

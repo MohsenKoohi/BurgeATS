@@ -61,7 +61,7 @@ $route[ADMIN_URL_FOLDER."/post"]			="post";
 $route[ADMIN_URL_FOLDER."/customer"]					="customer";
 $route[ADMIN_URL_FOLDER."/customer/details/(\d+)"]	="customer/customer_details/$1";
 $route[ADMIN_URL_FOLDER."/task"]							="task";
-$route[ADMIN_URL_FOLDER."/task/details/(\d+)"]		="task/customer_details/$1";
+$route[ADMIN_URL_FOLDER."/task/details/(\d+)"]		="task/task_details/$1";
 
 $route[urlencode('ثبت')]="register";
 $route['register/request_pay/(.*)']="register/request_pay/$1";

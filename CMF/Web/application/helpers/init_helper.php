@@ -31,6 +31,8 @@ function &get_links()
 
 		,'admin_customer'						=> ADMIN_SURL_LANG."/customer"
 		,'admin_customer_details_format'	=> ADMIN_SURL_LANG."/customer/details/customer_id"
+
+		,'admin_task'				=> ADMIN_SURL_LANG."/task"
 	);
 	
 	return $LINKS;

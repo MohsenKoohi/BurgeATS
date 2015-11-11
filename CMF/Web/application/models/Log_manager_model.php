@@ -42,6 +42,8 @@ class Log_manager_model extends CI_Model
 
 		,"CUSTOMER_ADD"			=>1001
 		,"CUSTOMER_INFO_CHANGE"	=>1002
+
+		,"TASK_ADD"					=>1101
 		);
 
 	public function __construct()

@@ -57,8 +57,10 @@ $route[ADMIN_URL_FOLDER."/hit_counter"]	="hit_counter";
 $route[ADMIN_URL_FOLDER."/log"]				="log";
 
 $route[ADMIN_URL_FOLDER."/post"]			="post";
-$route[ADMIN_URL_FOLDER."/customer"]				="customer";
+
+$route[ADMIN_URL_FOLDER."/customer"]					="customer";
 $route[ADMIN_URL_FOLDER."/customer/details/(\d+)"]	="customer/customer_details/$1";
+$route[ADMIN_URL_FOLDER."/task"]							="task";
 
 $route[urlencode('ثبت')]="register";
 $route['register/request_pay/(.*)']="register/request_pay/$1";

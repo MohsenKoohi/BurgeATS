@@ -3,6 +3,10 @@ class Task_manager_model extends CI_Model
 {
 	private $task_table="task";
 	private $task_user_table="task_user";
+	private $task_props_for_write=array(
+		"task_name","task_desc","task_class_name"
+		,"task_period","task_active"
+	);
 	
 	public function __construct()
 	{
@@ -41,6 +45,20 @@ class Task_manager_model extends CI_Model
 		$this->module_manager_model->add_module("task","task_manager");
 		$this->module_manager_model->add_module_names_from_lang_file("task");
 		
+		return;
+	}
+
+	public function add_task($props)
+	{
+		$props_array=array();
+		foreach($this->task_props_for_write as $prop_name)
+			if(isset($props[$prop_name]))
+				$props_array[$prop_name]=$props[$prop_name];
+		bprint_r($props_array);
+		$this->db->insert($this->task_table,$props_array);
+
+		$this->log_manager_model->info("TASK_ADD",$props_array);
+
 		return;
 	}
 

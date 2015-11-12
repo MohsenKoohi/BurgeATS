@@ -79,11 +79,8 @@ class Task_manager_model extends CI_Model
 
 	public function add_task($props)
 	{
-		$props_array=array();
-		foreach($this->task_props_for_write as $prop_name)
-			if(isset($props[$prop_name]))
-				$props_array[$prop_name]=$props[$prop_name];
-		bprint_r($props_array);
+		$props_array=select_allowed_elements($props,$this->task_props_for_write);
+
 		$this->db->insert($this->task_table,$props_array);
 
 		$this->log_manager_model->info("TASK_ADD",$props_array);

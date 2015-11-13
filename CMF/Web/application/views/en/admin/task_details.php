@@ -26,6 +26,12 @@
 						/>
 					</div>
 					<div class="seven columns">
+						<label>{task_priority_text}</label>
+						<input type="text" name="task_priority" class="full-width ltr" 
+							value="<?php echo $task_info['task_priority'];?>"
+						/>
+					</div>
+					<div class="seven columns">
 						<label>{task_period_text}</label>
 						<input type="text" name="task_period" class="full-width ltr" 
 							value="<?php echo $task_info['task_period'];?>"
@@ -41,15 +47,17 @@
 						<?php
 							foreach ($potential_users as $user) {
 						?>
-							<div class="three columns">
-								<?php echo $user['user_email'];?>
-								<input type="checkbox" 	class="graphical"
-									name="task_user_<?php echo $user['user_id'];?>"								
-									<?php 
-										if(in_array($user['user_id'],$task_users_ids)) 
-											echo "checked";
-									?>
-								/>	
+							<div class="five columns separated half-col-margin">
+								<div class="six columns"><?php echo $user['user_email'];?></div>
+								<div class="six columns">
+									<input type="checkbox" 	class="graphical"
+										name="task_user_<?php echo $user['user_id'];?>"								
+										<?php 
+											if(in_array($user['user_id'],$task_users_ids)) 
+												echo "checked";
+										?>
+									/>
+								</div>
 							</div>
 						<?php 
 							}

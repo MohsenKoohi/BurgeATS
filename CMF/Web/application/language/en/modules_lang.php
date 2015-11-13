@@ -12,3 +12,4 @@ $lang['log']="Logs";
 
 $lang['customer']="Customers";
 $lang['task']="Tasks";
+$lang['task_exec']="Tasks Execution";

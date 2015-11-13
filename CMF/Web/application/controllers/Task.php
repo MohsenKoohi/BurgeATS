@@ -82,6 +82,7 @@ class Task extends Burge_CMF_Controller {
 			,"task_class_name"=>persian_normalize_word($this->input->post("task_class_name"))
 			,"task_active"=>(($this->input->post("task_active")==="on")?1:0)
 			,"task_period"=>(int)$this->input->post("task_period")
+			,"task_priority"=>(int)$this->input->post("task_priority")
 		));
 
 		$pusers=$this->access_manager_model->get_users_have_access_to_module("task_exec");

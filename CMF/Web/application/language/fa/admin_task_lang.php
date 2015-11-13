@@ -26,6 +26,7 @@ $lang['task_props']="مشخصات";
 $lang['task_details']="جزئیات وظیفه";
 $lang['task_class_name']="نام کلاس";
 $lang['task_period']="دوره تناوب";
+$lang['task_priority']="اولویت";
 $lang['save']="ثبت";
 $lang['task_users']="کاربران";
 

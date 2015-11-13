@@ -12,3 +12,4 @@ $lang['log']="فعالیت‌ها";
 
 $lang['customer']="مشتریان";
 $lang['task']="وظایف";
+$lang['task_exec']="اجرای وظایف";

@@ -24,6 +24,7 @@ $lang['task_props']="Properties";
 $lang['task_details']="Task Details";
 $lang['task_class_name']="Class Name";
 $lang['task_period']="Period";
+$lang['task_priority']="Priority";
 $lang['save']="Save";
 $lang['task_users']="Users";
 

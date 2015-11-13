@@ -5,7 +5,7 @@ class Task_manager_model extends CI_Model
 	private $task_user_table="task_user";
 	private $task_props_for_write=array(
 		"task_name","task_desc","task_class_name"
-		,"task_period","task_active"
+		,"task_period","task_active","task_priority"
 	);
 	
 	public function __construct()
@@ -23,7 +23,7 @@ class Task_manager_model extends CI_Model
 				`task_id` int NOT NULL AUTO_INCREMENT
 				,`task_name` varchar(100)
 				,`task_desc` text
-				,`task_class_name` varchar(20)
+				,`task_class_name` varchar(100)
 				,`task_period` int DEFAULT -1
 				,`task_priority` int DEFAULT 1
 				,`task_active` tinyint DEFAULT 1

@@ -94,6 +94,11 @@ class Task_manager_model extends CI_Model
 
 	public function set_task_users($task_id,$user_ids)
 	{
+		$this->log_manager_model->info("TASK_USERS_CHANGE",array(
+			"task_id"=>$task_id
+			,"new_user_ids"=>implode(' , ', $user_ids)
+		));
+
 		$this->db->where("tu_task_id",$task_id);
 		$this->db->delete($this->task_user_table);
 
@@ -114,7 +119,8 @@ class Task_manager_model extends CI_Model
 		$props_array=select_allowed_elements($props,$this->task_props_for_write);
 
 		$this->db->insert($this->task_table,$props_array);
-
+		
+		$props_array['task_id']=$this->db->insert_id();
 		$this->log_manager_model->info("TASK_ADD",$props_array);
 
 		return;
@@ -126,6 +132,9 @@ class Task_manager_model extends CI_Model
 		$this->db->set($props_array);
 		$this->db->where("task_id",$task_id);
 		$this->db->update($this->task_table);
+
+		$props_array['task_id']=$task_id;
+		$this->log_manager_model->info("TASK_INFO_CHANGE",$props_array);
 
 		return;
 	}

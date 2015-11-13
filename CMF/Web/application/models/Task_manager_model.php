@@ -94,25 +94,37 @@ class Task_manager_model extends CI_Model
 		return;
 	}
 
+	private function get_counts()
+	{
+		$table_name=$this->db->dbprefix($this->task_table); 
+
+		$result=$this->db->query("
+			SELECT 
+				(SELECT COUNT(*) FROM $table_name ) as total,
+				(SELECT COUNT(*) FROM $table_name WHERE task_active = 1) as active
+		");
+		
+		$row=$result->row_array();
+		return $row;
+	}
+
 	public function get_dashbord_info()
 	{
-		return "";
 		$CI=& get_instance();
 		$lang=$CI->language->get();
-		$CI->lang->load('admin_hit_counter',$lang);		
+		$CI->lang->load('admin_task',$lang);		
 		
 		$data=array();
-		$data['month_text']=$CI->lang->line("monthly_visit");
-		$data['year_text']=$CI->lang->line("yearly_visit");
-		$data['total_text']=$CI->lang->line("total_visit");
+		$data['total_text']=$CI->lang->line("total");
+		$data['active_text']=$CI->lang->line("active");
 
-		$counts=$this->get_all_counts();
-		$data['total_count']=$counts[0]['total_count'];
-		$data['year_count']=$counts[0]['year_count'];
-		$data['month_count']=$counts[0]['month_count'];
+		$counts=$this->get_counts();
+
+		$data['total_count']=$counts['total'];
+		$data['active_count']=$counts['active'];
 		
 		$CI->load->library('parser');
-		$ret=$CI->parser->parse($CI->get_admin_view_file("hit_counter_dashboard"),$data,TRUE);
+		$ret=$CI->parser->parse($CI->get_admin_view_file("task_dashboard"),$data,TRUE);
 		
 		return $ret;		
 	}

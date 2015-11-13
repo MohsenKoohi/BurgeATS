@@ -20,7 +20,4 @@ $lang["task_added_successfully"]="New task added successfully.";
 
 
 $lang['total']="Total";
-
-$lang['repeated_email']="This email has been added previously.";
-$lang['modfied_successfully']="Changes have been done successfully.";
-
+$lang['active']="Active";

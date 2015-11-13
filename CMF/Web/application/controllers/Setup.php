@@ -105,7 +105,7 @@ class Setup extends CI_Controller {
 			"user","module","module_name","access","hit_counter"
 			,"post","post_content"
 		//	,"customer","province","city"
-			,"task"
+		//	,"task","task_user","task_exec"
 		);
 
 		foreach($table_names as $tn)

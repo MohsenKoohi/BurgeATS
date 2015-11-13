@@ -10,7 +10,7 @@ class Task_exec_manager_model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
-	
+		
 		return;
 	}
 
@@ -18,7 +18,7 @@ class Task_exec_manager_model extends CI_Model
 	{
 		$table_name=$this->db->dbprefix($this->task_exec_table); 
 		$task_statuses_text="'".implode("','",$this->task_statuses)."'";
-		
+
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $table_name (
 				`te_task_id` int NOT NULL
@@ -70,5 +70,50 @@ class Task_exec_manager_model extends CI_Model
 		return $ret;		
 	}
 
+	//this is our scheduler method, 
+	//which may be call a scheduler class in next versions
+	//and returns the firt $count important task should be done by $user_id  user
+	public function get_tasks($user_id, $count)
+	{
+
+		//1) we should read all tasks this user can do
+		$this->load->model("task_manager_model");
+
+		$user_tasks=$this->task_manager_model->get_user_tasks($user_id);
+		if(!$user_tasks)
+			return;
+
+		//2) we should find the most important works with the same priority
+		$high_priority_tasks=array();
+		$hp=$user_tasks[0]['task_priority'];
+		for($i=0;$i<sizeof($user_tasks);$i++)
+			if($user_tasks[$i]['task_priority'] == $hp)
+				$high_priority_tasks[]=$user_tasks[$i];
+			else
+				break;
+
+		//3) we assume number of customers for each task is more  than $count,
+		//thus we just return the first priorities.
+		//however there is a hole for next version works
+		//this assumption can be deleted
+		//
+		//in this section we specify number of customers for each specified tasks 
+		//in previous section
+		$tasks=$high_priority_tasks;
+		$total_tasks=sizeof($tasks);
+		$sum=0;
+		$counts=array();
+		for($i=0;$i<$total_tasks;$i++)
+		{
+			$task_count=(int)(($count-$sum)/($total_tasks-$i));
+			$counts[]=$task_count;
+			$sum+=$task_count;
+		}
+
+		//now we have two array $tasks , $counts
+		//we should call classes of each task and specify customers
+
+
+	}
 
 }

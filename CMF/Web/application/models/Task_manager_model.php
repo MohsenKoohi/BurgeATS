@@ -51,7 +51,7 @@ class Task_manager_model extends CI_Model
 	public function get_all_tasks()
 	{
 		$this->db->from($this->task_table);
-		$this->db->order_by("task_id ASC");
+		$this->db->order_by("task_id DESC");
 		$result=$this->db->get();
 
 		return $result->result_array();
@@ -90,6 +90,18 @@ class Task_manager_model extends CI_Model
 			$ret[]=$row['tu_user_id'];
 
 		return $ret;
+	}
+
+	public function get_user_tasks($user_id)
+	{
+		$this->db->from($this->task_table);
+		$this->db->join($this->task_user_table,"task_id = tu_task_id");
+		$this->db->where("tu_user_id",$user_id);
+		$this->db->where("task_active",1);
+		$this->db->order_by("task_priority DESC, task_name ASC");
+		$result=$this->db->get();
+
+		return $result->result_array();
 	}
 
 	public function set_task_users($task_id,$user_ids)

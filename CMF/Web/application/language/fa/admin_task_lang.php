@@ -20,3 +20,13 @@ $lang["task_added_successfully"]="با موفقیت افزوده شد.";
 
 $lang['total']="مجموع";
 $lang['active']="فعال";
+
+
+$lang['task_props']="مشخصات";
+$lang['task_details']="جزئیات وظیفه";
+$lang['task_class_name']="نام کلاس";
+$lang['task_period']="دوره تناوب";
+$lang['save']="ثبت";
+$lang['task_users']="کاربران";
+
+$lang["task_changed_successfully"]="تغییرات با موفقیت ثبت شد.";

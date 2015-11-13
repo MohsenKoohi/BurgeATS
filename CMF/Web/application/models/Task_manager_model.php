@@ -62,7 +62,7 @@ class Task_manager_model extends CI_Model
 	{
 		$result=$this->db->get_where($this->task_table,array("task_id"=>$task_id));
 
-		return $result->result_array();
+		return $result->row_array();
 	}
 
 	//returns all users of a task
@@ -72,9 +72,41 @@ class Task_manager_model extends CI_Model
 		$this->db->from("task_user");
 		$this->db->join("user","tu_user_id = user.user_id","left");
 		$this->db->where("tu_task_id",$task_id);
+		$this->db->order_by("tu_user_id desc");
 		$result=$this->db->get();
 
 		return $result->result_array();
+	}
+
+	public function get_task_users_ids($task_id)
+	{	
+		$this->db->select("task_user.tu_user_id");
+		$this->db->from("task_user");
+		$this->db->where("tu_task_id",$task_id);
+		$result=$this->db->get();
+
+		$ret=array();
+		foreach($result->result_array() as $row)
+			$ret[]=$row['tu_user_id'];
+
+		return $ret;
+	}
+
+	public function set_task_users($task_id,$user_ids)
+	{
+		$this->db->where("tu_task_id",$task_id);
+		$this->db->delete($this->task_user_table);
+
+		if(!$user_ids)
+			return;
+		
+		$arr=array();
+		foreach($user_ids as $uid)
+			$arr[]=array("tu_task_id"=>$task_id, "tu_user_id"=>$uid);
+
+		$this->db->insert_batch($this->task_user_table,$arr);
+
+		return;
 	}
 
 	public function add_task($props)
@@ -87,6 +119,22 @@ class Task_manager_model extends CI_Model
 
 		return;
 	}
+
+	public function set_task_info($task_id,$props)
+	{
+		$props_array=select_allowed_elements($props,$this->task_props_for_write);
+		$this->db->set($props_array);
+		$this->db->where("task_id",$task_id);
+		$this->db->update($this->task_table);
+
+		return;
+	}
+
+	public function get_changeable_task_props()
+	{
+		return $this->task_props_for_write;
+	}
+
 
 	public function uninstall()
 	{

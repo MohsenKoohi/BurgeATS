@@ -2,9 +2,7 @@
 
 $lang['tasks']="Tasks";
 
-
 $lang['tasks_list']="Tasks List";
-
 
 $lang['add_task']="Add a task";
 $lang['add']="Add";
@@ -21,3 +19,12 @@ $lang["task_added_successfully"]="New task added successfully.";
 
 $lang['total']="Total";
 $lang['active']="Active";
+
+$lang['task_props']="Properties";
+$lang['task_details']="Task Details";
+$lang['task_class_name']="Class Name";
+$lang['task_period']="Period";
+$lang['save']="Save";
+$lang['task_users']="Users";
+
+$lang["task_changed_successfully"]="Task info changed successfully.";

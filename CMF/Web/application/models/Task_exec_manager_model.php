@@ -72,8 +72,9 @@ class Task_exec_manager_model extends CI_Model
 
 	//this is our scheduler method, 
 	//which may be call a scheduler class in next versions
-	//and returns the firt $count important task should be done by $user_id  user
-	public function get_tasks($user_id, $count)
+	//and returns the firt $total_count important task should be done by $user_id  user
+	//in an array of obejcts with task_id and customer_id indexes
+	public function get_tasks($user_id, $total_count)
 	{
 
 		//1) we should read all tasks this user can do
@@ -92,7 +93,7 @@ class Task_exec_manager_model extends CI_Model
 			else
 				break;
 
-		//3) we assume number of customers for each task is more  than $count,
+		//3) we assume number of customers for each task is more  than $total_count,
 		//thus we just return the first priorities.
 		//however there is a hole for next version works
 		//this assumption can be deleted
@@ -105,15 +106,32 @@ class Task_exec_manager_model extends CI_Model
 		$counts=array();
 		for($i=0;$i<$total_tasks;$i++)
 		{
-			$task_count=(int)(($count-$sum)/($total_tasks-$i));
+			$task_count=(int)(($total_count-$sum)/($total_tasks-$i));
 			$counts[]=$task_count;
 			$sum+=$task_count;
 		}
 
-		//now we have two array $tasks , $counts
-		//we should call classes of each task and specify customers
+		//4) now we have two array $tasks , $counts
+		//we should call classes of each task and specify customers 
+		//who the task should be execute for 
+		//class of each task should be placed in libraries/tasks folder
+		$result_array=array();
+		for($i=0;$i<sizeof($tasks);$i++)
+		{
+			$task=$tasks[$i];
+			$count=$counts[$i];
 
+			$class_name=$task['task_class_name'];
 
+			$task_file_name="tasks/".strtolower($class_name);
+			$this->load->library($task_file_name,NULL,"temp_task");
+
+			$task_result=$this->temp_task->get_customers($task,$count);
+
+			$result_array=array_merge($result_array,$task_result);
+		}
+
+		return $result_array;
 	}
 
 }

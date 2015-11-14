@@ -36,7 +36,7 @@ function &get_links()
 		,'admin_task_details_format'	=> ADMIN_SURL_LANG."/task/details/task_id"
 
 		,'admin_task_exec'				=> ADMIN_SURL_LANG."/task_exec"
-		,'admin_task_exec_format'		=> ADMIN_SURL_LANG."/task_exec/exec/task_id/customer_id"
+		,'admin_task_exec_format'		=> ADMIN_SURL_LANG."/customer/details/customer_id/task_id#tasks"
 	);
 	
 	return $LINKS;

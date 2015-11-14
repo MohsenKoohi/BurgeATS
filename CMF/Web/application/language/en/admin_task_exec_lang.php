@@ -1,8 +1,12 @@
 <?php 
 
-$lang['tasks']="Tasks";
+$lang['tasks_exec']="Tasks Execution";
 
-$lang['tasks_list']="Tasks List";
+$lang['execution']="Execution";
+$lang['logs']="Logs";
+
+$lang['task']="Task";
+$lang['customer']="Customer";
 
 $lang['add_task']="Add a task";
 $lang['add']="Add";

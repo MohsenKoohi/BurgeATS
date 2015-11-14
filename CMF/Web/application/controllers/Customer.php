@@ -117,7 +117,7 @@ class Customer extends Burge_CMF_Controller {
 		return;
 	}
 
-	public function customer_details($customer_id)
+	public function customer_details($customer_id,$task_id=0)
 	{
 		$customer_id=(int)$customer_id;
 

@@ -26,6 +26,12 @@
 				overflow:hidden;
 				text-overflow: ellipsis;
 			}
+
+			.row.even-odd-bg a div
+			{
+				font-size: 1.2em;
+				padding:10px;
+			}
 		</style>
 
 		<div class="tab-container">
@@ -88,9 +94,9 @@
 							<a target="_blank" href="<?php echo get_admin_task_exec_details_link($task['task_id'],$task['customer_id']);?>">
 								<div class="twelve columns">
 									{task_text} :
-									<?php echo $task['task_name'];?>
-									, {customer_text} : 
-									<?php echo $task['customer_name'];?>
+									"<?php echo $task['task_name'];?>"
+									{comma_text}  {customer_text} : 
+									"<?php echo $task['customer_name'];?>"
 								</div>
 							</a>
 						</div>				

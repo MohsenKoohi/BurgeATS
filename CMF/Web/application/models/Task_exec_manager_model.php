@@ -28,7 +28,8 @@ class Task_exec_manager_model extends CI_Model
 				,`te_last_exec_timestamp` DATETIME
 				,`te_last_exec_result` varchar(500)
 				,`te_last_exec_result_file_name` varchar(200)
-				,`te_exec_count` tinyint
+				,`te_last_exec_requires_manager_note` tinyint DEFAULT 0
+				,`te_exec_count` tinyint DEFAULT 0
 				,PRIMARY KEY (te_task_id,te_customer_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);

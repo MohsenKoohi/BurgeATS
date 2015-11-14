@@ -78,6 +78,18 @@ class Task_manager_model extends CI_Model
 		return $result->result_array();
 	}
 
+	public function check_user_can_execute_task($user_id,$task_id)
+	{
+		$result=$this->db->get_where($this->task_user_table
+			,array(
+				"tu_task_id"=>$task_id
+				,"tu_user_id"=>$user_id
+			)
+		);
+
+		return ( $result->num_rows() > 0 );
+	}
+
 	public function get_task_users_ids($task_id)
 	{	
 		$this->db->select("task_user.tu_user_id");

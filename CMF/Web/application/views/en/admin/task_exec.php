@@ -79,7 +79,7 @@
 							   //and this will solve the problem
 							   //for example in this situation, in each load, we should first equalize height of
 							   //all tabs, and then call setupMovingHeader 
-							   //thus we don't need to call setupMovingHeader in each tab change event
+							   //in this way we don't need to call setupMovingHeader in each tab change event
 							<?php } ?>
 						   setupMovingHeader();
 						});
@@ -89,18 +89,24 @@
 			<div class="tab" id="exec" style="">
 				<div class="container">
 					<h2>{execution_text}</h2>	
-					<?php foreach($tasks as $task) { ?>
-						<div class="row even-odd-bg dont-magnify" >
-							<a target="_blank" href="<?php echo get_admin_task_exec_details_link($task['task_id'],$task['customer_id']);?>">
-								<div class="twelve columns">
-									{task_text} :
-									"<?php echo $task['task_name'];?>"
-									{comma_text}  {customer_text} : 
-									"<?php echo $task['customer_name'];?>"
-								</div>
-							</a>
-						</div>				
-					<?php } ?>						
+					<?php 
+						if($tasks)
+							foreach($tasks as $task)
+							{ 
+					?>
+							<div class="row even-odd-bg dont-magnify" >
+								<a target="_blank" href="<?php echo get_admin_customer_details_link($task['customer_id'],$task['task_id'],"tasks");?>">
+									<div class="twelve columns">
+										{task_text} :
+										"<?php echo $task['task_name'];?>"
+										{comma_text}  {customer_text} : 
+										"<?php echo $task['customer_name'];?>"
+									</div>
+								</a>
+							</div>				
+					<?php 
+							} 
+					?>						
 				</div>
 			</div>
 

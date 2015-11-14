@@ -12,6 +12,12 @@ class Task_Sample
 	//and count, which specifies max number of customers this task can return
 	//
 	//return is an array of objects with task_id,task_name,customer_id,customer_name indexes
+	//
+	//Note that we (with intention to increase performance) don't run another 
+	//query to filter customer_ids who the task has been
+	//executed for. So, filter them here. When a task for a customer is completed 
+	//its status is changed to 'complete', or if it is canceled by the user who executes the 
+	//task, the status is changed to 'canceled', other wise its status is NULL or 'chaning'
 	public function get_customers($task,$count)
 	{
 

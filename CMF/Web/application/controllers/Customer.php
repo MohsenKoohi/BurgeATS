@@ -120,8 +120,16 @@ class Customer extends Burge_CMF_Controller {
 	public function customer_details($customer_id,$task_id=0)
 	{
 		$customer_id=(int)$customer_id;
+		$task_id=(int)$task_id;
+
+		$this->data['customer_id']=$customer_id;
+		$this->data['task_id']=$task_id;
 
 		$this->lang->load('admin_customer_details',$this->selected_lang);
+
+		if($task_id)
+			$this->task_exec($customer_id,$task_id);
+
 		$this->data['message']=get_message();
 		
 		if($this->input->post())
@@ -177,11 +185,9 @@ class Customer extends Burge_CMF_Controller {
 			}
 		}
 
-				
 		$this->data['filter']=$filter;
-		$this->data['raw_page_url']=get_admin_customer_details_link($customer_id);
-		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,TRUE));
-
+		$this->data['raw_page_url']=get_admin_customer_details_link($customer_id,$task_id);
+		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,$task_id,NULL,TRUE));
 
 		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();		
 		$this->data['log_types']=$this->customer_manager_model->get_customer_log_types();
@@ -198,6 +204,7 @@ class Customer extends Burge_CMF_Controller {
 	private function save_customer_new_properties()
 	{
 		$customer_id=$this->input->post("customer_id");
+		$task_id=$this->input->post("task_id");
 
 		$args=array(
 			"customer_name"		=>$this->input->post("customer_name")
@@ -217,7 +224,35 @@ class Customer extends Burge_CMF_Controller {
 
 		set_message($this->lang->line("saved_successfully"));
 
-		redirect(get_admin_customer_details_link($customer_id));
+		redirect(get_admin_customer_details_link($customer_id,$task_id));
 	}
 
+	private function task_exec($customer_id, $task_id)
+	{
+		//check if this customer has this task to execute
+		//we assume yes, because it has been redirected here from task_exec page
+		//but you can be sure for next versions
+		//or if a customer has a task, it is very good to do that task
+		//without redirecting from its page
+		//its not so complicated, ...
+
+
+		//check if this user can do this task
+		$user_id=$this->user->get_id();
+		$this->load->model("task_manager_model");
+		$can_exec=$this->task_manager_model->check_user_can_execute_task($user_id,$task_id);
+
+		if(!$can_exec)
+			return;
+
+		//we should load information of task
+		$task_info=$this->task_manager_model->get_task_details($task_id);
+		if(!$task_info)
+			return;
+
+		$this->data['task_info']=$task_info;
+
+
+
+	}
 }

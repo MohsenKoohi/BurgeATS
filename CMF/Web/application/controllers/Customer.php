@@ -245,6 +245,43 @@ class Customer extends Burge_CMF_Controller {
 		if(!$can_exec)
 			return;
 
+		$this->load->model("task_exec_manager_model");
+
+		if($this->input->post("post_type") === "task_exec")
+		{
+			$date_function=DATE_FUNCTION;
+
+			$timestamp=$date_function("Y-m-d H:i:s");
+			$status=$this->input->post("task_status");
+			$next_exec=0;
+			if("changing" === $status)
+			{
+				$next_exec=$this->input->post("task_exec_remind_in");
+				$next_exec=$date_function("Y-m-d H:i:s",time()+60*60*24*(int)$next_exec);
+			}
+
+			$result=$this->input->post("task_exec_result");
+			$file="";//filename
+			$requires_manager_note=("on" === $this->input->post("task_exec_requires_manager_note"));
+
+			$props=array(
+				"te_status"										=>$status
+				,"te_next_exec"								=>$next_exec
+				,"te_last_exec_user_id"						=>$user_id
+				,"te_last_exec_timestamp"					=>$timestamp
+				,"te_last_exec_result"						=>$result
+				,"te_last_exec_result_file_name"			=>$file
+				,"te_last_exec_requires_manager_note"	=>$requires_manager_note
+				,"te_last_exec_manager_note"				=>""
+			);
+
+			$this->task_exec_manager_model->update_task_exec_info($customer_id, $task_id, $props);
+
+			set_message($this->lang->line("task_saved_successfully"));
+			
+			redirect(get_admin_customer_details_link($customer_id,$task_id,"tasks"));
+		}
+
 		//we should load information of task
 		$task_info=$this->task_manager_model->get_task_details($task_id);
 		if(!$task_info)
@@ -252,10 +289,10 @@ class Customer extends Burge_CMF_Controller {
 
 		$this->data['task_info']=$task_info;
 
-		$this->load->model("task_exec_manager_model");
 		$this->data['task_exec_info']=$this->task_exec_manager_model->get_task_exec_info($task_id,$customer_id);
-		bprint_r($this->data['task_exec_info']);
+		
+		$this->data['task_exec_statuses']=$this->task_exec_manager_model->get_task_statuses();
 
-
+		return;
 	}
 }

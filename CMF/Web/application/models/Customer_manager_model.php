@@ -9,6 +9,7 @@ class Customer_manager_model extends CI_Model
 		"UNKOWN"						=>0
 		,"CUSTOMER_ADD"			=>1001
 		,"CUSTOMER_INFO_CHANGE"	=>1002
+		,"CUSTOMER_TASK_EXEC"	=>1003
 	);
 	
 	public function __construct()
@@ -224,7 +225,8 @@ class Customer_manager_model extends CI_Model
 		if(isset($CI->in_admin_env) && $CI->in_admin_env)
 		{
 			$desc["active_user_id"]=$CI->user->get_id();
-			$desc["active_user_email"]=$CI->user->get_email();
+			$desc["active_user_code"]=$CI->user->get_code();
+			$desc["active_user_name"]=$CI->user->get_name();
 		}		
 		
 		$log_path=$this->get_customer_log_path($customer_id,$type_index);

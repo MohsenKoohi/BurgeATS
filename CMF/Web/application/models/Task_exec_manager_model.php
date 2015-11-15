@@ -4,7 +4,14 @@ class Task_exec_manager_model extends CI_Model
 	private $task_exec_table="task_exec";
 	private $task_statuses=array('changing','complete','canceled');
 	private $task_exec_props_for_write=array(
-		
+		'te_status'
+		,'te_next_exec'
+		,'te_last_exec_user_id'
+		,'te_last_exec_timestamp'
+		,'te_last_exec_result'
+		,'te_last_exec_result_file_name'
+		,'te_last_exec_requires_manager_note'
+		,'te_last_exec_manager_note'
 	);
 	
 	public function __construct()
@@ -29,13 +36,14 @@ class Task_exec_manager_model extends CI_Model
 				`te_task_id` int NOT NULL
 				,`te_customer_id` int NOT NULL
 				,`te_status` enum($task_statuses_text) DEFAULT 'changing'
+				,`te_next_exec` DATETIME
 				,`te_last_exec_user_id` int
 				,`te_last_exec_timestamp` DATETIME
 				,`te_last_exec_result` varchar(500)
 				,`te_last_exec_result_file_name` varchar(200)
 				,`te_last_exec_requires_manager_note` tinyint DEFAULT 0
 				,`te_last_exec_manager_note` varchar(500) 
-				,`te_exec_count` tinyint DEFAULT 0
+				,`te_exec_count` int DEFAULT 1
 				,PRIMARY KEY (te_task_id,te_customer_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
@@ -77,8 +85,38 @@ class Task_exec_manager_model extends CI_Model
 		return $ret;		
 	}
 
+	public function update_task_exec_info($customer_id, $task_id, $props_array)
+	{
+		$props=select_allowed_elements($props_array,$this->task_exec_props_for_write);
+		if(isset($props['te_last_exec_result']))
+			$props['te_last_exec_result']=persian_normalize_word($props['te_last_exec_result']);
+
+		$this->db->set("te_customer_id",$customer_id);
+		$this->db->set("te_task_id",$task_id);
+		$this->db->set($props);
+		$insert_sql=$this->db->get_compiled_insert($this->task_exec_table);
+		
+		$this->db->reset_query();
+		$this->db->set($props);
+		$this->db->set("te_exec_count","te_exec_count + 1",FALSE);
+	   $update_sql=$this->db->get_compiled_update($this->task_exec_table);
+	   $update_sql=preg_replace('/UPDATE.*?SET/',' ON DUPLICATE KEY UPDATE',$update_sql);
+	   $this->db->reset_query();
+	   $this->db->query($insert_sql.$update_sql);
+
+	   $props['te_customer_id']=$customer_id;
+		$props['te_task_id']=$task_id;
+
+		$this->load->model("customer_manager_model");
+
+		$this->log_manager_model->info("CUSTOMER_TASK_EXEC",$props);
+		$this->customer_manager_model->add_customer_log($customer_id,'CUSTOMER_TASK_EXEC',$props);
+
+		
+	}
+
 	//this is our scheduler method, 
-	//which may be call a scheduler class in next versions
+	//which may be call$this->db->reset_query() a scheduler class in next versions
 	//and returns the firt $total_count important task should be done by $user_id  user
 	//in an array of obejcts with task_id and customer_id indexes
 	public function get_tasks($user_id, $total_count)

@@ -108,7 +108,6 @@
 								</div>
 							</div>
 						</div>
-							<br><br>
 
 							<?php if($task_exec_info) { ?>
 								<div class="separated">
@@ -170,7 +169,6 @@
 										</div>
 									<?php } ?>
 								</div>
-								<br><br>
 							<?php } ?>
 							
 							<div class="separated">
@@ -181,9 +179,54 @@
 									<input type="hidden" name="task_id" value="<?php echo $task_id ?>" />
 									<span></span>
 									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											<span>{task_status_text}</span>
+										</div>
 										<div class="six columns">
-											<label>{desc_text}</label>
-											<input type="text" name="desc" class="full-width" />
+											<select name="task_status" class="full-width" onchange="taskStatusChanged();">
+												<?php 
+													foreach($task_exec_statuses as $status)
+													{
+														$sel="";
+														if($task_exec_info && ($task_exec_info['te_status'] === $status))
+															$sel="selected";
+														echo "<option $sel value='$status'>".${"task_status_".$status."_text"}."</option>";
+													}
+												?>
+											</select>
+										</div>					
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											<span>{task_exec_result_text}</span>
+										</div>
+										<div class="six columns">
+											<textarea rows="3" name="task_exec_result" class="full-width"></textarea>
+										</div>					
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											<span>{task_exec_result_file_text}</span>
+										</div>
+										<div class="six columns">
+											<input type="file" name="task_exec_file" />
+										</div>					
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											<span>{task_exec_request_manager_note_text}</span>
+										</div>
+										<div class="six columns">
+											<input type="checkbox" name="task_exec_requires_manager_note" class="graphical"/>
+										</div>					
+									</div>
+									<div class="row even-odd-bg dont-magnify" id="remind_days_row" >
+										<div class="three columns">
+											<span>{task_exec_remind_in_text}</span>
+										</div>
+										<div class="six columns">
+											<input type="number" name="task_exec_remind_in" value="1"/>
+											{days_text}
 										</div>					
 									</div>
 									<br><br>
@@ -192,6 +235,17 @@
 											<input type="submit" class=" button-primary four columns" value="{save_text}"/>
 									</div>				
 								</form>
+								<script type="text/javascript">
+									$(taskStatusChanged);
+									function taskStatusChanged()
+									{
+										val=$("select[name='task_status']").val();
+										if(val == "changing")
+											$("#remind_days_row").fadeIn();
+										else
+											$("#remind_days_row").fadeOut();
+									}
+								</script>
 							</div>	
 					</div>
 				</div>

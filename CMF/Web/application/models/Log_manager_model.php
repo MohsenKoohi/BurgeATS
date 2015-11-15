@@ -44,6 +44,7 @@ class Log_manager_model extends CI_Model
 
 		,"CUSTOMER_ADD"			=>1001
 		,"CUSTOMER_INFO_CHANGE"	=>1002
+		,"CUSTOMER_TASK_EXEC"	=>1003
 
 		,"TASK_ADD"					=>1101
 		,"TASK_INFO_CHANGE"		=>1102

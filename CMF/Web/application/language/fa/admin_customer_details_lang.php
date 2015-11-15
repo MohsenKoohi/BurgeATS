@@ -49,3 +49,9 @@ $lang['task_last_exec_user']="کاربر اجرا کننده";
 $lang['user_name']="نام";
 $lang['user_code']="کد";
 
+$lang['task_exec_result']="نتیجه اجرا";
+$lang['task_exec_result_file']="فایل";
+$lang['task_exec_remind_in']="اجرای مجدد پس از";
+$lang['days']="روز";
+$lang['task_exec_request_manager_note']="نیازمند بررسی مدیر";
+$lang['task_saved_successfully']="اجرای وظیفه  با موفقیت ذخیره شد.";

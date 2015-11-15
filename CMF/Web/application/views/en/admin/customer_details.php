@@ -3,11 +3,7 @@
 		<h1>{customer_details_text}</h1>
 
 		<style type="text/css">
-			.row.even-odd-bg span
-			{
-				font-size: .8em;
-				//color:#555;
-			}
+			
 
 			.row.even-odd-bg .button-primary
 			{
@@ -26,10 +22,18 @@
 				overflow:hidden;
 				text-overflow: ellipsis;
 			}
+
+			.row.even-odd-bg div.nine.columns
+			{
+				font-size:1.2em;
+			}
 		</style>
 
 		<div class="tab-container">
 			<ul class="tabs">
+				<?php if(isset($task_info)) { ?>
+				<li><a href="#tasks">{tasks_text}</a></li>
+				<?php } ?>
 				<li><a href="#props">{properties_text}</a></li>
 				<li><a href="#logs">{customer_logs_text}</a></li>
 			</ul>
@@ -80,6 +84,118 @@
 					});
 				});
 			</script>
+
+			<?php if(isset($task_info)) { ?>
+				<div class="tab" id="tasks" style="">
+					<div class="container">
+						<h2>{tasks_text}</h2>	
+						<div class="separated">
+							<h3>{task_specs_text}</h3>
+							<div class="row even-odd-bg dont-magnify" >
+								<div class="three columns">
+									{task_name_text}
+								</div>
+								<div class="nine columns">
+									<?php echo $task_info['task_name'];?>
+								</div>
+							</div>
+							<div class="row even-odd-bg dont-magnify" >
+								<div class="three columns">
+									{task_desc_text}
+								</div>
+								<div class="nine columns">
+									<?php echo nl2br($task_info['task_desc']);?>
+								</div>
+							</div>
+						</div>
+							<br><br>
+
+							<?php if($task_exec_info) { ?>
+								<div class="separated">
+									<h3>{task_last_exec_results_text}</h3>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											{task_status_text}
+										</div>
+										<div class="eight columns">
+											<?php 
+												echo ${"task_status_".$task_exec_info['te_status']."_text"};
+											?>
+										</div>
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											{task_exec_count_text}
+										</div>
+										<div class="eight columns">
+											<?php echo $task_exec_info['te_exec_count']; ?>
+										</div>
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											{task_last_exec_time_text}
+										</div>
+										<div class="eight columns">
+											<?php echo $task_exec_info['te_last_exec_timestamp']; ?>
+										</div>
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											{task_last_exec_user_text}
+										</div>
+										<div class="eight columns">
+											{user_name_text}: <?php echo $task_exec_info['user_name']; ?>
+											- {user_code_text}: <?php echo $task_exec_info['user_code']; ?>
+										</div>
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											{task_last_exec_result_text}
+										</div>
+										<div class="eight columns">
+											<?php echo nl2br($task_exec_info['te_last_exec_result']); ?>
+											<br>
+											<?php echo ($task_exec_info['te_last_exec_result_file_name']); ?>
+										</div>
+									</div>
+
+									<?php if($task_exec_info['te_last_exec_requires_manager_note']) { ?>
+										<div class="row even-odd-bg dont-magnify" >
+											<div class="three columns">
+												{task_last_exec_manager_note_text}
+											</div>
+											<div class="eight columns">
+												<?php echo nl2br($task_exec_info['te_last_exec_manager_note']); ?>
+											</div>
+										</div>
+									<?php } ?>
+								</div>
+								<br><br>
+							<?php } ?>
+							
+							<div class="separated">
+								<h3>{task_exec_text}</h3>
+								<?php echo form_open(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
+									<input type="hidden" name="post_type" value="task_exec" />	
+									<input type="hidden" name="customer_id" value="<?php echo $customer_id ?>" />	
+									<input type="hidden" name="task_id" value="<?php echo $task_id ?>" />
+									<span></span>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="six columns">
+											<label>{desc_text}</label>
+											<input type="text" name="desc" class="full-width" />
+										</div>					
+									</div>
+									<br><br>
+									<div class="row">
+											<div class="four columns">&nbsp;</div>
+											<input type="submit" class=" button-primary four columns" value="{save_text}"/>
+									</div>				
+								</form>
+							</div>	
+					</div>
+				</div>
+			<?php } ?>
 			<div class="tab" id="props" style="">
 				<div class="container">
 					<h2>{properties_text}</h2>	

@@ -252,6 +252,9 @@ class Customer extends Burge_CMF_Controller {
 
 		$this->data['task_info']=$task_info;
 
+		$this->load->model("task_exec_manager_model");
+		$this->data['task_exec_info']=$this->task_exec_manager_model->get_task_exec_info($task_id,$customer_id);
+		bprint_r($this->data['task_exec_info']);
 
 
 	}

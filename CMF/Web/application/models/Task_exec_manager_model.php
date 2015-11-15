@@ -14,6 +14,11 @@ class Task_exec_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_task_statuses()
+	{
+		return $this->task_statuses;
+	}
+
 	public function install()
 	{
 		$table_name=$this->db->dbprefix($this->task_exec_table); 
@@ -23,12 +28,13 @@ class Task_exec_manager_model extends CI_Model
 			"CREATE TABLE IF NOT EXISTS $table_name (
 				`te_task_id` int NOT NULL
 				,`te_customer_id` int NOT NULL
-				,`te_status` enum($task_statuses_text)
+				,`te_status` enum($task_statuses_text) DEFAULT 'changing'
 				,`te_last_exec_user_id` int
 				,`te_last_exec_timestamp` DATETIME
 				,`te_last_exec_result` varchar(500)
 				,`te_last_exec_result_file_name` varchar(200)
 				,`te_last_exec_requires_manager_note` tinyint DEFAULT 0
+				,`te_last_exec_manager_note` varchar(500) 
 				,`te_exec_count` tinyint DEFAULT 0
 				,PRIMARY KEY (te_task_id,te_customer_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
@@ -135,4 +141,18 @@ class Task_exec_manager_model extends CI_Model
 		return $result_array;
 	}
 
+	public function get_task_exec_info($task_id,$customer_id)
+	{	
+		$this->db->select($this->task_exec_table.".* , user_name,user_code");
+		$this->db->from($this->task_exec_table);
+		$this->db->join("user","user_id = te_last_exec_user_id","left");
+		$this->db->where(array(
+			"te_task_id"=>$task_id
+			,"te_customer_id"=>$customer_id
+		));
+
+		$result=$this->db->get();
+
+		return $result->row_array();
+	}
 }

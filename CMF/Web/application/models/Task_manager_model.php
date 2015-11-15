@@ -80,6 +80,9 @@ class Task_manager_model extends CI_Model
 
 	public function check_user_can_execute_task($user_id,$task_id)
 	{
+		//we may check if task is active 
+		//in future
+
 		$result=$this->db->get_where($this->task_user_table
 			,array(
 				"tu_task_id"=>$task_id

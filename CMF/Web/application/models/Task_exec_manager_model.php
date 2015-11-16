@@ -112,6 +112,7 @@ class Task_exec_manager_model extends CI_Model
 		unset($props['te_last_exec_user_id']);
 		unset($props['te_last_exec_timestamp']);
 		
+		$props['te_last_exec_result']=nl2br($props['te_last_exec_result']);
 		$props=delete_prefix_of_indexes($props,"te_");
 
 		$this->log_manager_model->info("CUSTOMER_TASK_EXEC",$props);

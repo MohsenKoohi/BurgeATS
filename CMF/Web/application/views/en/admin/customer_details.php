@@ -472,14 +472,15 @@
 									<label class="big-font">#<?php echo $i++;?></label>
 								</div>
 								<?php 
+									$c=1;
 									if($log)
-									foreach ($log as $key => $value) { 
+										foreach ($log as $key => $value) { 
 								?>
-									<div class="three columns eng ltr">
-										<span><?php echo $key;?></span>
-										<label class="eng ltr"><?php echo $value;?></label>
+									<div class="three columns eng ltr separated">
+										<label><?php echo $key;?></label>
+										<span class="eng ltr"><?php echo $value;?></span>
 									</div>
-								<?php } ?>				
+								<?php if($c++%4==3)echo "<br>";} ?>				
 							</div>
 						<?php } ?>
 						<script type="text/javascript">

@@ -27,3 +27,31 @@ $lang['page']="Page";
 $lang['total_results']="Total Results";
 $lang['results']="Results";
 $lang['to']="to";
+
+
+$lang['tasks']="Tasks";
+
+$lang['task_last_exec_results']="Previous Execution Result";
+$lang['task_specs']="Task Specifications";
+$lang['task_exec']="Execution";
+
+$lang['task_name']="Name";
+$lang['task_desc']="Description";
+$lang['task_status']="Status";
+$lang['task_status_changing']="Changing";
+$lang['task_status_complete']="Complete";
+$lang['task_status_canceled']="Canceled";
+$lang['task_last_exec_time']="Date";
+$lang['task_last_exec_result']="Result";
+$lang['task_exec_count']="Executions count";
+$lang['task_last_exec_manager_note']="Manager note";
+$lang['task_last_exec_user']="Executed by user";
+$lang['user_name']="Name";
+$lang['user_code']="Code";
+
+$lang['task_exec_result']="Result";
+$lang['task_exec_result_file']="File";
+$lang['task_exec_remind_in']="Repeat execution after";
+$lang['days']="days";
+$lang['task_exec_request_manager_note']="Requires manager note";
+$lang['task_saved_successfully']="Task execution saved successfully.";

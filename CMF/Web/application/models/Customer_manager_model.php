@@ -214,6 +214,23 @@ class Customer_manager_model extends CI_Model
 		return $this->customer_log_types;
 	}
 
+	public function get_task_exec_file_path($customer_id,$file_name)
+	{
+		$dir=$this->get_customer_directory($customer_id);	
+		return $dir."/".$file_name;
+	}
+
+	public function add_and_move_customer_task_exec_file($props)
+	{
+		$dir=$this->get_customer_directory($props['customer_id']);
+		$new_filename="task-exec-".$props['task_id']."-".$props['exec_count'].".".$props['file_extension'];
+		$new_path=$dir."/".$new_filename;
+
+		@move_uploaded_file($props['temp_path'], $new_path);
+
+		return $new_filename;
+	}
+
 	public function add_customer_log($customer_id,$log_type,$desc)
 	{
 		if(isset($this->customer_log_types[$log_type]))
@@ -271,7 +288,7 @@ class Customer_manager_model extends CI_Model
 
 		foreach($file_names as $fn)
 		{
-			if("." === $fn|| ".." === $fn)
+			if(!preg_match("/^log-/", $fn))
 				continue;
 
 			$tmp=explode(".", $fn);
@@ -318,7 +335,7 @@ class Customer_manager_model extends CI_Model
 		$ext=$this->customer_log_file_extension;
 		$tp=sprintf("%02d",$type_index);
 
-		$log_path=$customer_dir."/".$dt."#".$tp.".".$ext;
+		$log_path=$customer_dir."/log-".$dt."#".$tp.".".$ext;
 		
 		return $log_path;
 	}

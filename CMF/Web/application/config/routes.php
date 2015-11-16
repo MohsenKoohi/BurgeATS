@@ -64,6 +64,7 @@ $route[ADMIN_URL_FOLDER."/customer/details/(\d+)/(\d+)"] ="customer/customer_det
 $route[ADMIN_URL_FOLDER."/task"]									="task";
 $route[ADMIN_URL_FOLDER."/task/details/(\d+)"]				="task/task_details/$1";
 $route[ADMIN_URL_FOLDER."/task_exec"]							="task_exec";
+$route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]="task_exec/get_file/$1/$2";
 
 
 

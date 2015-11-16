@@ -85,6 +85,21 @@ class Task_exec_manager_model extends CI_Model
 		return $ret;		
 	}
 
+	public function get_task_exec_count($customer_id,$task_id)
+	{
+		$this->db->select("te_exec_count");
+		$result=$this->db->get_where($this->task_exec_table,array(
+			"te_customer_id"	=> $customer_id
+			,"te_task_id"		=> $task_id
+		));
+
+		$row=$result->row_array();
+		if($row)
+			return $row['te_exec_count'];
+		else
+			return 0;
+	}
+
 	public function update_task_exec_info($customer_id, $task_id, $props_array)
 	{
 		$props=select_allowed_elements($props_array,$this->task_exec_props_for_write);

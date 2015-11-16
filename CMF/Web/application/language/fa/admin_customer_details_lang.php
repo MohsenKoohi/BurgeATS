@@ -55,3 +55,4 @@ $lang['task_exec_remind_in']="اجرای مجدد پس از";
 $lang['days']="روز";
 $lang['task_exec_request_manager_note']="نیازمند بررسی مدیر";
 $lang['task_saved_successfully']="اجرای وظیفه  با موفقیت ذخیره شد.";
+$lang['task_last_exec_result_file']="فایل ضمیمه آخرین اجرا";

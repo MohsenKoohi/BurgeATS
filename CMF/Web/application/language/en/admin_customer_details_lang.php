@@ -55,3 +55,4 @@ $lang['task_exec_remind_in']="Repeat execution after";
 $lang['days']="days";
 $lang['task_exec_request_manager_note']="Requires manager note";
 $lang['task_saved_successfully']="Task execution saved successfully.";
+$lang['task_last_exec_result_file']="Attached file";

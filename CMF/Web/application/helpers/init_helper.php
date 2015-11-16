@@ -36,9 +36,19 @@ function &get_links()
 		,'admin_task_details_format'	=> ADMIN_SURL_LANG."/task/details/task_id"
 
 		,'admin_task_exec'				=> ADMIN_SURL_LANG."/task_exec"
+		,'admin_task_exec_file_format'=> ADMIN_SURL_LANG."/task_exec/get_file/customer_id/file_name"
 	);
 	
 	return $LINKS;
+}
+
+function get_admin_task_exec_file($customer_id,$file_name)
+{
+	return str_replace(
+		array("customer_id","file_name")
+		,array($customer_id,$file_name)
+		, get_link("admin_task_exec_file_format")
+	);
 }
 
 function get_admin_task_details_link($task_id, $do_not_set_lang=FALSE)

@@ -246,7 +246,7 @@ class Customer extends Burge_CMF_Controller {
 			return;
 
 		$this->load->model("task_exec_manager_model");
-
+		
 		if($this->input->post("post_type") === "task_exec")
 		{
 			$date_function=DATE_FUNCTION;
@@ -261,7 +261,25 @@ class Customer extends Burge_CMF_Controller {
 			}
 
 			$result=$this->input->post("task_exec_result");
-			$file="";//filename
+
+			if(isset($_FILES['task_exec_file']) && $_FILES['task_exec_file']['name'])
+			{
+				$exec_count=1+$this->task_exec_manager_model->get_task_exec_count($customer_id,$task_id);
+				$file_name=$_FILES['task_exec_file']['name'];
+				$file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
+				$temp_path=$_FILES['task_exec_file']['tmp_name'];
+				
+				$file=$this->customer_manager_model->add_and_move_customer_task_exec_file(array(
+					"customer_id"		=>$customer_id
+					,"task_id"			=>$task_id
+					,"exec_count"		=>$exec_count
+					,"file_extension"	=>$file_extension
+					,"temp_path"		=>$temp_path
+				));
+				
+			}
+			else
+				$file="";
 			$requires_manager_note=("on" === $this->input->post("task_exec_requires_manager_note"));
 
 			$props=array(

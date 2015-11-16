@@ -153,8 +153,21 @@
 										</div>
 										<div class="eight columns">
 											<?php echo nl2br($task_exec_info['te_last_exec_result']); ?>
-											<br>
-											<?php echo ($task_exec_info['te_last_exec_result_file_name']); ?>
+										</div>
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											{task_last_exec_result_file_text}
+										</div>
+										<div class="eight columns">
+											<?php 
+												$filename=$task_exec_info['te_last_exec_result_file_name']; 
+												if($filename)
+												{
+													$link=get_admin_task_exec_file($customer_id,$filename);
+													echo "<a target='_blank' href='$link'>$filename</a>";
+												}
+											?>
 										</div>
 									</div>
 
@@ -173,7 +186,7 @@
 							
 							<div class="separated">
 								<h3>{task_exec_text}</h3>
-								<?php echo form_open(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
+								<?php echo form_open_multipart(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
 									<input type="hidden" name="post_type" value="task_exec" />	
 									<input type="hidden" name="customer_id" value="<?php echo $customer_id ?>" />	
 									<input type="hidden" name="task_id" value="<?php echo $task_id ?>" />

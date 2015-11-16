@@ -108,11 +108,17 @@ class Task_exec_manager_model extends CI_Model
 		$props['te_task_id']=$task_id;
 
 		$this->load->model("customer_manager_model");
+		
+		unset($props['te_last_exec_user_id']);
+		unset($props['te_last_exec_timestamp']);
+		
+		$props=delete_prefix_of_indexes($props,"te_");
 
 		$this->log_manager_model->info("CUSTOMER_TASK_EXEC",$props);
+		
 		$this->customer_manager_model->add_customer_log($customer_id,'CUSTOMER_TASK_EXEC',$props);
 
-		
+		return;
 	}
 
 	//this is our scheduler method, 

@@ -47,13 +47,27 @@
 						<?php
 							foreach ($potential_users as $user) {
 						?>
-							<div class="five columns separated half-col-margin">
-								<div class="six columns"><?php echo $user['user_email'];?></div>
-								<div class="six columns">
+							<div class="eleven columns separated half-col-margin">
+								<div class="five columns"><?php echo $user['user_name']." 	- $user_code_text:".$user['user_code'];?></div>
+								<div class="three columns">
+									{task_exec_text} :‌ 
 									<input type="checkbox" 	class="graphical"
 										name="task_user_<?php echo $user['user_id'];?>"								
 										<?php 
+
 											if(in_array($user['user_id'],$task_users_ids)) 
+												echo "checked";
+										?>
+									/>
+								</div>
+								<div class="one column">&nbsp;
+								</div>
+								<div class="three columns">
+									{task_manager_text} : 
+									<input type="checkbox" 	class="graphical"
+										name="task_user_<?php echo $user['user_id'];?>_is_manager"								
+										<?php 
+											if(in_array($user['user_id'],$task_managers_ids)) 
 												echo "checked";
 										?>
 									/>

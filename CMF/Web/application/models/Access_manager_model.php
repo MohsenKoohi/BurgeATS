@@ -154,7 +154,7 @@ class Access_manager_model extends CI_Model
 
 	public function get_users_have_access_to_module($module_id)
 	{	
-		$this->db->select("user.user_email,user.user_id");
+		$this->db->select("user.user_name,user.user_code,user.user_id");
 		$this->db->from("user");
 		$this->db->join("access","user.user_id = access.user_id","left");
 		$this->db->where(array("module_id"=>$module_id));

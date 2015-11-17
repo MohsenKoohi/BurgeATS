@@ -60,7 +60,18 @@ class Task extends Burge_CMF_Controller {
 
 		$this->data['potential_users']=$this->access_manager_model->get_users_have_access_to_module("task_exec");
 		$this->data['task_info']=$this->task_manager_model->get_task_details($task_id);
-		$this->data['task_users_ids']=$this->task_manager_model->get_task_users_ids($task_id);
+		
+		$task_users=$this->task_manager_model->get_task_users($task_id);
+		$task_users_ids=array();
+		$task_managers_ids=array();
+		foreach ($task_users as $tu)
+		{
+			$task_users_ids[]=$tu['user_id'];
+			if($tu['is_manager'])
+				$task_managers_ids[]=$tu['user_id'];
+		}
+		$this->data['task_users_ids']=$task_users_ids;
+		$this->data['task_managers_ids']=$task_managers_ids;
 
 		$message=get_message();
 		if($message)

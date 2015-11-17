@@ -36,6 +36,7 @@ class Task_manager_model extends CI_Model
 			"CREATE TABLE IF NOT EXISTS $table_name (
 				`tu_task_id` int NOT NULL
 				,`tu_user_id` int NOT NULL
+				,`tu_is_manager` tinyint DEFAULT 0
 				,PRIMARY KEY (tu_task_id, tu_user_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
@@ -68,7 +69,7 @@ class Task_manager_model extends CI_Model
 	//returns all users of a task
 	public function get_task_users($task_id)
 	{	
-		$this->db->select("task_user.* , user.user_email");
+		$this->db->select("task_user.tu_is_manager as is_manager, user_id , user_name , user_code");
 		$this->db->from("task_user");
 		$this->db->join("user","tu_user_id = user.user_id","left");
 		$this->db->where("tu_task_id",$task_id);

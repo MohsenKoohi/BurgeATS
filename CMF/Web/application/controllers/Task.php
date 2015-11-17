@@ -99,15 +99,21 @@ class Task extends Burge_CMF_Controller {
 		$pusers=$this->access_manager_model->get_users_have_access_to_module("task_exec");
 		
 		$task_users=array();
+		$task_managers=array();
 		foreach ($pusers as $user)
 		{
 			$user_id=$user['user_id'];
 			$iname="task_user_".$user_id;
 			if($this->input->post($iname) === "on")
+			{
 				$task_users[]=$user_id;
+				$iname="task_user_is_manager_".$user_id;
+				if($this->input->post($iname) === "on")
+					$task_managers[]=$user_id;
+			}
 		}
 
-		$this->task_manager_model->set_task_users($task_id,$task_users);
+		$this->task_manager_model->set_task_users($task_id,$task_users,$task_managers);
 
 		set_message($this->lang->line("task_changed_successfully"));
 

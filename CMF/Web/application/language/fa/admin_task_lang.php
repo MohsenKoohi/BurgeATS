@@ -32,5 +32,5 @@ $lang['task_users']="کاربران";
 
 $lang["task_changed_successfully"]="تغییرات با موفقیت ثبت شد.";
 $lang['user_code']="کد";
-$lang['task_manager']="اجرا";
-$lang['task_exec']="مدیر";
+$lang['task_manager']="مدیر";
+$lang['task_exec']="اجرا";

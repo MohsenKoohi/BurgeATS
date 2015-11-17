@@ -48,10 +48,11 @@
 							foreach ($potential_users as $user) {
 						?>
 							<div class="eleven columns separated half-col-margin">
-								<div class="five columns"><?php echo $user['user_name']." 	- $user_code_text:".$user['user_code'];?></div>
-								<div class="three columns">
+								<div class="five columns"><?php echo $user['user_name']." ( $user_code_text ".$user['user_code']." )";?></div>
+								<div class="three columns user_exec">
 									{task_exec_text} :‌ 
-									<input type="checkbox" 	class="graphical"
+									<input type="checkbox" 	class="graphical" 
+										onchange="userChanged(this);"
 										name="task_user_<?php echo $user['user_id'];?>"								
 										<?php 
 
@@ -62,10 +63,10 @@
 								</div>
 								<div class="one column">&nbsp;
 								</div>
-								<div class="three columns">
+								<div class="three columns" id="mid_<?php echo $user['user_id'];?>">
 									{task_manager_text} : 
 									<input type="checkbox" 	class="graphical"
-										name="task_user_<?php echo $user['user_id'];?>_is_manager"								
+										name="task_user_is_manager_<?php echo $user['user_id'];?>"								
 										<?php 
 											if(in_array($user['user_id'],$task_managers_ids)) 
 												echo "checked";
@@ -76,6 +77,21 @@
 						<?php 
 							}
 						?>
+						<script type="text/javascript">
+							$(function()
+							{
+								$(".user_exec input").trigger("change");
+							});
+							function userChanged(el)
+							{	
+								v=$(el).prop("name").split("task_user_");
+								uid=v[1];
+								if($(el).prop("checked"))
+									$("#mid_"+uid).fadeIn();
+								else
+									$("#mid_"+uid).fadeOut();
+							}
+						</script>
 					</div>
 				</div>
 				<div class="row">

@@ -30,5 +30,5 @@ $lang['task_users']="Users";
 
 $lang["task_changed_successfully"]="Task info changed successfully.";
 $lang['user_code']="Code";
-$lang['task_manager']="Execute";
-$lang['task_exec']="Manager";
+$lang['task_manager']="Manager";
+$lang['task_exec']="Execute";

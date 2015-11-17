@@ -120,7 +120,7 @@ class Task_manager_model extends CI_Model
 		return $result->result_array();
 	}
 
-	public function set_task_users($task_id,$user_ids)
+	public function set_task_users($task_id,$user_ids,$manager_ids)
 	{
 		$this->log_manager_model->info("TASK_USERS_CHANGE",array(
 			"task_id"=>$task_id
@@ -133,11 +133,16 @@ class Task_manager_model extends CI_Model
 		if(!$user_ids)
 			return;
 		
-		$arr=array();
+		$batch_arr=array();
 		foreach($user_ids as $uid)
-			$arr[]=array("tu_task_id"=>$task_id, "tu_user_id"=>$uid);
+			$batch_arr[]=array(
+				"tu_task_id"=>$task_id
+				,"tu_user_id"=>$uid
+				,'tu_is_manager'=>(int)in_array($uid,$manager_ids)
+			);
+	
 
-		$this->db->insert_batch($this->task_user_table,$arr);
+		$this->db->insert_batch($this->task_user_table,$batch_arr);
 
 		return;
 	}

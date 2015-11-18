@@ -17,10 +17,11 @@
 				color:#0C7B77;
 			}
 
-			.row.even-odd-bg div label
+			.row.even-odd-bg div label,.row.even-odd-bg div span
 			{
 				overflow:hidden;
 				text-overflow: ellipsis;
+				display: block;
 			}
 
 			.row.even-odd-bg div.nine.columns
@@ -564,8 +565,8 @@
 						</div>		
 						<br>
 						<?php $i=$logs_start;foreach($customer_logs as $log) { ?>
-							<div class="row even-odd-bg" >
-								<div class="three columns">
+							<div class="row even-odd-bg" style="display:flex;flex-wrap:wrap">
+								<div class="three columns" style="">
 									<label class="big-font">#<?php echo $i++;?></label>
 								</div>
 								<?php 
@@ -573,11 +574,11 @@
 									if($log)
 										foreach ($log as $key => $value) { 
 								?>
-									<div class="three columns eng ltr separated">
+									<div class="three columns eng ltr separated " style="">
 										<label><?php echo $key;?></label>
 										<span class="eng ltr"><?php echo $value;?></span>
 									</div>
-								<?php if($c++%4==3)echo "<br>";} ?>				
+								<?php } ?>				
 							</div>
 						<?php } ?>
 						<script type="text/javascript">

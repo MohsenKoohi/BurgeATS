@@ -33,4 +33,3 @@ $lang['task_status_complete']="کامل";
 $lang['task_status_canceled']="لغو شده";
 $lang['status']="وضعیت";
 $lang['executer']="اجرا کننده";
-$lang['requires_manager_note']="نیازمند بررسی مدیر";

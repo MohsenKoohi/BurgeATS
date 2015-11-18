@@ -155,21 +155,24 @@
 											<?php echo nl2br($task_exec_info['te_last_exec_result']); ?>
 										</div>
 									</div>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											{task_last_exec_result_file_text}
-										</div>
-										<div class="eight columns">
-											<?php 
-												$filename=$task_exec_info['te_last_exec_result_file_name']; 
-												if($filename)
-												{
-													$link=get_admin_task_exec_file($customer_id,$filename);
-													echo "<a target='_blank' href='$link'>$filename</a>";
-												}
-											?>
-										</div>
-									</div>
+									<?php 
+										$filename=$task_exec_info['te_last_exec_result_file_name']; 
+										if($filename)
+										{
+											$link=get_admin_task_exec_file($customer_id,$filename);
+									?>
+											
+											<div class="row even-odd-bg dont-magnify" >
+												<div class="three columns">
+													{task_last_exec_result_file_text}
+												</div>
+												<div class="eight columns">
+													<?php echo "<a target='_blank' href='$link'>$filename</a>";?>
+												</div>
+											</div>
+									<?php 
+										}
+									?>
 
 									<?php if($task_exec_info['te_last_exec_requires_manager_note']) { ?>
 										<div class="row even-odd-bg dont-magnify" >

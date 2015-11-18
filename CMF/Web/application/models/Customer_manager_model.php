@@ -164,18 +164,15 @@ class Customer_manager_model extends CI_Model
 		));
 		$id=$this->db->insert_id();
 
-		$this->log_manager_model->info("CUSTOMER_ADD",array(
-			"customer_name"		=>	$name
-			,"customer_id"			=>	$id
-			,"customer_type"		=>	$type
-			,"desc"					=>	$desc
-		));
-
-		$this->add_customer_log($id,'CUSTOMER_ADD',array(
+		$props=array(
 			"cutomer_name"		=>	$name
 			,"customer_type"	=>	$type
 			,"desc"				=>	$desc
-		));
+		);
+		$this->add_customer_log($id,'CUSTOMER_ADD',$props);
+		
+		$props['customer_id']=$id;
+		$this->log_manager_model->info("CUSTOMER_ADD",$props);
 
 		return TRUE;
 	}

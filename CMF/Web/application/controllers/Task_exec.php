@@ -19,13 +19,85 @@ class Task_exec extends Burge_CMF_Controller {
 		$user_id=$this->user->get_id();
 		
 		$this->data['tasks']=$this->task_exec_manager_model->get_tasks($user_id, 10);
-			
+		
+		$this->executed_tasks_tab();		
+		
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_task_exec",TRUE));
 		$this->data['header_title']=$this->lang->line("tasks_exec");
 		
 		$this->send_admin_output("task_exec");
 
 		return;	 
+	}
+
+	private function executed_tasks_tab()
+	{
+		$user_id=$this->user->get_id();
+
+		$this->data['user_tasks']=$this->task_manager_model->get_user_tasks($user_id,FALSE);
+		$this->data['users_info']=$this->user_manager_model->get_all_users_info();
+		
+		$this->data['raw_page_url']=get_link("admin_task_exec");
+		
+		$filter=array();
+		$model_filter=array();
+
+		if($this->input->get("date"))
+		{
+			$date=$this->input->get("date");
+			$filter['date']=$date;
+
+			$date_splitted=explode("-", $date);
+			if(sizeof($date_splitted)==2)
+			{
+				$end=(int)$date_splitted[0];
+				$start=(int)$date_splitted[1];
+
+				$model_filter['end_interval']=$end;
+				$model_filter['start_interval']=$start;
+			}
+			else
+			{
+				$end=(int)$date;
+				$model_filter['end_interval']=$end;
+			}
+		}
+
+		if($this->input->get("task"))
+		{
+			$task_id=(int)$this->input->get("task");;
+			$filter['task']=$task_id;
+			$model_filter['task_id']=$task_id;
+		}
+
+		if($this->input->get("name"))
+		{
+			$customer_name=$this->input->get("name");
+			$filter['name']=$customer_name;
+			$model_filter['customer_name']=$customer_name;
+		}
+
+		if($this->input->get("user"))
+		{
+			$user_id=(int)$this->input->get("user");
+			$filter['user']=$user_id;
+			$model_filter['user_id']=$user_id;
+		}
+
+		if($this->input->get("note"))
+		{
+			$note=$this->input->get("note");
+			$filter['note']=$note;
+			$model_filter['requires_manager_note']=(int)("yes" === $note);
+		}
+
+
+
+
+
+		$this->data['filter']=$filter;
+
+		return;
 	}
 
 	public function get_file($customer_id,$file_name)

@@ -37,7 +37,7 @@
 		<div class="tab-container">
 			<ul class="tabs">
 				<li><a href="#exec">{execution_text}</a></li>
-				<li><a href="#logs">{logs_text}</a></li>
+				<li><a href="#logs">{executed_tasks_text}</a></li>
 			</ul>
 			<script type="text/javascript">
 				$(function(){
@@ -112,139 +112,171 @@
 
 			<div class="tab" id="logs">
 				<div class="container">
-					<h2>{customer_logs_text}</h2>
-					<?php if($customer_info) { ?>
-						<div class="container separated">
-							<div class="row filter">
-								<div class="three columns">
-									<label>{log_type_text}</label>
-									<select name="log_type" class="full-width en ltr">
-										<option value=""></option>
-										<?php
-											foreach ($log_types as $text=>$type)
-												echo "<option value='$text'>$text</option>";
-										?>
-									</select>
-								</div>
-								<div class="two columns results-search-again">
-									<label></label>
-									<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
-								</div>
+					<h2>{executed_tasks_text}</h2>
+					<div class="container separated">
+						<div class="row filter">
+							<div class="three columns">
+								<label>{date_text}</label>
+								<select name="date" class="full-width">
+									<option value=""></option>
+									<option value="0-0">{today_text}</option>
+									<option value="0-7">{this_week_text}</option>
+									<option value="0-30">{this_month_text}</option>
+								</select>
+							</div>
+							<div class="three columns half-col-margin">
+								<label>{task_name_text}</label>
+								<select name="task" class="full-width">
+									<option value=""></option>
+									<?php
+										foreach($user_tasks as $task)
+											echo "<option value='".$task['task_id']."'>".$task['task_name']."</option>";
+									?>
+								</select>
+							</div>
+							<div class="three columns half-col-margin">
+								<label>{customer_name_text}</label>
+								<input type="text" name="name" class="full-width"/>
+							</div>
+							<div class="three columns">
+								<label>{executer_user_text}</label>
+								<select name="user" class="full-width">
+									<option value=""></option>
+									<?php
+										foreach($users_info as $user)
+											echo "<option value='".$user['user_id']."'>".$user['user_name']." ( ".$code_text.": ".$user['user_code']." )</option>";
+									?>
+								</select>
+							</div>
+							<div class="three columns half-col-margin">
+								<label>{requires_manager_note_text}</label>
+								<select name="note" class="full-width">
+									<option value=""></option>
+									<option value="yes">{yes_text}</option>
+									<option value="no">{no_text}</option>
+								</select>
 							</div>
 							
-							<div class="row results-count" >
-								<div class="six columns">
-									<label>
-										{results_text} {logs_start} {to_text} {logs_end} - {total_results_text}: {logs_total}
-									</label>
-								</div>
-								<div class="three columns results-page-select">
-									<select class="full-width" onchange="pageChanged($(this).val());">
-										<?php 
-											for($i=1;$i<=$logs_total_pages;$i++)
-											{
-												$sel="";
-												if($i == $logs_current_page)
-													$sel="selected";
-
-												echo "<option value='$i' $sel>$page_text $i</option>";
-											}
-										?>
-									</select>
-								</div>
+							<div class="two columns results-search-again half-col-margin">
+								<label></label>
+								<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
 							</div>
-
-							<script type="text/javascript">
-								var initialFilters=[];
-								<?php
-									foreach($filter as $key => $val)
-										echo 'initialFilters["'.$key.'"]="'.$val.'";';
-								?>
-								var rawPageUrl="{raw_page_url}";
-
-								$(function()
-								{
-									$(".filter input, .filter select").keypress(function(ev)
-									{
-										if(13 != ev.keyCode)
-											return;
-
-										searchAgain();
-									});
-
-									for(i in initialFilters)
-										$(".filter [name='"+i+"']").val(initialFilters[i]);
-								});
-
-								function searchAgain()
-								{
-									document.location=getCustomerSearchUrl(getSearchConditions())+"#logs";
-								}
-
-								function getSearchConditions()
-								{
-									var conds=[];
-
-									$(".filter input, .filter select").each(
-										function(index,el)
+							
+						</div>
+						
+						<div class="row results-count" >
+							<div class="six columns">
+								<label>
+									{results_text} {logs_start} {to_text} {logs_end} - {total_results_text}: {logs_total}
+								</label>
+							</div>
+							<div class="three columns results-page-select">
+								<select class="full-width" onchange="pageChanged($(this).val());">
+									<?php 
+										for($i=1;$i<=$logs_total_pages;$i++)
 										{
-											var el=$(el);
+											$sel="";
+											if($i == $logs_current_page)
+												$sel="selected";
 
-											if(el.prop("type")=="button")
-												return;
-
-											if(el.val())
-												conds[el.prop("name")]=el.val();
-
+											echo "<option value='$i' $sel>$page_text $i</option>";
 										}
-									);
-									
-									return conds;
-								}
-
-								function getCustomerSearchUrl(filters)
-								{
-									var ret=rawPageUrl+"?";
-									for(i in filters)
-										ret+="&"+i+"="+encodeURIComponent(filters[i].trim().replace(/\s+/g," "));
-									return ret;
-								}
-
-								function pageChanged(pageNumber)
-								{
-									document.location=getCustomerSearchUrl(initialFilters)+"&page="+pageNumber+"#logs";
-								}
-							</script>
-						</div>		
-						<br>
-						<?php $i=$logs_start;foreach($customer_logs as $log) { ?>
-							<div class="row even-odd-bg" >
-								<div class="three columns">
-									<label class="big-font">#<?php echo $i++;?></label>
-								</div>
-								<?php 
-									if($log)
-									foreach ($log as $key => $value) { 
-								?>
-									<div class="three columns eng ltr">
-										<span><?php echo $key;?></span>
-										<label class="eng ltr"><?php echo $value;?></label>
-									</div>
-								<?php } ?>				
+									?>
+								</select>
 							</div>
-						<?php } ?>
+						</div>
+
 						<script type="text/javascript">
+							var initialFilters=[];
+							<?php
+								foreach($filter as $key => $val)
+									echo 'initialFilters["'.$key.'"]="'.$val.'";';
+							?>
+							var rawPageUrl="{raw_page_url}";
+
 							$(function()
 							{
-								$(".row.even-odd-bg div label").each(
+								$(".filter input, .filter select").keypress(function(ev)
+								{
+									if(13 != ev.keyCode)
+										return;
+
+									searchAgain();
+								});
+
+								for(i in initialFilters)
+									$(".filter [name='"+i+"']").val(initialFilters[i]);
+							});
+
+							function searchAgain()
+							{
+								document.location=getCustomerSearchUrl(getSearchConditions())+"#logs";
+							}
+
+							function getSearchConditions()
+							{
+								var conds=[];
+
+								$(".filter input, .filter select").each(
 									function(index,el)
 									{
-										$(el).prop("title",$(el).text());
+										var el=$(el);
+
+										if(el.prop("type")=="button")
+											return;
+
+										if(el.val())
+											conds[el.prop("name")]=el.val();
+
 									}
 								);
-							});
+								
+								return conds;
+							}
+
+							function getCustomerSearchUrl(filters)
+							{
+								var ret=rawPageUrl+"?";
+								for(i in filters)
+									ret+="&"+i+"="+encodeURIComponent(filters[i].trim().replace(/\s+/g," "));
+								return ret;
+							}
+
+							function pageChanged(pageNumber)
+							{
+								document.location=getCustomerSearchUrl(initialFilters)+"&page="+pageNumber+"#logs";
+							}
 						</script>
+					</div>		
+					<br>
+					<?php $i=$logs_start;foreach($customer_logs as $log) { ?>
+						<div class="row even-odd-bg" >
+							<div class="three columns">
+								<label class="big-font">#<?php echo $i++;?></label>
+							</div>
+							<?php 
+								if($log)
+								foreach ($log as $key => $value) { 
+							?>
+								<div class="three columns eng ltr">
+									<span><?php echo $key;?></span>
+									<label class="eng ltr"><?php echo $value;?></label>
+								</div>
+							<?php } ?>				
+						</div>
 					<?php } ?>
+					<script type="text/javascript">
+						$(function()
+						{
+							$(".row.even-odd-bg div label").each(
+								function(index,el)
+								{	
+									$(el).prop("title",$(el).text());
+								}
+							);
+						});
+					</script>
+					
 				</div>
 			<div>
 		</div>

@@ -290,7 +290,6 @@ class Customer extends Burge_CMF_Controller {
 				,"te_last_exec_result"						=>$result
 				,"te_last_exec_result_file_name"			=>$file
 				,"te_last_exec_requires_manager_note"	=>$requires_manager_note
-				,"te_last_exec_manager_note"				=>""
 			);
 
 			$this->task_exec_manager_model->update_task_exec_info($customer_id, $task_id, $props);

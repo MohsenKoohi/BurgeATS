@@ -21,7 +21,7 @@ $lang['desc']="توضیح";
 
 $lang['customer_logs']="فعالیت‌ها";
 $lang['log_type']="نوع فعالیت";
-$lang['search_again']="جستجوی مجدد";
+$lang['search_again']="جستجو";
 
 $lang['page']="صفحه";
 $lang['total_results']="تعداد کل نتایج";

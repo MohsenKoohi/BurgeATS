@@ -109,10 +109,14 @@ class Task_exec_manager_model extends CI_Model
 		$this->db->set("te_customer_id",$customer_id);
 		$this->db->set("te_task_id",$task_id);
 		$this->db->set($props);
+		if(!iset($props['te_last_exec_manager_note']))
+			$this->db->set("te_last_exec_manager_note",'NULL',FALSE);
 		$insert_sql=$this->db->get_compiled_insert($this->task_exec_table);
 		
 		$this->db->reset_query();
 		$this->db->set($props);
+		if(!iset($props['te_last_exec_manager_note']))
+			$this->db->set("te_last_exec_manager_note",'NULL',FALSE);
 		$this->db->set("te_exec_count","te_exec_count + 1",FALSE);
 	   $update_sql=$this->db->get_compiled_update($this->task_exec_table);
 	   $update_sql=preg_replace('/UPDATE.*?SET/',' ON DUPLICATE KEY UPDATE',$update_sql);

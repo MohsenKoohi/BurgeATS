@@ -108,12 +108,13 @@ class Task_manager_model extends CI_Model
 		return $ret;
 	}
 
-	public function get_user_tasks($user_id)
+	public function get_user_tasks($user_id,$task_should_be_active=TRUE)
 	{
 		$this->db->from($this->task_table);
 		$this->db->join($this->task_user_table,"task_id = tu_task_id");
 		$this->db->where("tu_user_id",$user_id);
-		$this->db->where("task_active",1);
+		if($task_should_be_active)
+			$this->db->where("task_active",1);
 		$this->db->order_by("task_priority DESC, task_name ASC");
 		$result=$this->db->get();
 

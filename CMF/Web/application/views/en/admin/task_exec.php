@@ -258,7 +258,9 @@
 									{comma_text} <?php echo $te['customer_name'] ?> 
 									{comma_text} {status_text}: <?php echo ${"task_status_".$te['te_status']."_text"}; ?>
 									{comma_text} {executer_text}: <?php echo $te['user_name']." (".$code_text.":".$te['user_code'].")";?>
-									{comma_text} {requires_manager_note_text}: <?php echo $te['te_last_exec_requires_manager_note'] ?>
+									<?php if($te['te_last_exec_requires_manager_note']) { ?>
+										{comma_text} {requires_manager_note_text}
+									<?php } ?>
 								</a>
 								
 							</div>

@@ -116,7 +116,7 @@
 					<div class="container separated">
 						<div class="row filter">
 							<div class="three columns">
-								<label>{date_text}</label>
+								<label>{last_exec_date_text}</label>
 								<select name="date" class="full-width">
 									<option value=""></option>
 									<option value="0-0">{today_text}</option>
@@ -139,7 +139,7 @@
 								<input type="text" name="name" class="full-width"/>
 							</div>
 							<div class="three columns">
-								<label>{executer_user_text}</label>
+								<label>{last_executer_user_text}</label>
 								<select name="user" class="full-width">
 									<option value=""></option>
 									<?php
@@ -249,20 +249,19 @@
 						</script>
 					</div>		
 					<br>
-					<?php $i=$logs_start;foreach($customer_logs as $log) { ?>
+					<?php $i=$logs_start;foreach($task_exec_info as $te) { ?>
 						<div class="row even-odd-bg" >
-							<div class="three columns">
-								<label class="big-font">#<?php echo $i++;?></label>
+							<div class="twleve columns">
+								<a href="<?php echo get_admin_customer_details_link($te['te_customer_id'],$te['te_task_id'],'tasks');?>" target="_blank">
+									<?php echo $i++;?> - 
+									<?php echo $te['task_name'] ?>
+									{comma_text} <?php echo $te['customer_name'] ?> 
+									{comma_text} {status_text}: <?php echo ${"task_status_".$te['te_status']."_text"}; ?>
+									{comma_text} {executer_text}: <?php echo $te['user_name']." (".$code_text.":".$te['user_code'].")";?>
+									{comma_text} {requires_manager_note_text}: <?php echo $te['te_last_exec_requires_manager_note'] ?>
+								</a>
+								
 							</div>
-							<?php 
-								if($log)
-								foreach ($log as $key => $value) { 
-							?>
-								<div class="three columns eng ltr">
-									<span><?php echo $key;?></span>
-									<label class="eng ltr"><?php echo $value;?></label>
-								</div>
-							<?php } ?>				
 						</div>
 					<?php } ?>
 					<script type="text/javascript">

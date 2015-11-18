@@ -16,15 +16,21 @@ $lang['total_results']="تعداد کل نتایج";
 $lang['results']="نتایج";
 $lang['to']="تا";
 
-$lang['date']="زمان اجرا";
+$lang['last_exec_date']="آخرین زمان اجرا";
 $lang['today']="امروز";
 $lang['this_week']="هفته گذشته";
 $lang['this_month']="ماه گذشته";
 
 $lang['task_name']="عنوان وظیفه";
 $lang['customer_name']="نام مشتری";
-$lang['executer_user']="کاربر اجراکننده";
+$lang['last_executer_user']="آخرین کاربر اجراکننده";
 $lang['requires_manager_note']="نیازمند بررسی مدیر";
 $lang['yes']="بله";
 $lang['no']="خیر";
 $lang['code']="کد";
+$lang['task_status_changing']="در حال تغییر";
+$lang['task_status_complete']="کامل";
+$lang['task_status_canceled']="لغو شده";
+$lang['status']="وضعیت";
+$lang['executer']="اجرا کننده";
+$lang['requires_manager_note']="نیازمند بررسی مدیر";

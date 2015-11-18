@@ -306,7 +306,14 @@ class Customer extends Burge_CMF_Controller {
 
 		$this->data['task_info']=$task_info;
 
-		$this->data['task_exec_info']=$this->task_exec_manager_model->get_task_exec_info($task_id,$customer_id);
+		$exec_info=$this->task_exec_manager_model->get_task_exec_info(array(
+			"task_id"=>$task_id
+			,"customer_id"=>$customer_id
+		));
+		if($exec_info)
+			$this->data['task_exec_info']=$exec_info[0];
+		else
+			$this->data['task_exec_info']=NULL;
 		
 		$this->data['task_exec_statuses']=$this->task_exec_manager_model->get_task_statuses();
 

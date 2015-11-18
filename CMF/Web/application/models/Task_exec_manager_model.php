@@ -205,18 +205,63 @@ class Task_exec_manager_model extends CI_Model
 		return $result_array;
 	}
 
-	public function get_task_exec_info($task_id,$customer_id)
+	public function get_task_exec_info($filter)
 	{	
-		$this->db->select($this->task_exec_table.".* , user_name,user_code");
-		$this->db->from($this->task_exec_table);
-		$this->db->join("user","user_id = te_last_exec_user_id","left");
-		$this->db->where(array(
-			"te_task_id"=>$task_id
-			,"te_customer_id"=>$customer_id
-		));
+		$this->db->select($this->task_exec_table.".* , user_name,user_code , customer.customer_name, task_name");
 
+		$this->set_task_exec_info_query_fields($filter);
+		
 		$result=$this->db->get();
 
-		return $result->row_array();
+		return $result->result_array();
+	}
+
+	public function get_task_exec_info_total($filter)
+	{
+		$this->db->select("COUNT(*) as count");
+
+		$this->set_task_exec_info_query_fields($filter);
+
+		$result=$this->db->get();
+		$row=$result->row_array();
+
+		return $row['count'];		
+	}
+
+	private function set_task_exec_info_query_fields($filter)
+	{
+		$this->db->from($this->task_exec_table);
+		$this->db->join("user","te_last_exec_user_id = user_id","left");
+		$this->db->join("customer","te_customer_id = customer_id","left");
+		$this->db->join("task","te_task_id = task_id","left");
+
+		if(isset($filter['task_id']))
+			$this->db->where("te_task_id",$filter['task_id']);
+
+		if(isset($filter['customer_id']))
+			$this->db->where("te_customer_id",$filter['customer_id']);
+		
+		if(isset($filter['start_date']))
+			$this->db->where("te_last_exec_timestamp >=",$filter['start_date']);
+
+		if(isset($filter['end_date']))
+			$this->db->where("te_last_exec_timestamp <=",$filter['end_date']);
+
+		if(isset($filter['customer_name']))
+		{
+			$filter['customer_name']=persian_normalize_word($filter['customer_name']);
+			$this->db->where("`customer_name` LIKE '%".str_replace(" ", "%",$filter['customer_name'])."%'");
+		}
+
+		if(isset($filter['last_exec_user_id']))
+			$this->db->where("te_last_exec_user_id",$filter['last_exec_user_id']);
+
+		if(isset($filter['last_exec_requires_manager_note']))
+			$this->db->where("te_last_exec_requires_manager_note",$filter['last_exec_requires_manager_note']);
+
+		if(isset($filter['start']))
+			$this->db->limit($filter['length'],$filter['start']);
+
+		return;	
 	}
 }

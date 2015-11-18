@@ -42,6 +42,48 @@ class Task_exec extends Burge_CMF_Controller {
 		$filter=array();
 		$model_filter=array();
 
+		$this->initialize_task_exec_info_filters($filter,$model_filter);
+
+		$total=$this->task_exec_manager_model->get_task_exec_info_total($model_filter);
+		if($total)
+		{
+			$logs_pp=10;
+			$page=1;
+			if($this->input->get("page"))
+				$page=(int)$this->input->get("page");
+
+			$start=($page-1)*$logs_pp;
+			$model_filter['start']=$start;
+			$model_filter['length']=$logs_pp;
+			
+			$this->data['task_exec_info']=$this->task_exec_manager_model->get_task_exec_info($model_filter);
+			
+			$end=$start+sizeof($this->data['task_exec_info'])-1;
+
+			$this->data['logs_current_page']=$page;
+			$this->data['logs_total_pages']=ceil($total/$logs_pp);
+			$this->data['logs_total']=$total;
+			$this->data['logs_start']=$start+1;
+			$this->data['logs_end']=$end+1;		
+		}
+		else
+		{
+			$this->data['logs_current_page']=0;
+			$this->data['logs_total_pages']=0;
+			$this->data['logs_total']=$total;
+			$this->data['logs_start']=0;
+			$this->data['logs_end']=0;
+		}
+			
+		
+		$this->data['filter']=$filter;
+
+		return;
+	}
+
+	private function initialize_task_exec_info_filters(&$filter, &$model_filter)
+	{
+
 		if($this->input->get("date"))
 		{
 			$date=$this->input->get("date");
@@ -53,13 +95,13 @@ class Task_exec extends Burge_CMF_Controller {
 				$end=(int)$date_splitted[0];
 				$start=(int)$date_splitted[1];
 
-				$model_filter['end_interval']=$end;
-				$model_filter['start_interval']=$start;
+				$model_filter['end_date']=$this->get_date_days_before($end)." 24:59:59";
+				$model_filter['start_date']=$this->get_date_days_before($start)." 00:00:00";
 			}
 			else
 			{
 				$end=(int)$date;
-				$model_filter['end_interval']=$end;
+				$model_filter['end_date']=$this->get_date_days_before($end)." 24:59:59";
 			}
 		}
 
@@ -79,23 +121,17 @@ class Task_exec extends Burge_CMF_Controller {
 
 		if($this->input->get("user"))
 		{
-			$user_id=(int)$this->input->get("user");
-			$filter['user']=$user_id;
-			$model_filter['user_id']=$user_id;
+			$exec_user_id=(int)$this->input->get("user");
+			$filter['user']=$exec_user_id;
+			$model_filter['last_exec_user_id']=$exec_user_id;
 		}
 
 		if($this->input->get("note"))
 		{
 			$note=$this->input->get("note");
 			$filter['note']=$note;
-			$model_filter['requires_manager_note']=(int)("yes" === $note);
+			$model_filter['last_exec_requires_manager_note']=(int)("yes" === $note);
 		}
-
-
-
-
-
-		$this->data['filter']=$filter;
 
 		return;
 	}
@@ -125,5 +161,11 @@ class Task_exec extends Burge_CMF_Controller {
 		$this->output->set_output(file_get_contents($path));
 
 		return;
+	}
+
+	private function get_date_days_before($days)
+	{
+		$df=DATE_FUNCTION;
+		return $df("Y-m-d",time()-60*60*24*$days);
 	}
 }

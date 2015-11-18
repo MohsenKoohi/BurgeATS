@@ -6,10 +6,11 @@ class Customer_manager_model extends CI_Model
 	private $customer_log_dir;
 	private $customer_log_file_extension="txt";
 	private $customer_log_types=array(
-		"UNKOWN"						=>0
-		,"CUSTOMER_ADD"			=>1001
-		,"CUSTOMER_INFO_CHANGE"	=>1002
-		,"CUSTOMER_TASK_EXEC"	=>1003
+		"UNKOWN"									=>0
+		,"CUSTOMER_ADD"						=>1001
+		,"CUSTOMER_INFO_CHANGE"				=>1002
+		,"CUSTOMER_TASK_EXEC"				=>1003
+		,"CUSTOMER_TASK_MANAGER_NOTE"		=>1004
 	);
 	
 	public function __construct()

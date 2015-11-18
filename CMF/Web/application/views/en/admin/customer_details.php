@@ -160,8 +160,7 @@
 										if($filename)
 										{
 											$link=get_admin_task_exec_file($customer_id,$filename);
-									?>
-											
+									?>								
 											<div class="row even-odd-bg dont-magnify" >
 												<div class="three columns">
 													{task_last_exec_result_file_text}
@@ -173,17 +172,101 @@
 									<?php 
 										}
 									?>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											{task_last_exec_requires_manager_note_text}
+										</div>
+										<div class="eight columns">
+											<?php 
+												if($task_exec_info['te_last_exec_requires_manager_note'])
+													echo $yes_text;
+												else
+													echo $no_text;
+											?>
+										</div>
+									</div>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											{task_next_exec_text}
+										</div>
+										<div class="eight columns">
+											<?php 
+												if($task_exec_info['te_next_exec']!="0000-00-00 00:00:00")
+													echo $task_exec_info['te_next_exec']; 
+											?>
+										</div>
+									</div>
+									<div class="row even-odd-bg dont-magnify">
+										<div class="three columns">
+											{task_last_exec_manager_note_text}
+										</div>
+										<div class="eight columns">
+											<?php echo nl2br($task_exec_info['te_last_exec_manager_note']); ?>
+										</div>
+									</div>
+									
+								</div>
+							<?php } ?>
 
-									<?php if($task_exec_info['te_last_exec_requires_manager_note']) { ?>
+							<?php if($task_exec_info && $user_is_manager) { ?>
+								<div class="separated">
+									<h3>{manager_note_text}</h3>
+									<?php echo form_open_multipart(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
+										<input type="hidden" name="post_type" value="manager_note" />	
+										<span></span>
 										<div class="row even-odd-bg dont-magnify" >
 											<div class="three columns">
-												{task_last_exec_manager_note_text}
+												<span>{task_status_text}</span>
 											</div>
-											<div class="eight columns">
-												<?php echo nl2br($task_exec_info['te_last_exec_manager_note']); ?>
-											</div>
+											<div class="six columns">
+												<select name="manager_task_status" class="full-width" onchange="managerTaskStatusChanged();">
+													<?php 
+														foreach($task_exec_statuses as $status)
+														{
+															$sel="";
+															if($task_exec_info['te_status'] === $status)
+																$sel="selected";
+															echo "<option $sel value='$status'>".${"task_status_".$status."_text"}."</option>";
+														}
+													?>
+												</select>
+											</div>					
 										</div>
-									<?php } ?>
+										<div class="row even-odd-bg dont-magnify" >
+											<div class="three columns">
+												<span>{manager_note_text}</span>
+											</div>
+											<div class="six columns">
+												<textarea rows="3" name="manager_note" class="full-width"></textarea>
+											</div>					
+										</div>
+										<div class="row even-odd-bg dont-magnify" id="manager_remind_days_row" >
+											<div class="three columns">
+												<span>{task_exec_remind_in_text}</span>
+											</div>
+											<div class="six columns">
+												<input type="number" name="manager_remind_in" value=""/>
+												{days_text}
+											</div>					
+										</div>
+										<script type="text/javascript">
+											$(managerTaskStatusChanged);
+											function managerTaskStatusChanged()
+											{
+												val=$("select[name='manager_task_status']").val();
+												if(val == "changing")
+													$("#manager_remind_days_row").fadeIn();
+												else
+													$("#manager_remind_days_row").fadeOut();
+											}
+										</script>
+									
+										<br><br>
+										<div class="row">
+												<div class="four columns">&nbsp;</div>
+												<input type="submit" class=" button-primary four columns" value="{save_text}"/>
+										</div>
+									</form>
 								</div>
 							<?php } ?>
 							
@@ -191,8 +274,6 @@
 								<h3>{task_exec_text}</h3>
 								<?php echo form_open_multipart(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
 									<input type="hidden" name="post_type" value="task_exec" />	
-									<input type="hidden" name="customer_id" value="<?php echo $customer_id ?>" />	
-									<input type="hidden" name="task_id" value="<?php echo $task_id ?>" />
 									<span></span>
 									<div class="row even-odd-bg dont-magnify" >
 										<div class="three columns">

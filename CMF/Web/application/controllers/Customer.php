@@ -225,6 +225,8 @@ class Customer extends Burge_CMF_Controller {
 		set_message($this->lang->line("saved_successfully"));
 
 		redirect(get_admin_customer_details_link($customer_id,$task_id));
+
+		return;
 	}
 
 	private function task_exec($customer_id, $task_id)
@@ -245,8 +247,39 @@ class Customer extends Burge_CMF_Controller {
 		if(!$can_exec)
 			return;
 
+		$this->data['user_is_manager']=(2 === $can_exec);
+
 		$this->load->model("task_exec_manager_model");
 		
+		if($this->input->post("post_type") === "manager_note")
+		{
+			$note=$this->input->post("manager_note");
+			$note.="\n".$this->user->get_name()." - ".$this->user->get_code();
+			$status=$this->input->post("manager_task_status");
+
+			$props=array(
+				"te_status"							=>$status
+				,"te_last_exec_manager_note"	=>$note
+			);
+
+			if("changing" === $status)
+			{
+				$next_exec=persian_normalize_word($this->input->post("manager_remind_in"));
+				if($next_exec)
+				{
+					$date_function=DATE_FUNCTION;
+					$next_exec=$date_function("Y-m-d H:i:s",time()+60*60*24*(int)$next_exec);
+					$props['te_next_exec']=$next_exec;
+				}
+			}
+
+			$this->task_exec_manager_model->set_manager_note($customer_id, $task_id, $props);
+
+			set_message($this->lang->line("note_saved_successfully"));
+			
+			redirect(get_admin_customer_details_link($customer_id,$task_id,"tasks"));
+		}
+
 		if($this->input->post("post_type") === "task_exec")
 		{
 			$date_function=DATE_FUNCTION;
@@ -256,7 +289,7 @@ class Customer extends Burge_CMF_Controller {
 			$next_exec=0;
 			if("changing" === $status)
 			{
-				$next_exec=$this->input->post("task_exec_remind_in");
+				$next_exec=persian_normalize_word($this->input->post("task_exec_remind_in"));
 				$next_exec=$date_function("Y-m-d H:i:s",time()+60*60*24*(int)$next_exec);
 			}
 

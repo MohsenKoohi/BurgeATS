@@ -56,3 +56,10 @@ $lang['days']="روز";
 $lang['task_exec_request_manager_note']="نیازمند بررسی مدیر";
 $lang['task_saved_successfully']="اجرای وظیفه  با موفقیت ذخیره شد.";
 $lang['task_last_exec_result_file']="فایل ضمیمه آخرین اجرا";
+
+$lang['task_last_exec_requires_manager_note']="نیازمند بررسی مدیر";
+$lang['yes']="بله";
+$lang['no']="نه";
+$lang['manager_note']="نظر مدیر";
+$lang['note_saved_successfully']="نظر شما با موفقیت ثبت شد.";
+$lang['task_next_exec']="تاریخ اجرای مجدد";

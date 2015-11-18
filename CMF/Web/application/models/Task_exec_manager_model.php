@@ -100,6 +100,35 @@ class Task_exec_manager_model extends CI_Model
 			return 0;
 	}
 
+	public function set_manager_note($customer_id, $task_id, $props_array)
+	{
+		$props=select_allowed_elements($props_array,array("te_status","te_last_exec_manager_note","te_next_exec"));
+		$props['te_last_exec_manager_note']=persian_normalize_word($props['te_last_exec_manager_note']);
+
+		$this->db->set($props);
+		$this->db->where(array(
+			"te_customer_id"=>$customer_id
+			,"te_task_id"=>$task_id
+		));
+	   $this->db->update($this->task_exec_table);
+
+	   $props['te_customer_id']=$customer_id;
+		$props['te_task_id']=$task_id;
+
+		$this->load->model("customer_manager_model");
+		
+		$props['te_last_exec_manager_note']=nl2br($props['te_last_exec_manager_note']);
+		$props=delete_prefix_of_indexes($props,"te_");
+
+		$this->log_manager_model->info("CUSTOMER_TASK_MANAGER_NOTE",$props);
+		
+		unset($props['customer_id']);
+		$this->customer_manager_model->add_customer_log($customer_id,'CUSTOMER_TASK_MANAGER_NOTE',$props);
+
+		return;
+	}
+
+
 	public function update_task_exec_info($customer_id, $task_id, $props_array)
 	{
 		$props=select_allowed_elements($props_array,$this->task_exec_props_for_write);
@@ -135,7 +164,8 @@ class Task_exec_manager_model extends CI_Model
 		$props=delete_prefix_of_indexes($props,"te_");
 
 		$this->log_manager_model->info("CUSTOMER_TASK_EXEC",$props);
-		
+
+		unset($props['customer_id']);
 		$this->customer_manager_model->add_customer_log($customer_id,'CUSTOMER_TASK_EXEC',$props);
 
 		return;

@@ -79,6 +79,9 @@ class Task_manager_model extends CI_Model
 		return $result->result_array();
 	}
 
+	//returns 0 if user can't execute task
+	//returns 1 if user can execute task but is not its manager
+	//returns 2 if user can execute and also is its manager
 	public function check_user_can_execute_task($user_id,$task_id)
 	{
 		//we may check if task is active 
@@ -91,7 +94,14 @@ class Task_manager_model extends CI_Model
 			)
 		);
 
-		return ( $result->num_rows() > 0 );
+		$row=$result->row_array();
+		if(!$row)
+			return 0;
+
+		if(!$row['tu_is_manager'])
+			return 1;
+		else
+			return 2;
 	}
 
 	public function get_task_users_ids($task_id)

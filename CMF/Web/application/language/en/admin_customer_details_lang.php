@@ -56,3 +56,10 @@ $lang['days']="days";
 $lang['task_exec_request_manager_note']="Requires manager note";
 $lang['task_saved_successfully']="Task execution saved successfully.";
 $lang['task_last_exec_result_file']="Attached file";
+
+$lang['task_last_exec_requires_manager_note']="Requires manager note";
+$lang['yes']="Yes";
+$lang['no']="No";
+$lang['manager_note']="Manager note";
+$lang['note_saved_successfully']="Your note saved successfully.";
+$lang['task_next_exec']="Repeat execution after";

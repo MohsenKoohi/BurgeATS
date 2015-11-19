@@ -70,6 +70,8 @@ class Customer extends Burge_CMF_Controller {
 		{
 			if($page > $this->data['customers_total_pages'])
 				$page=$this->data['customers_total_pages'];
+			if($page<1)
+				$page=1;
 			$this->data['customers_current_page']=$page;
 			if($page!=1)
 				$this->data['url_queries'].="&page=".$page;
@@ -84,7 +86,7 @@ class Customer extends Burge_CMF_Controller {
 			$this->data['customers_start']=$start+1;
 			$this->data['customers_end']=$end+1;		
 	
-			$filter['order_by']="customer_name ASC";
+			$filter['order_by']="customer_id DESC";
 
 			$this->data['customers_info']=$this->customer_manager_model->get_customers($filter);
 
@@ -103,13 +105,21 @@ class Customer extends Burge_CMF_Controller {
 	{
 		$customer_name=$this->input->post("customer_name");
 		$customer_type=$this->input->post("customer_type");
+		$customer_phone=$this->input->post("customer_phone");
+		$customer_mobile=$this->input->post("customer_mobile");
 		$desc=$this->input->post("desc");
 
 		if(!$customer_type || !$customer_name)
 			$this->data['message']=$this->lang->line("fill_all_fields");
 		else
 		{
-			$res=$this->customer_manager_model->add_customer($customer_name,$customer_type,$desc);
+			$res=$this->customer_manager_model->add_customer(array(
+				"customer_name"=>$customer_name
+				,"customer_type"=>$customer_type
+				,"customer_phone"=>$customer_phone
+				,"customer_mobile"=>$customer_mobile
+				), $desc);
+
 			if($res)
 				$this->data['message']=$this->lang->line("added_successfully");
 		}
@@ -137,7 +147,7 @@ class Customer extends Burge_CMF_Controller {
 			$this->lang->load('error',$this->selected_lang);
 
 			if("customer_properties" === $this->input->post("post_type"))
-				$this->save_customer_new_properties();
+				$this->save_customer_new_properties($customer_id,$task_id);
 		}
 
 		$filter=array();
@@ -201,11 +211,8 @@ class Customer extends Burge_CMF_Controller {
 		return;	 		
 	}
 
-	private function save_customer_new_properties()
+	private function save_customer_new_properties($customer_id,$task_id)
 	{
-		$customer_id=$this->input->post("customer_id");
-		$task_id=$this->input->post("task_id");
-
 		$args=array(
 			"customer_name"		=>$this->input->post("customer_name")
 			,"customer_type"		=>$this->input->post("customer_type")

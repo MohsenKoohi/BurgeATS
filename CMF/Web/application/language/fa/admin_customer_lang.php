@@ -20,3 +20,5 @@ $lang['total_results']="تعداد کل نتایج";
 $lang['results']="نتایج";
 $lang['to']="تا";
 $lang['search_again']="جستجو";
+$lang['phone']="تلفن";
+$lang['mobile']="موبایل";

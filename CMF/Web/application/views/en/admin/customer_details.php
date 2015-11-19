@@ -353,10 +353,8 @@
 					<h2>{properties_text}</h2>	
 						<?php if($customer_info) { ?>
 							<?php echo form_open(get_admin_customer_details_link($customer_id,$task_id,"props"),array()); ?>
-							<input type="hidden" name="post_type" value="customer_properties" />	
-							<input type="hidden" name="customer_id" value="<?php echo $customer_id ?>" />	
-							<input type="hidden" name="task_id" value="<?php echo $task_id ?>" />	
-							
+								<input type="hidden" name="post_type" value="customer_properties" />	
+								<span></span>
 								<div class="row even-odd-bg dont-magnify" >
 									<div class="three columns">
 										<label>{name_text}</label>

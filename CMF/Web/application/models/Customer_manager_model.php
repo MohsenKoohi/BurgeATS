@@ -3,6 +3,19 @@ class Customer_manager_model extends CI_Model
 {
 	private $customer_table_name="customer";
 	private $customer_types=array("regular","agent");
+
+	private $customer_props_can_be_written=array(
+		"customer_type"
+		,"customer_email"
+		,"customer_name"
+		,"customer_code" 
+		,"customer_province"
+		,"customer_city"
+		,"customer_address"
+		,"customer_phone" 
+		,"customer_mobile"
+	);
+
 	private $customer_log_dir;
 	private $customer_log_file_extension="txt";
 	private $customer_log_types=array(
@@ -154,22 +167,16 @@ class Customer_manager_model extends CI_Model
 		return $this->customer_types;
 	}
 
-	public function add_customer($name,$type,$desc="")
+	public function add_customer($props_array,$desc="")
 	{	
-		$name=persian_normalize_word($name);
 		$desc=persian_normalize_word($desc);
-
-		$this->db->insert($this->customer_table_name,array(
-			"customer_name"=>$name
-			,"customer_type"=>$type
-		));
+		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
+		persian_normalize($props);
+		
+		$this->db->insert($this->customer_table_name,$props);
 		$id=$this->db->insert_id();
 
-		$props=array(
-			"cutomer_name"		=>	$name
-			,"customer_type"	=>	$type
-			,"desc"				=>	$desc
-		);
+		$props['desc']=$desc;
 		$this->add_customer_log($id,'CUSTOMER_ADD',$props);
 		
 		$props['customer_id']=$id;
@@ -178,20 +185,10 @@ class Customer_manager_model extends CI_Model
 		return TRUE;
 	}
 
-	public function set_customer_properties($customer_id, $args, $desc)
+	public function set_customer_properties($customer_id, $props_array, $desc)
 	{
-		$allowed_props=array(
-			"name","type","email","code","province","city","address","phone","mobile"
-		);
-
-		$props=array();
-		foreach($allowed_props as $prop)
-		{
-			$index="customer_".$prop;
-			if(isset($args[$index]))
-				$props[$index]=$args[$index];
-		}
-
+		
+		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
 		persian_normalize($props);
 
 		$this->db->where("customer_id",(int)$customer_id);
@@ -293,7 +290,7 @@ class Customer_manager_model extends CI_Model
 			list($date_time,$log_type)=explode("#",$tmp[0]);
 			list($date,$time)=explode(",",$date_time);
 			$time=str_replace("-", ":", $time);
-			$date=str_replace("-", "/", $date);
+			$date=str_replace(array("log-","-"), array("","/"), $date);
 			$date_time=$date." ".$time;
 
 			//now we have timestamp and log_type of this log

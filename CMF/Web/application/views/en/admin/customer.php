@@ -121,7 +121,7 @@
 					</div>
 					<div class="two columns">
 						<label>{customer_page_text} </label>
-						<a 
+						<a target="_blank" 
 						href="<?php echo get_admin_customer_details_link($cs['customer_id']); ?>"
 						class="button button-primary sub-primary full-width"
 						>
@@ -149,6 +149,14 @@
 									echo "<option value='$type'>".${"type_".$type."_text"}."</option>";
 							?>
 						</select>
+					</div>
+					<div class="three columns half-col-margin">
+						<label>{phone_text}</label>
+						<input value="" type="text" name="customer_phone" class="full-width ltr" />
+					</div>
+					<div class="three columns">
+						<label>{mobile_text}</label>
+						<input value="" type="text" name="customer_mobile" class="full-width ltr" />
 					</div>
 					<div class="three columns half-col-margin">
 						<label>{desc_text}</label>

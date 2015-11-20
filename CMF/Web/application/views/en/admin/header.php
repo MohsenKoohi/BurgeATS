@@ -23,7 +23,7 @@
     <script src="{scripts_url}/jquery-1.11.1.min.js"></script>
   <![endif]-->  
   <script src="{scripts_url}/jquery-ui.min.js"></script>
-  <script src="{scripts_url}/common.js"></script>
+  <script src="{scripts_url}/admin_common.js"></script>
   <script src="{scripts_url}/colorbox.js"></script>
   <script src="{scripts_url}/scripts.js"></script>
 
@@ -33,8 +33,8 @@
   <div class="header">
 
     <div class="logo">
-      <a href="{admin_surl}" class="logo-img"><img src="{images_url}/logo-notext.png"></a>
-      <a href="{admin_surl}" class="logo-text"><img src="{images_url}/logo-text.png"></a>
+      <a href="<?php echo get_link('admin_surl');?>" class="logo-img"><img src="{images_url}/logo-notext.png"></a>
+      <a href="<?php echo get_link('admin_surl');?>" class="logo-text"><img src="{images_url}/logo-text.png"></a>
     </div>
     
     <div class="top-menu">  

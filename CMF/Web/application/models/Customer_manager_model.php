@@ -55,14 +55,16 @@ class Customer_manager_model extends CI_Model
 	{
 		$table=$this->db->dbprefix($this->customer_table_name); 
 		$customer_types="'".implode("','", $this->customer_types)."'";
+		$default_type="'".$this->customer_types[0]."'";
+
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $table (
 				`customer_id` int AUTO_INCREMENT NOT NULL
-				,`customer_type` enum($customer_types) 
-				,`customer_email` varchar(100) NOT NULL UNIQUE 
+				,`customer_type` enum($customer_types) DEFAULT $default_type
+				,`customer_email` varchar(100) NOT NULL 
 				,`customer_pass` char(32) DEFAULT NULL
 				,`customer_salt` char(32) DEFAULT NULL
-				,`customer_name` varchar(255) NOT NULL
+				,`customer_name` varchar(255) DEFAULT NULL
 				,`customer_code` char(10) DEFAULT NULL
 				,`customer_province` varchar(255) DEFAULT NULL
 				,`customer_city` varchar(255) DEFAULT NULL
@@ -183,6 +185,25 @@ class Customer_manager_model extends CI_Model
 		$desc=persian_normalize_word($desc);
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
 		persian_normalize($props);
+
+		if(isset($props['customer_email']))
+		{
+			if(!$props['customer_email'])
+				return FALSE;
+
+			$this->db->select("count(customer_id) as count");
+			$this->db->from($this->customer_table_name);
+			$this->db->where("customer_id !=",$customer_id);
+			$this->db->where("customer_email",$props['customer_email']);
+			$result=$this->db->get();
+			$row=$result->row_array();
+			$count=$row['count'];
+			if($count)
+				return FALSE;
+
+			if(!isset($props['customer_name']))
+				$props['customer_name']=$props['customer_email'];
+		}
 		
 		$this->db->insert($this->customer_table_name,$props);
 		$id=$this->db->insert_id();
@@ -491,6 +512,8 @@ class Customer_manager_model extends CI_Model
 		return "";
 	}
 
+
+	//returns a new pass or FALSE
 	public function set_new_password($email)
 	{
 		$ret=FALSE;
@@ -519,10 +542,13 @@ class Customer_manager_model extends CI_Model
 		
 		$this->log_manager_model->info("CUSTOMER_PASS_CHANGE",$props);
 
-		return $ret;
+		if($ret)
+			return $pass;
+		else
+			return FALSE;
 	}
 
-	public function set_customer_logged_in($customer_id,$customer_email)
+	private function set_customer_logged_in($customer_id,$customer_email)
 	{
 		$this->session->set_userdata(SESSION_VARS_PREFIX."customer_logged_in","true");
 		$this->session->set_userdata(SESSION_VARS_PREFIX."customer_id",$customer_id);

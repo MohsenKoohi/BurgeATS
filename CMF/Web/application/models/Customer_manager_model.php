@@ -524,21 +524,23 @@ class Customer_manager_model extends CI_Model
 
 	public function set_customer_logged_in($customer_id,$customer_email)
 	{
-		$this->session->set_userdata("customer_logged_in","true");
-		$this->session->set_userdata("customer_id",$customer_id);
-		$this->session->set_userdata("customer_email",$customer_email);
+		$this->session->set_userdata(SESSION_VARS_PREFIX."customer_logged_in","true");
+		$this->session->set_userdata(SESSION_VARS_PREFIX."customer_id",$customer_id);
+		$this->session->set_userdata(SESSION_VARS_PREFIX."customer_email",$customer_email);
+		$this->session->set_userdata(SESSION_VARS_PREFIX."customer_last_visit",time());
 
 		return;
 	}
 
 	public function set_customer_logged_out()
 	{
-		$customer_id=$this->session->userdata("customer_id");
-		$customer_email=$this->session->userdata("customer_email");
+		$customer_id=$this->session->userdata(SESSION_VARS_PREFIX."customer_id");
+		$customer_email=$this->session->userdata(SESSION_VARS_PREFIX."customer_email");
 
-		$this->session->unset_userdata("customer_logged_in");
-		$this->session->unset_userdata("customer_id");
-		$this->session->unset_userdata("customer_email");
+		$this->session->unset_userdata(SESSION_VARS_PREFIX."customer_logged_in");
+		$this->session->unset_userdata(SESSION_VARS_PREFIX."customer_id");
+		$this->session->unset_userdata(SESSION_VARS_PREFIX."customer_email");
+		$this->session->unset_userdata(SESSION_VARS_PREFIX."customer_last_visit");
 
 		if($customer_id)
 		{
@@ -554,9 +556,20 @@ class Customer_manager_model extends CI_Model
 		return;
 	}
 
-	public function customer_logged_in()
+	public function has_customer_logged_in()
 	{
-		return $this->session->userdata("customer_logged_in") === 'true';
+		if($this->session->userdata(SESSION_VARS_PREFIX."customer_logged_in") !== 'true')
+			return FALSE;
+
+		if(time()-$this->session->userdata(SESSION_VARS_PREFIX."customer_last_visit") < CUSTOMER_SESSION_EXPIRATION)
+		{
+			$this->session->set_userdata(SESSION_VARS_PREFIX."customer_last_visit",time());
+			return TRUE;
+		}
+			
+		$this->set_customer_logged_out();
+
+		return FALSE;
 	}
 
 	private function getPass($pass,$salt)

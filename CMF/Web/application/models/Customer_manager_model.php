@@ -37,6 +37,9 @@ class Customer_manager_model extends CI_Model
 		,"CUSTOMER_INFO_CHANGE"				=>1002
 		,"CUSTOMER_TASK_EXEC"				=>1003
 		,"CUSTOMER_TASK_MANAGER_NOTE"		=>1004
+		,"CUSTOMER_LOGIN"						=>1005
+		,"CUSTOMER_LOGOUT"					=>1006
+		,"CUSTOMER_PASS_CHANGE"				=>1007
 	);
 	
 	public function __construct()
@@ -416,31 +419,68 @@ class Customer_manager_model extends CI_Model
 
 	public function login($email,$pass)
 	{
-		$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$email));
-		if($result->num_rows() != 1)
-			return FALSE;
+		$ret=FALSE;
 
-		$row=$result->row_array();		
-		
-		if($row['customer_pass'] === $this->getPass($pass, $row['customer_salt']))
+		$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$email));
+		if($result->num_rows() == 1)
 		{
-			$this->set_customer_logged_in($row['customer_id'],$email);
-			return TRUE;
+			$row=$result->row_array();		
+			
+			if($row['customer_pass'] === $this->getPass($pass, $row['customer_salt']))
+			{
+				$this->set_customer_logged_in($row['customer_id'],$email);
+				$customer_id=$row['customer_id'];
+				
+				$ret=TRUE;
+			}
 		}
 
-		return FALSE;
+		$props=array(
+			"claimed_email"=>$email
+			,"result"=>(int)$ret
+		);
+
+		if(isset($customer_id))
+		{
+			$this->add_customer_log($customer_id,'CUSTOMER_LOGIN',$props);
+			$props['customer_id']=$customer_id;
+		}
+		
+		$this->log_manager_model->info("CUSTOMER_LOGIN",$props);
+
+		return $ret;
 	}
 
 	public function login_openid($email,$openid_server)
 	{
-		$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$email));
-		if($result->num_rows() != 1)
-			return FALSE;
-
-		$row=$result->row_array();		
+		$ret=FALSE;
 		
-		$this->set_customer_logged_in($row['customer_id'],$email);
-		return TRUE;
+		$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$email));
+		
+		if($result->num_rows() == 1)
+		{
+			$row=$result->row_array();
+			$customer_id=$row['customer_id'];
+			$this->set_customer_logged_in($customer_id,$email);
+
+			$ret=TRUE;
+		}
+
+		$props=array(
+			"claimed_email"=>$email
+			,"openid_server"=>$openid_server
+			,"result"=>(int)$ret
+		);
+
+		if(isset($customer_id))
+		{
+			$this->add_customer_log($customer_id,'CUSTOMER_LOGIN',$props);
+			$props['customer_id']=$customer_id;
+		}
+
+		$this->log_manager_model->info("CUSTOMER_LOGIN",$props);
+
+		return $ret;
 	}
 
 	public function get_logged_customer_email()
@@ -453,6 +493,8 @@ class Customer_manager_model extends CI_Model
 
 	public function set_new_password($email)
 	{
+		$ret=FALSE;
+
 		$pass=random_string("alnum",7);
 		$salt=random_string("alnum",32);
 
@@ -462,10 +504,22 @@ class Customer_manager_model extends CI_Model
 		$this->db->limit(1);
 		$this->db->update($this->customer_table_name);
 
-		if(!$this->db->affected_rows())
-			return FALSE;
+		$props=array("customer_email"=>$email);
 
-		return $pass;
+		if($this->db->affected_rows())
+		{
+			$ret=TRUE;
+			$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$email));
+			$row=$result->row_array();
+			$customer_id=$row['customer_id'];
+
+			$this->add_customer_log($customer_id,'CUSTOMER_PASS_CHANGE',$props);
+			$props['customer_id']=$customer_id;
+		}
+		
+		$this->log_manager_model->info("CUSTOMER_PASS_CHANGE",$props);
+
+		return $ret;
 	}
 
 	public function set_customer_logged_in($customer_id,$customer_email)
@@ -479,9 +533,23 @@ class Customer_manager_model extends CI_Model
 
 	public function set_customer_logged_out()
 	{
+		$customer_id=$this->session->userdata("customer_id");
+		$customer_email=$this->session->userdata("customer_email");
+
 		$this->session->unset_userdata("customer_logged_in");
 		$this->session->unset_userdata("customer_id");
 		$this->session->unset_userdata("customer_email");
+
+		if($customer_id)
+		{
+			$props=array(
+				'customer_id'=>$customer_id
+				,'customer_email'=>$customer_email
+			);
+
+			$this->add_customer_log($customer_id,'CUSTOMER_LOGOUT',$props);	
+			$this->log_manager_model->info("CUSTOMER_LOGOUT",$props);
+		}
 
 		return;
 	}

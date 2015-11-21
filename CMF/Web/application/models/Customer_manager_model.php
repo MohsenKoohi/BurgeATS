@@ -16,6 +16,19 @@ class Customer_manager_model extends CI_Model
 		,"customer_mobile"
 	);
 
+	private $customer_props_can_be_read=array(
+		"customer_id"
+		,"customer_type"
+		,"customer_email"
+		,"customer_name"
+		,"customer_code" 
+		,"customer_province"
+		,"customer_city"
+		,"customer_address"
+		,"customer_phone" 
+		,"customer_mobile"
+	);
+
 	private $customer_log_dir;
 	private $customer_log_file_extension="txt";
 	private $customer_log_types=array(
@@ -43,7 +56,7 @@ class Customer_manager_model extends CI_Model
 			"CREATE TABLE IF NOT EXISTS $table (
 				`customer_id` int AUTO_INCREMENT NOT NULL
 				,`customer_type` enum($customer_types) 
-				,`customer_email` varchar(100) NOT NULL 
+				,`customer_email` varchar(100) NOT NULL UNIQUE 
 				,`customer_pass` char(32) DEFAULT NULL
 				,`customer_salt` char(32) DEFAULT NULL
 				,`customer_name` varchar(255) NOT NULL
@@ -94,7 +107,7 @@ class Customer_manager_model extends CI_Model
 
 	public function get_customers($filter)
 	{
-		$this->db->select("*");
+		$this->db->select($this->customer_props_can_be_read);
 		$this->db->from($this->customer_table_name);
 		$this->set_search_where_clause($filter);
 
@@ -102,11 +115,6 @@ class Customer_manager_model extends CI_Model
 
 		$results=$query->result_array();
 
-		//there are some private data in results
-		foreach ($results as &$res)
-		{
-			unset($res['customer_salt'],$res['customer_pass']);
-		}
 		return $results;
 	}
 
@@ -191,6 +199,25 @@ class Customer_manager_model extends CI_Model
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
 		persian_normalize($props);
 
+		if(isset($props['customer_name']) && !$props['customer_name'])
+			return FALSE;
+
+		if(isset($props['customer_email']))
+		{
+			if(!$props['customer_email'])
+				return FALSE;
+
+			$this->db->select("count(customer_id) as count");
+			$this->db->from($this->customer_table_name);
+			$this->db->where("customer_id !=",$customer_id);
+			$this->db->where("customer_email",$props['customer_email']);
+			$result=$this->db->get();
+			$row=$result->row_array();
+			$count=$row['count'];
+			if($count)
+				return FALSE;
+		}
+
 		$this->db->where("customer_id",(int)$customer_id);
 		$this->db->update($this->customer_table_name,$props);
 
@@ -201,7 +228,7 @@ class Customer_manager_model extends CI_Model
 
 		$this->add_customer_log($customer_id,'CUSTOMER_INFO_CHANGE',$props);
 
-		return;
+		return TRUE;
 	}
 
 	public function get_customer_log_types()
@@ -387,4 +414,85 @@ class Customer_manager_model extends CI_Model
 		return;
 	}
 
+	public function login($email,$pass)
+	{
+		$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$email));
+		if($result->num_rows() != 1)
+			return FALSE;
+
+		$row=$result->row_array();		
+		
+		if($row['customer_pass'] === $this->getPass($pass, $row['customer_salt']))
+		{
+			$this->set_customer_logged_in($row['customer_id'],$email);
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	public function login_openid($email,$openid_server)
+	{
+		$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$email));
+		if($result->num_rows() != 1)
+			return FALSE;
+
+		$row=$result->row_array();		
+		
+		$this->set_customer_logged_in($row['customer_id'],$email);
+		return TRUE;
+	}
+
+	public function get_logged_customer_email()
+	{
+		if($this->customer_logged_in())
+			return $this->session->userdata("customer_email");
+
+		return "";
+	}
+
+	public function set_new_password($email)
+	{
+		$pass=random_string("alnum",7);
+		$salt=random_string("alnum",32);
+
+		$this->db->set("customer_pass", $this->getPass($pass,$salt));
+		$this->db->set("customer_salt", $salt);
+		$this->db->where("customer_email",$email);
+		$this->db->limit(1);
+		$this->db->update($this->customer_table_name);
+
+		if(!$this->db->affected_rows())
+			return FALSE;
+
+		return $pass;
+	}
+
+	public function set_customer_logged_in($customer_id,$customer_email)
+	{
+		$this->session->set_userdata("customer_logged_in","true");
+		$this->session->set_userdata("customer_id",$customer_id);
+		$this->session->set_userdata("customer_email",$customer_email);
+
+		return;
+	}
+
+	public function set_customer_logged_out()
+	{
+		$this->session->unset_userdata("customer_logged_in");
+		$this->session->unset_userdata("customer_id");
+		$this->session->unset_userdata("customer_email");
+
+		return;
+	}
+
+	public function customer_logged_in()
+	{
+		return $this->session->userdata("customer_logged_in") === 'true';
+	}
+
+	private function getPass($pass,$salt)
+	{
+		return md5(md5($pass).$salt);
+	}
 }

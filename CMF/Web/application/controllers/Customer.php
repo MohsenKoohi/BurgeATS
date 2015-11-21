@@ -229,7 +229,8 @@ class Customer extends Burge_CMF_Controller {
 
 		$result=$this->customer_manager_model->set_customer_properties($customer_id,$args,$desc);
 
-		set_message($this->lang->line("saved_successfully"));
+		if($result)
+			set_message($this->lang->line("saved_successfully"));
 
 		redirect(get_admin_customer_details_link($customer_id,$task_id));
 

@@ -214,6 +214,13 @@ class Customer_manager_model extends CI_Model
 		$props['customer_id']=$id;
 		$this->log_manager_model->info("CUSTOMER_ADD",$props);
 
+		//we should send an email to the customer
+		if($props['customer_email'])
+		{
+			$pass=$this->set_new_password($props['customer_email']);
+			$this->send_registeration_mail($props['customer_email'],$pass);
+		}
+
 		return TRUE;
 	}
 
@@ -222,6 +229,7 @@ class Customer_manager_model extends CI_Model
 		
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
 		persian_normalize($props);
+		$should_send_registeration_mail=FALSE;
 
 		if(isset($props['customer_name']) && !$props['customer_name'])
 			return FALSE;
@@ -240,6 +248,12 @@ class Customer_manager_model extends CI_Model
 			$count=$row['count'];
 			if($count)
 				return FALSE;
+
+			$this->db->select("customer_email");
+			$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$props['customer_email']));
+			$row=$result->row_array();
+			if(!$row['customer_email'])
+				$should_send_registeration_mail=TRUE;
 		}
 
 		$this->db->where("customer_id",(int)$customer_id);
@@ -251,6 +265,12 @@ class Customer_manager_model extends CI_Model
 		$this->log_manager_model->info("CUSTOMER_INFO_CHANGE",$props);
 
 		$this->add_customer_log($customer_id,'CUSTOMER_INFO_CHANGE',$props);
+
+		if($should_send_registeration_mail)
+		{
+			$pass=$this->set_new_password($props['customer_email']);
+			$this->send_registeration_mail($props['customer_email'],$pass);
+		}
 
 		return TRUE;
 	}
@@ -504,14 +524,14 @@ class Customer_manager_model extends CI_Model
 		return $ret;
 	}
 
-	public function get_logged_customer_email()
+	public function get_logged_customer_info()
 	{
-		if($this->customer_logged_in())
-			return $this->session->userdata("customer_email");
+		if(!$this->has_customer_logged_in())
+			return NULL;
 
-		return "";
+		$customer_id=$this->session->userdata(SESSION_VARS_PREFIX."customer_id");
+		return $this->get_customer_info($customer_id);
 	}
-
 
 	//returns a new pass or FALSE
 	public function set_new_password($email)
@@ -601,5 +621,21 @@ class Customer_manager_model extends CI_Model
 	private function getPass($pass,$salt)
 	{
 		return md5(md5($pass).$salt);
+	}
+
+	private function send_registeration_mail($email,$pass)
+	{
+		$content='
+			شما با موفقیت ثبت نام نمودید.<br>
+			هم اکنون با پست الکترونیک و رمز زیر می توانید از محیط کاربری استفاده کنید:<br>
+			پست الکترونیک: <span style="font-family:arial;">'.$email.'</span><br>
+			رمز: <span style="font-family:arial;">'.$pass.'</span><br>
+			در صورت بروز هر مشکل با همین پست الکترونیک تماس بگیرید.<br>
+			با استفاده از  <a style="color:#0870E3" href="'.HOME_URL."/حساب-کاربری".'">حساب کاربری</a> می توانید به 
+			صفحه خود دسترسی پیدا کنید.<br>';
+
+		burge_cmf_send_mail($email,'یه‌اتاق | اطلاعات حساب کاربری',$content);
+
+		return;
 	}
 }

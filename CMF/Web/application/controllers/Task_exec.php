@@ -75,7 +75,6 @@ class Task_exec extends Burge_CMF_Controller {
 			$this->data['logs_end']=0;
 		}
 			
-		
 		$this->data['filter']=$filter;
 
 		return;

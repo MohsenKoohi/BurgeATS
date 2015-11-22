@@ -249,7 +249,12 @@
 						</script>
 					</div>		
 					<br>
-					<?php $i=$logs_start;foreach($task_exec_info as $te) { ?>
+					<?php 
+						$i=$logs_start;
+						if(isset($task_exec_info))
+							foreach($task_exec_info as $te) 
+							{ 
+					?>
 						<div class="row even-odd-bg" >
 							<div class="twleve columns">
 								<a href="<?php echo get_admin_customer_details_link($te['te_customer_id'],$te['te_task_id'],'tasks');?>" target="_blank">

@@ -535,6 +535,14 @@ class Customer_manager_model extends CI_Model
 		return $this->get_customer_info($customer_id);
 	}
 
+	public function get_logged_customer_id()
+	{
+		if(!$this->has_customer_logged_in())
+			return NULL;
+
+		return $this->session->userdata(SESSION_VARS_PREFIX."customer_id");
+	}
+
 	//returns a new pass or FALSE
 	public function set_new_password($email)
 	{

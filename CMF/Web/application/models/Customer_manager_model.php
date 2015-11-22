@@ -227,6 +227,17 @@ class Customer_manager_model extends CI_Model
 		return TRUE;
 	}
 
+	public function get_customer_id_with_customer_email($customer_email)
+	{
+		$this->db->select("customer_id");
+		$this->db->from($this->customer_table_name);
+		$this->db->where("customer_email",$customer_email);
+		$result=$this->db->get();
+		$row=$result->row_array();
+		
+		return $row['customer_id'];
+	}
+
 	public function set_customer_properties($customer_id, $props_array, $desc)
 	{
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
@@ -541,6 +552,14 @@ class Customer_manager_model extends CI_Model
 			return NULL;
 
 		return $this->session->userdata(SESSION_VARS_PREFIX."customer_id");
+	}
+
+	public function get_logged_customer_email()
+	{
+		if(!$this->has_customer_logged_in())
+			return NULL;
+
+		return $this->session->userdata(SESSION_VARS_PREFIX."customer_email");
 	}
 
 	//returns a new pass or FALSE

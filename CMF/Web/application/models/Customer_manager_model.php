@@ -226,7 +226,6 @@ class Customer_manager_model extends CI_Model
 
 	public function set_customer_properties($customer_id, $props_array, $desc)
 	{
-		
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
 		persian_normalize($props);
 		$should_send_registeration_mail=FALSE;
@@ -250,7 +249,7 @@ class Customer_manager_model extends CI_Model
 				return FALSE;
 
 			$this->db->select("customer_email");
-			$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$props['customer_email']));
+			$result=$this->db->get_where($this->customer_table_name,array("customer_id"=>$customer_id));
 			$row=$result->row_array();
 			if(!$row['customer_email'])
 				$should_send_registeration_mail=TRUE;

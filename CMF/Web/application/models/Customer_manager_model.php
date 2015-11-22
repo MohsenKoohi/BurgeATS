@@ -180,7 +180,7 @@ class Customer_manager_model extends CI_Model
 		return $this->customer_types;
 	}
 
-	public function add_customer($props_array,$desc="")
+	public function add_customer($props_array,$desc="",$login=FALSE)
 	{	
 		$desc=persian_normalize_word($desc);
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
@@ -219,6 +219,9 @@ class Customer_manager_model extends CI_Model
 		{
 			$pass=$this->set_new_password($props['customer_email']);
 			$this->send_registeration_mail($props['customer_email'],$pass);
+
+			if($login)
+				$this->login($props['customer_email'],$pass);
 		}
 
 		return TRUE;

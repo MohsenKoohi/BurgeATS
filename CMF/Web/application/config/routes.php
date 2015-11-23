@@ -58,6 +58,8 @@ $route[ADMIN_URL_FOLDER."/log"]				="log";
 
 $route[ADMIN_URL_FOLDER."/post"]			="post";
 
+$route["retry"]="retry";
+
 $route[ADMIN_URL_FOLDER."/customer"]							="customer";
 $route[ADMIN_URL_FOLDER."/customer/details/(\d+)"]			="customer/customer_details/$1";
 $route[ADMIN_URL_FOLDER."/customer/details/(\d+)/(\d+)"] ="customer/customer_details/$1/$2";
@@ -65,8 +67,6 @@ $route[ADMIN_URL_FOLDER."/task"]									="task";
 $route[ADMIN_URL_FOLDER."/task/details/(\d+)"]				="task/task_details/$1";
 $route[ADMIN_URL_FOLDER."/task_exec"]							="task_exec";
 $route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]="task_exec/get_file/$1/$2";
-
-
 
 $route[urlencode('ثبت')]="register";
 $route['register/request_pay/(.*)']="register/request_pay/$1";

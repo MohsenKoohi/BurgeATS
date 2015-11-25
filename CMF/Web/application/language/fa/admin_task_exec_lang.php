@@ -33,3 +33,7 @@ $lang['task_status_complete']="کامل";
 $lang['task_status_canceled']="لغو شده";
 $lang['status']="وضعیت";
 $lang['executer']="اجرا کننده";
+
+$lang['this_year']="سال جاری";
+$lang['this_month']="ماه جاری";
+$lang['this_day']="امروز";

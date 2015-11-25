@@ -62,25 +62,48 @@ class Task_exec_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_counts()
+	{
+		$df=DATE_FUNCTION;
+		list($y,$m,$d)=explode("/", $df("Y/m/d"));
+
+		$year_start="$y-01-01 00:00:00";
+		$month_start="$y-$m-01 00:00:00";
+		$day_start="$y-$m-$d 00:00:00";
+
+		$tb=$this->db->dbprefix($this->task_exec_table); 
+
+		$result=$this->db->query("
+			SELECT 
+				 (SELECT COUNT(*) FROM $tb WHERE te_last_exec_timestamp >= '$year_start') as year_count
+				,(SELECT COUNT(*) FROM $tb WHERE te_last_exec_timestamp >= '$month_start') as month_count
+				,(SELECT COUNT(*) FROM $tb WHERE te_last_exec_timestamp >= '$day_start') as day_count
+		");
+
+		$row=$result->row_array();
+
+		return $row;
+	}
+
 	public function get_dashbord_info()
 	{
-		return "";
-
 		$CI=& get_instance();
 		$lang=$CI->language->get();
-		$CI->lang->load('admin_task',$lang);		
+		$CI->lang->load('admin_task_exec',$lang);		
 		
 		$data=array();
-		$data['total_text']=$CI->lang->line("total");
-		$data['active_text']=$CI->lang->line("active");
+		$data['this_year_text']=$CI->lang->line("this_year");
+		$data['this_month_text']=$CI->lang->line("this_month");
+		$data['today_text']=$CI->lang->line("today");
 
 		$counts=$this->get_counts();
 
-		$data['total_count']=$counts['total'];
-		$data['active_count']=$counts['active'];
+		$data['year_count']=$counts['year_count'];
+		$data['month_count']=$counts['month_count'];
+		$data['day_count']=$counts['day_count'];
 		
 		$CI->load->library('parser');
-		$ret=$CI->parser->parse($CI->get_admin_view_file("task_dashboard"),$data,TRUE);
+		$ret=$CI->parser->parse($CI->get_admin_view_file("task_exec_dashboard"),$data,TRUE);
 		
 		return $ret;		
 	}

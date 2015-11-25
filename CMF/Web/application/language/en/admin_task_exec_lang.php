@@ -33,3 +33,7 @@ $lang['task_status_complete']="Complete";
 $lang['task_status_canceled']="Canceled";
 $lang['status']="Status";
 $lang['executer']="Executer";
+
+$lang['this_year']="This year";
+$lang['this_month']="This month";
+$lang['this_day']="Today";

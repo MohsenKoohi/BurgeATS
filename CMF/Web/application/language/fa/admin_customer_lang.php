@@ -22,3 +22,5 @@ $lang['to']="تا";
 $lang['search_again']="جستجو";
 $lang['phone']="تلفن";
 $lang['mobile']="موبایل";
+
+$lang['total']="تعداد";

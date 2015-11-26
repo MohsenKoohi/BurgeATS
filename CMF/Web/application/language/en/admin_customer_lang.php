@@ -22,3 +22,5 @@ $lang['to']="to";
 $lang['search_again']="Search";
 $lang['phone']="Phone";
 $lang['mobile']="Mobile";
+
+$lang['total']="Total";

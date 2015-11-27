@@ -20,9 +20,10 @@ class Task_Sample
 	//task, the status is changed to 'canceled', other wise its status is NULL or 'chaning'
 	public function get_customers($task,$count)
 	{
+		$df=DATE_FUNCTION;
+		$now=$df("Y-m-d H:i:s");
 
 		$task_id=$task['task_id'];
-
 
 		//a simple query which retreives all agent customers 
 
@@ -32,7 +33,7 @@ class Task_Sample
 		$CI->db->from("customer");
 		$CI->db->join("task_exec","customer_id = te_customer_id AND te_task_id = ".$task_id,"left");
 		$CI->db->where("customer_type","agent");
-		$CI->db->where("( ISNULL(te_status) OR  te_status = 'changing')");
+		$CI->db->where("( ISNULL(te_status) OR  (te_status = 'changing' AND te_next_exec < '$now') )");
 		$CI->db->order_by("customer_id ASC");
 		$CI->db->limit($count,0);
 		$res=$CI->db->get();

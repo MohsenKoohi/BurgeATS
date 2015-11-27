@@ -9,8 +9,7 @@
 					<div class="three columns">
 						<label>{task_name_text}</label>
 						<span><?php echo $task['task_name'];?></span>
-					</div>
-					
+					</div>					
 					<div class="three columns">
 						<label>{task_active_text} </label>
 						<span>

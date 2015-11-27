@@ -10,10 +10,7 @@
 						<label>{task_name_text}</label>
 						<span><?php echo $task['task_name'];?></span>
 					</div>
-					<div class="three columns">
-						<label>{task_desc_text}</label>
-						<span><?php echo nl2br($task['task_desc']);?></span>
-					</div>
+					
 					<div class="three columns">
 						<label>{task_active_text} </label>
 						<span>

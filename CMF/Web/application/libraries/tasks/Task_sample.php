@@ -8,7 +8,7 @@ class Task_Sample
 		
 	}
 
-	//this method recieve two args; $task which is a row of task table in db
+	//this method recieves two args; $task which is a row of task table in db
 	//and count, which specifies max number of customers this task can return
 	//
 	//return is an array of objects with task_id,task_name,customer_id,customer_name indexes

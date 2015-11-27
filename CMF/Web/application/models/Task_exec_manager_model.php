@@ -208,49 +208,24 @@ class Task_exec_manager_model extends CI_Model
 		if(!$user_tasks)
 			return;
 
-		//2) we should find the most important works with the same priority
-		$high_priority_tasks=array();
-		$hp=$user_tasks[0]['task_priority'];
-		for($i=0;$i<sizeof($user_tasks);$i++)
-			if($user_tasks[$i]['task_priority'] == $hp)
-				$high_priority_tasks[]=$user_tasks[$i];
-			else
-				break;
-
-		//3) we assume number of customers for each task is more  than $total_count,
-		//thus we just return the first priorities.
-		//however there is a hole for next version works
-		//this assumption can be deleted
-		//
-		//in this section we specify number of customers for each specified tasks 
-		//in previous section
-		$tasks=$high_priority_tasks;
-		$total_tasks=sizeof($tasks);
-		$sum=0;
-		$counts=array();
-		for($i=0;$i<$total_tasks;$i++)
-		{
-			$task_count=(int)(($total_count-$sum)/($total_tasks-$i));
-			$counts[]=$task_count;
-			$sum+=$task_count;
-		}
-
-		//4) now we have two array $tasks , $counts
 		//we should call classes of each task and specify customers 
 		//who the task should be execute for 
 		//class of each task should be placed in libraries/tasks folder
 		$result_array=array();
-		for($i=0;$i<sizeof($tasks);$i++)
+		$remained_count=$total_count;
+
+		for($i=0;($i<sizeof($user_tasks)) && ($remained_count>0);$i++)
 		{
-			$task=$tasks[$i];
-			$count=$counts[$i];
+			$task=$user_tasks[$i];
 
-			$class_name=$task['task_class_name'];
+			$class_name=strtolower($task['task_class_name']);
 
-			$task_file_name="tasks/".strtolower($class_name);
-			$this->load->library($task_file_name,NULL,"temp_task");
+			$task_file_name="tasks/".$class_name;
+			$this->load->library($task_file_name,NULL);
+			
+			$task_result=$this->$class_name->get_customers($task,$remained_count);
 
-			$task_result=$this->temp_task->get_customers($task,$count);
+			$remained_count-=sizeof($task_result);
 
 			$result_array=array_merge($result_array,$task_result);
 		}

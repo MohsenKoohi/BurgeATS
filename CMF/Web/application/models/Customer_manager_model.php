@@ -187,22 +187,19 @@ class Customer_manager_model extends CI_Model
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
 		persian_normalize($props);
 
-		if(isset($props['customer_email']))
+		if(isset($props['customer_email']) && $props['customer_email'])
 		{
-			if($props['customer_email'])
-			{
-				$this->db->select("count(customer_id) as count");
-				$this->db->from($this->customer_table_name);
-				$this->db->where("customer_id !=",$customer_id);
-				$this->db->where("customer_email",$props['customer_email']);
-				$result=$this->db->get();
-				$row=$result->row_array();
-				$count=$row['count'];
-				if($count)
-					return FALSE;
-			}
+			$this->db->select("count(customer_id) as count");
+			$this->db->from($this->customer_table_name);
+			$this->db->where("customer_id !=",$customer_id);
+			$this->db->where("customer_email",$props['customer_email']);
+			$result=$this->db->get();
+			$row=$result->row_array();
+			$count=$row['count'];
+			if($count)
+				return FALSE;
 
-			if(!isset($props['customer_name']))
+			if(!isset($props['customer_name']) || !$props['customer_name'])
 				$props['customer_name']=$props['customer_email'];
 		}
 		

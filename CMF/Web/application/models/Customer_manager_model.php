@@ -189,18 +189,18 @@ class Customer_manager_model extends CI_Model
 
 		if(isset($props['customer_email']))
 		{
-			if(!$props['customer_email'])
-				return FALSE;
-
-			$this->db->select("count(customer_id) as count");
-			$this->db->from($this->customer_table_name);
-			$this->db->where("customer_id !=",$customer_id);
-			$this->db->where("customer_email",$props['customer_email']);
-			$result=$this->db->get();
-			$row=$result->row_array();
-			$count=$row['count'];
-			if($count)
-				return FALSE;
+			if($props['customer_email'])
+			{
+				$this->db->select("count(customer_id) as count");
+				$this->db->from($this->customer_table_name);
+				$this->db->where("customer_id !=",$customer_id);
+				$this->db->where("customer_email",$props['customer_email']);
+				$result=$this->db->get();
+				$row=$result->row_array();
+				$count=$row['count'];
+				if($count)
+					return FALSE;
+			}
 
 			if(!isset($props['customer_name']))
 				$props['customer_name']=$props['customer_email'];
@@ -216,7 +216,7 @@ class Customer_manager_model extends CI_Model
 		$this->log_manager_model->info("CUSTOMER_ADD",$props);
 
 		//we should send an email to the customer
-		if(isset($props['customer_email']))
+		if(isset($props['customer_email']) && $props['customer_email'])
 		{
 			$pass=$this->set_new_password($props['customer_email']);
 			$this->send_registeration_mail($props['customer_email'],$pass);

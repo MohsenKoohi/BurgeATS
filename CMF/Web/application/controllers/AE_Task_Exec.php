@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Task_exec extends Burge_CMF_Controller {
+class AE_Task_Exec extends Burge_CMF_Controller {
 
 	function __construct()
 	{

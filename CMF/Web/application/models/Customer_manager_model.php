@@ -250,24 +250,31 @@ class Customer_manager_model extends CI_Model
 
 		if(isset($props['customer_email']))
 		{
-			if(!$props['customer_email'])
-				return FALSE;
-
-			$this->db->select("count(customer_id) as count");
-			$this->db->from($this->customer_table_name);
-			$this->db->where("customer_id !=",$customer_id);
-			$this->db->where("customer_email",$props['customer_email']);
-			$result=$this->db->get();
-			$row=$result->row_array();
-			$count=$row['count'];
-			if($count)
-				return FALSE;
+			if($props['customer_email'])
+			{
+				$this->db->select("count(customer_id) as count");
+				$this->db->from($this->customer_table_name);
+				$this->db->where("customer_id !=",$customer_id);
+				$this->db->where("customer_email",$props['customer_email']);
+				$result=$this->db->get();
+				$row=$result->row_array();
+				$count=$row['count'];
+				if($count)
+					return FALSE;
+			}
 
 			$this->db->select("customer_email");
 			$result=$this->db->get_where($this->customer_table_name,array("customer_id"=>$customer_id));
 			$row=$result->row_array();
-			if(!$row['customer_email'])
-				$should_send_registeration_mail=TRUE;
+
+			if($row['customer_email'])
+			{
+				if(!$props['customer_email'])
+					return FALSE;
+			}
+			else
+				if($props['customer_email'])
+					$should_send_registeration_mail=TRUE;
 		}
 
 		$this->db->where("customer_id",(int)$customer_id);

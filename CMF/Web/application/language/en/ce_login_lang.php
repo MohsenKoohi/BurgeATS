@@ -5,3 +5,4 @@ $lang['email']="Email";
 $lang['password']="Password";
 $lang['sign-in']="Sign In";
 
+$lang['header_title']=" | Login";

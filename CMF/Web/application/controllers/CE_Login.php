@@ -11,6 +11,7 @@ class CE_Login extends Burge_CMF_Controller {
 	public function index()
 	{
 		$this->load->model("customer_manager_model");
+		
 		if($this->customer_manager_model->has_customer_logged_in())
 		{
 			redirect(get_link("customer_dashboard"));
@@ -18,7 +19,7 @@ class CE_Login extends Burge_CMF_Controller {
 		}
 		
 		$lang=$this->language->get();
-		$this->lang->load('customer_login',$lang);
+		$this->lang->load('ce_login',$lang);
 
 		if($this->input->post())
 		{
@@ -31,10 +32,9 @@ class CE_Login extends Burge_CMF_Controller {
 					$pass=$this->input->post("pass");
 					$email=$this->input->post("email");
 					
-					$this->load->model("user_manager_model");
-					if($this->user_manager_model->login($email,$pass))
+					if($this->customer_manager_model->login($email,$pass))
 					{
-						redirect(get_link("admin_url"));
+						redirect(get_link("customer_dashboard"));
 						return;
 					}
 					else				
@@ -46,14 +46,13 @@ class CE_Login extends Burge_CMF_Controller {
 			else
 				$message=$this->lang->line("fill_all_fields");
 		}
-
 	
 		$this->data['lang_pages']=get_lang_pages(get_link("customer_login",TRUE));
 
 		if(isset($message))
-			$data['message']=$message;
+			$this->data['message']=$message;
 		else
-			$data['message']=get_message();
+			$this->data['message']=get_message();
 
 		$this->data['header_title'].=$this->lang->line("header_title");
 		$this->data['header_meta_description'].=$this->lang->line("header_meta_description");

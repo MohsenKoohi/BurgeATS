@@ -69,6 +69,7 @@ $route[ADMIN_URL_FOLDER."/task_exec"]							="AE_Task_Exec";
 $route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]="AE_Task_Exec/get_file/$1/$2";
 
 $route['login']		=	"CE_Login";
+$route['logout']		=	"CE_Logout";
 $route['dashboard']	=	"CE_Dashboard";
 
 $route[urlencode('ثبت')]="register";

@@ -12,7 +12,7 @@ class AE_Customer extends Burge_CMF_Controller {
 	public function index()
 	{
 
-		$this->lang->load('admin_customer',$this->selected_lang);
+		$this->lang->load('ae_customer',$this->selected_lang);
 		
 		if($this->input->post())
 		{
@@ -135,7 +135,7 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->data['customer_id']=$customer_id;
 		$this->data['task_id']=$task_id;
 
-		$this->lang->load('admin_customer_details',$this->selected_lang);
+		$this->lang->load('ae_customer_details',$this->selected_lang);
 
 		if($task_id)
 			$this->task_exec($customer_id,$task_id);

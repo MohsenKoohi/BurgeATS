@@ -9,7 +9,7 @@ class AE_Task_Exec extends Burge_CMF_Controller {
 		$this->load->model("task_manager_model");
 		$this->load->model("task_exec_manager_model");
 
-		$this->lang->load('admin_task_exec',$this->selected_lang);
+		$this->lang->load('ae_task_exec',$this->selected_lang);
 
 		return;
 	}

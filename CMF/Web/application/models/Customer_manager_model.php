@@ -165,7 +165,7 @@ class Customer_manager_model extends CI_Model
 	{
 		$CI=& get_instance();
 		$lang=$CI->language->get();
-		$CI->lang->load('admin_customer',$lang);		
+		$CI->lang->load('ae_customer',$lang);		
 		
 		$data['total_text']=$this->lang->line("total");
 		$data['customers_count']=$this->get_total_customers();

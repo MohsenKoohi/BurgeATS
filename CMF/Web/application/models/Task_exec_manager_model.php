@@ -89,7 +89,7 @@ class Task_exec_manager_model extends CI_Model
 	{
 		$CI=& get_instance();
 		$lang=$CI->language->get();
-		$CI->lang->load('admin_task_exec',$lang);		
+		$CI->lang->load('ae_task_exec',$lang);		
 		
 		$data=array();
 		$data['this_year_text']=$CI->lang->line("this_year");

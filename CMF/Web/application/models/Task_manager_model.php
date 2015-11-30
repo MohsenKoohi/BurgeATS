@@ -213,7 +213,7 @@ class Task_manager_model extends CI_Model
 	{
 		$CI=& get_instance();
 		$lang=$CI->language->get();
-		$CI->lang->load('admin_task',$lang);		
+		$CI->lang->load('ae_task',$lang);		
 		
 		$data=array();
 		$data['total_text']=$CI->lang->line("total");

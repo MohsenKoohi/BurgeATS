@@ -7,7 +7,7 @@ class AE_Task extends Burge_CMF_Controller {
 		parent::__construct();
 
 		$this->load->model("task_manager_model");
-		$this->lang->load('admin_task',$this->selected_lang);
+		$this->lang->load('ae_task',$this->selected_lang);
 
 		return;
 	}

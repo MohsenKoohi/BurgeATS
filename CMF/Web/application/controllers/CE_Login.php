@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class AE_Login extends CI_Controller {
+class CE_Login extends Burge_CMF_Controller {
 
 	function __construct()
 	{
@@ -10,15 +10,15 @@ class AE_Login extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->model("user_manager_model");
-		if($this->user_manager_model->has_user_logged_in())
+		$this->load->model("customer_manager_model");
+		if($this->customer_manager_model->has_customer_logged_in())
 		{
-			redirect(get_link("admin_url"));
+			redirect(get_link("customer_dashboard"));
 			return;
 		}
 		
 		$lang=$this->language->get();
-		$this->lang->load('ae_login',$lang);
+		$this->lang->load('customer_login',$lang);
 
 		if($this->input->post())
 		{
@@ -47,28 +47,25 @@ class AE_Login extends CI_Controller {
 				$message=$this->lang->line("fill_all_fields");
 		}
 
-		
-		$data=get_initialized_data();
-		
-		$data['lang_pages']=get_lang_pages(get_link("admin_login",TRUE));
+	
+		$this->data['lang_pages']=get_lang_pages(get_link("customer_login",TRUE));
 
 		if(isset($message))
 			$data['message']=$message;
 		else
 			$data['message']=get_message();
-		
-		$data['header_title']=$this->lang->line("login");
-		foreach($this->lang->language as $index => $val)
-			$data[$index."_text"]=$val;
-	
-		$data['captcha']=get_captcha();
-		
-		$tpl_dir=get_template_dir($lang);
-		$this->load->library('parser');
-		$this->parser->parse($tpl_dir.'/admin/header',$data);
-		$this->parser->parse($tpl_dir.'/admin/login',$data);
-		$this->parser->parse($tpl_dir.'/admin/footer',$data);			
 
+		$this->data['header_title'].=$this->lang->line("header_title");
+		$this->data['header_meta_description'].=$this->lang->line("header_meta_description");
+		$this->data['header_meta_keywords'].=$this->lang->line("header_meta_keywords");
+		$this->data['header_meta_robots']="noindex";
+
+		$this->data['header_canonical_url']=get_link("home_url");
+		
+		$this->data['captcha']=get_captcha();
+
+		$this->send_customer_output("login");
+		
 		return;	 
 	}
 }

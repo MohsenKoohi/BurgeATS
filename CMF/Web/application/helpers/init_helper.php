@@ -43,6 +43,9 @@ function &get_links($just_common=FALSE)
 
 			,'admin_task_exec'				=> ADMIN_SURL_LANG."/task_exec"
 			,'admin_task_exec_file_format'=> ADMIN_SURL_LANG."/task_exec/get_file/customer_id/file_name"
+
+			,'customer_login'					=>HOME_URL_LANG."/login"
+			,'customer_dashboard'			=>HOME_URL_LANG."/dashboard"
 		));
 	}
 

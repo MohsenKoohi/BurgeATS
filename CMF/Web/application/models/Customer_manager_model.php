@@ -668,7 +668,7 @@ class Customer_manager_model extends CI_Model
 			با استفاده از  <a style="color:#0870E3" href="'.HOME_URL."/حساب-کاربری".'">حساب کاربری</a> می توانید به 
 			صفحه خود دسترسی پیدا کنید.<br>';
 
-		burge_cmf_send_mail($email,'یه‌اتاق | اطلاعات حساب کاربری',$content);
+		burge_cmf_send_mail($email,'سیستم پیگیری امور برگه | اطلاعات حساب کاربری',$content);
 
 		return;
 	}

@@ -106,6 +106,7 @@
           </div>
            <ul>
             <li><a href="<?php echo get_link("customer_login");?>">Login</a></li>
+            <li><a href="<?php echo get_link("customer_logout");?>">Logout</a></li>
             <li>Item2</li>
             <li>Item3</li>
             <?php 

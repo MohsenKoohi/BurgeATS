@@ -139,6 +139,16 @@
 								<input type="text" name="name" class="full-width"/>
 							</div>
 							<div class="three columns">
+								<label>{status_text}</label>
+								<select name="status" class="full-width">
+									<option value=""></option>
+									<?php
+										foreach($task_exec_statuses as $status)
+											echo "<option value='".$status."'>".${"task_status_".$status."_text"}."</option>";
+									?>
+								</select>
+							</div>
+							<div class="three columns half-col-margin">
 								<label>{last_executer_user_text}</label>
 								<select name="user" class="full-width">
 									<option value=""></option>

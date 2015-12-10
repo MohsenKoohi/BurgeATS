@@ -28,9 +28,6 @@ $lang['requires_manager_note']="Requires manager note";
 $lang['yes']="Yes";
 $lang['no']="No";
 $lang['code']="Code";
-$lang['task_status_changing']="Changing";
-$lang['task_status_complete']="Complete";
-$lang['task_status_canceled']="Canceled";
 $lang['status']="Status";
 $lang['executer']="Executer";
 

@@ -28,9 +28,6 @@ $lang['requires_manager_note']="نیازمند بررسی مدیر";
 $lang['yes']="بله";
 $lang['no']="خیر";
 $lang['code']="کد";
-$lang['task_status_changing']="در حال تغییر";
-$lang['task_status_complete']="کامل";
-$lang['task_status_canceled']="لغو شده";
 $lang['status']="وضعیت";
 $lang['executer']="اجرا کننده";
 

@@ -281,6 +281,9 @@ class Task_exec_manager_model extends CI_Model
 			$this->db->where("`customer_name` LIKE '%".str_replace(" ", "%",$filter['customer_name'])."%'");
 		}
 
+		if(isset($filter['status']))
+			$this->db->where("te_status",$filter['status']);
+
 		if(isset($filter['last_exec_user_id']))
 			$this->db->where("te_last_exec_user_id",$filter['last_exec_user_id']);
 

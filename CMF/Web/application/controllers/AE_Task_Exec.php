@@ -38,6 +38,7 @@ class AE_Task_Exec extends Burge_CMF_Controller {
 		$this->data['users_info']=$this->user_manager_model->get_all_users_info();
 		
 		$this->data['raw_page_url']=get_link("admin_task_exec");
+		$this->data['task_exec_statuses']=$this->task_exec_manager_model->get_task_statuses();
 		
 		$filter=array();
 		$model_filter=array();
@@ -116,6 +117,13 @@ class AE_Task_Exec extends Burge_CMF_Controller {
 			$customer_name=$this->input->get("name");
 			$filter['name']=$customer_name;
 			$model_filter['customer_name']=$customer_name;
+		}
+
+		if($this->input->get("status"))
+		{
+			$result=$this->input->get("status");
+			$filter['status']=$result;
+			$model_filter['status']=$result;
 		}
 
 		if($this->input->get("user"))

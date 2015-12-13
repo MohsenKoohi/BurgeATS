@@ -1,6 +1,6 @@
 <div class="main">
 	<div class="container">
-		<h1>{customer_details_text} <?php if($customer_info) echo " , ".$customer_info['customer_name']; ?></h1>
+		<h1>{customer_details_text} <?php if($customer_info) echo $comma_text." ".$customer_info['customer_name']; ?></h1>
 
 		<style type="text/css">
 			
@@ -27,6 +27,15 @@
 			.row.even-odd-bg div.nine.columns
 			{
 				font-size:1.2em;
+			}
+
+			.task_histories .even-odd-bg div.four.columns
+			{
+				box-shadow: 2px 2px #888,-2px -2px #ccc;
+				border-radius: 5px;
+				margin:5px;
+				padding:10px;
+				width:calc(25% - 10px);
 			}
 		</style>
 
@@ -110,7 +119,7 @@
 							</div>
 						</div>
 
-							<?php if($task_exec_info) { ?>
+							<?php /*if($task_exec_info) { ?>
 								<div class="separated">
 									<h3>{task_last_exec_results_text}</h3>
 									<div class="row even-odd-bg dont-magnify" >
@@ -206,6 +215,87 @@
 										</div>
 									</div>
 									
+								</div>
+							<?php }*/ ?>
+
+							<?php if($task_history) { ?>
+								<div class="separated task_histories">
+									<h3>{task_last_exec_results_text}</h3>
+									<?php $i=0; foreach($task_history as $th) { $i++;?>
+										<div class="row even-odd-bg dont-magnify" >
+											<div class="four columns">
+												<label>#<?php echo $i;?></label>
+												<span>&nbsp;</span>
+											</div>
+											<div class="four columns">
+												<label>{task_status_text}</label>
+												<span>
+													<?php 
+														echo ${"task_status_".$th->status."_text"};
+													?>
+												</span>
+											</div>											
+											<div class="four columns">
+												<label>{task_last_exec_time_text}</label>
+												<span>
+													<?php echo $th->timestamp; ?>
+												</span>
+											</div>
+											<div class="four columns">
+												<label>{task_last_exec_user_text}</label>
+												<span>
+													{user_name_text}: <?php echo $th->active_user_name; ?>
+													- {user_code_text}: <?php echo $th->active_user_code; ?>
+												</span>
+											</div>									
+											<div class="four columns">
+												<label>{task_last_exec_result_text}</label>
+												<span><?php echo strip_tags($th->last_exec_result); ?></span>
+											</div>
+									
+											<?php 
+												$filename=$th->last_exec_result_file_name; 
+												if($filename)
+												{
+													$link=get_admin_task_exec_file($customer_id,$filename);
+											?>								
+												<div class="four columns">
+													<label>
+														{task_last_exec_result_file_text}
+													</label>
+													<span>
+														<?php echo "<a target='_blank' href='$link'>$filename</a>";?>
+													</span>
+												</div>
+											<?php 
+												}
+											?>
+											<div class="four columns">
+												<label>
+													{task_last_exec_requires_manager_note_text}
+												</label>
+												<span>
+													<?php 
+														if($th->last_exec_requires_manager_note)
+															echo $yes_text;
+														else
+															echo $no_text;
+													?>
+												</span>
+											</div>									
+											<div class="four columns">
+												<label>
+													{task_next_exec_text}
+												</label>
+												<span>
+													<?php 
+														if($th->next_exec!="0000-00-00 00:00:00")
+															echo "<span style='display:inline;dir:ltr'>".$th->next_exec."</span>"; 
+													?>
+												</span>
+											</div>
+										</div>								
+									<?php } ?>
 								</div>
 							<?php } ?>
 

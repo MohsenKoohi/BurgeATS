@@ -151,10 +151,15 @@ class AE_Customer extends Burge_CMF_Controller {
 		}
 
 		$filter=array();
+		$log_filter=array();
 
 		if($this->input->get('log_type'))
 		{
+			//this var is sent to view
 			$filter['log_type']=$this->input->get('log_type');
+
+			//this var is sent to retreive_customer_logs
+			$log_filter['log_types']=array($this->input->get('log_type'));
 		}
 
 		$this->data['customer_info']=$this->customer_manager_model->get_customer_info($customer_id);
@@ -164,7 +169,7 @@ class AE_Customer extends Burge_CMF_Controller {
 		}
 		else
 		{
-			$this->retrieve_cusomter_logs($customer_id,$filter);	
+			$this->retrieve_cusomter_logs($customer_id,$log_filter);	
 		}
 
 		$this->data['filter']=$filter;
@@ -187,7 +192,7 @@ class AE_Customer extends Burge_CMF_Controller {
 		return;	 		
 	}
 
-	private function retrieve_cusomter_logs($customer_id,&$filter)
+	private function retrieve_cusomter_logs($customer_id,$filter)
 	{
 		$logs_pp=10;
 		$page=1;
@@ -199,7 +204,6 @@ class AE_Customer extends Burge_CMF_Controller {
 		$filter['length']=$logs_pp;
 		
 		$log_res=$this->customer_manager_model->get_customer_logs($customer_id,$filter);
-		unset($filter['start'],$filter['length']);
 		
 		$total=$log_res['total'];
 		$this->data['customer_logs']=$log_res['results'];
@@ -357,6 +361,7 @@ class AE_Customer extends Burge_CMF_Controller {
 			return;
 
 		$this->data['task_info']=$task_info;
+		$this->data['task_history']=$this->get_task_exec_history($customer_id,$task_id);
 
 		$exec_info=$this->task_exec_manager_model->get_task_exec_info(array(
 			"task_id"=>$task_id
@@ -370,5 +375,45 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->data['task_exec_statuses']=$this->task_exec_manager_model->get_task_statuses();
 
 		return;
+	}
+
+	private function get_task_exec_history($customer_id,$task_id)
+	{
+		$types=array(
+			"CUSTOMER_TASK_EXEC"
+			,"CUSTOMER_TASK_MANAGER_NOTE"
+		);
+		
+		$logs=$this->customer_manager_model->get_customer_logs($customer_id,array("log_types"=>$types));
+
+		if(!$logs || !$logs['total'])
+			return NULL;
+
+		$logs=$logs['results'];
+
+		$ret=array();
+
+		for($i=sizeof($logs)-1;$i>=0;$i--)
+		{
+			$log=$logs[$i];
+			
+			if($log->task_id != $task_id)
+				continue;
+
+			if($log->log_type==="CUSTOMER_TASK_EXEC")
+				$ret[]=$log;
+			else
+			{
+				$ret_size=sizeof($ret);
+				if($ret_size==0)
+					continue;
+
+				$ret[$ret_size-1]->manager_note[]=$log;
+			}
+		}
+
+		bprint_r($ret[0]);
+
+		return $ret;
 	}
 }

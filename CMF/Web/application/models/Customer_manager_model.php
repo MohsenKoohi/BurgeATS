@@ -369,6 +369,12 @@ class Customer_manager_model extends CI_Model
 		$length=sizeof($file_names);
 		if(isset($filter['length']))
 			$length=(int)$filter['length'];
+		
+		$selected_log_type_codes=array();
+		if(isset($filter['log_types']))
+			foreach($filter['log_types'] as $type)
+				$selected_log_type_codes[]=$this->customer_log_types[$type];
+
 
 		foreach($file_names as $fn)
 		{
@@ -384,8 +390,8 @@ class Customer_manager_model extends CI_Model
 
 			//now we have timestamp and log_type of this log
 			//and we can filter logs we don't want here;
-			if(isset($filter['log_type']))
-				if($log_type != $this->customer_log_types[$filter['log_type']])
+			if($selected_log_type_codes)
+				if(!in_array($log_type ,$selected_log_type_codes))
 					continue;
 
 			$count++;

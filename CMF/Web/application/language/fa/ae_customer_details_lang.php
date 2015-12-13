@@ -31,7 +31,15 @@ $lang['to']="تا";
 
 $lang['tasks']="وظایف";
 
-$lang['task_last_exec_results']="نتیجه اجرای پیشین";
+$lang['task_last_exec_results']="نتیجه اجراهای پیشین";
+$lang['task_exec_time']="زمان اجرا";
+$lang['task_exec_result']="نتیجه اجرا";
+$lang['task_exec_file']="فایل";
+$lang['time']="زمان";
+$lang['status']="وضعیت";
+$lang['note']="نظر مدیر";
+
+
 $lang['task_specs']="مشخصات وظیفه";
 $lang['task_exec']="اجرا";
 

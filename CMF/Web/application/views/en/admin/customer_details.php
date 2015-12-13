@@ -31,9 +31,14 @@
 
 			.task_histories .even-odd-bg  div.columns
 			{
-				box-shadow: 2px 2px #888,-2px -2px #ccc;
+				box-shadow: 1px 1px #888,-1px -1px #ccc;
 				border-radius: 5px;
 				padding:10px;
+			}
+
+			.task_histories .even-odd-bg:nth-child(2n + 1)  div.columns
+			{
+				box-shadow: -1px -1px #888,1px 1px #ccc;
 			}
 
 			.task_histories .even-odd-bg  .three.columns
@@ -260,7 +265,7 @@
 												</span>
 											</div>											
 											<div class="three columns">
-												<label>{task_last_exec_time_text}</label>
+												<label>{task_exec_time_text}</label>
 												<span>
 													<?php echo $th->timestamp; ?>
 												</span>
@@ -273,7 +278,7 @@
 												</span>
 											</div>									
 											<div class="six columns">
-												<label>{task_last_exec_result_text}</label>
+												<label>{task_exec_result_text}</label>
 												<span><?php echo strip_tags($th->last_exec_result); ?></span>
 											</div>
 									
@@ -285,7 +290,7 @@
 											?>								
 												<div class="three columns">
 													<label>
-														{task_last_exec_result_file_text}
+														{task_exec_file_text}
 													</label>
 													<span>
 														<?php echo "<a target='_blank' href='$link'>$filename</a>";?>
@@ -327,19 +332,19 @@
 												<div class="twelve columns manager_note">
 													<label>{manager_note_text}</label>
 													<div class="three columns">
-														<label>{task_last_exec_time_text}</label>
+														<label>{time_text}</label>
 														<span>
 															<?php echo $note->timestamp; ?>
 														</span>
 													</div>
 													<div class="three columns">
-														<label>{task_last_exec_time_text}</label>
+														<label>{status_text}</label>
 														<span>
-															<?php echo $note->status; ?>
+															<?php echo ${"task_status_".$note->status."_text"};?>
 														</span>
 													</div>
 													<div class="six columns">
-														<label>{task_last_exec_time_text}</label>
+														<label>{note_text}</label>
 														<span>
 															<?php echo ($note->last_exec_manager_note); ?>
 														</span>

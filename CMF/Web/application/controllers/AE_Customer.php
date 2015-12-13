@@ -412,8 +412,6 @@ class AE_Customer extends Burge_CMF_Controller {
 			}
 		}
 
-		bprint_r($ret[0]);
-
 		return $ret;
 	}
 }

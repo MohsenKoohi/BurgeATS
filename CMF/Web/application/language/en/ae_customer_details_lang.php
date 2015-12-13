@@ -31,7 +31,14 @@ $lang['to']="to";
 
 $lang['tasks']="Tasks";
 
-$lang['task_last_exec_results']="Previous Execution Result";
+$lang['task_last_exec_results']="Previous Execution Results";
+$lang['task_exec_time']="Time";
+$lang['task_exec_result']="Result";
+$lang['task_exec_file']="File";
+$lang['time']="Time";
+$lang['status']="Status";
+$lang['note']="Manager Note";
+
 $lang['task_specs']="Task Specifications";
 $lang['task_exec']="Execution";
 

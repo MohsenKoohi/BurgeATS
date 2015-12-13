@@ -29,14 +29,34 @@
 				font-size:1.2em;
 			}
 
-			.task_histories .even-odd-bg div.four.columns
+			.task_histories .even-odd-bg  div.columns
 			{
 				box-shadow: 2px 2px #888,-2px -2px #ccc;
 				border-radius: 5px;
-				margin:5px;
 				padding:10px;
+			}
+
+			.task_histories .even-odd-bg  .three.columns
+			{
+				margin:5px;
 				width:calc(25% - 10px);
 			}
+			.task_histories .even-odd-bg  .six.columns
+			{
+				margin:5px;
+				width:calc(50% - 10px);
+			}
+
+			.task_histories .manager_note
+			{
+				margin-top:20px;
+			}
+
+			.task_histories > div
+			{
+				margin-top:10px;
+			}
+
 		</style>
 
 		<div class="tab-container">
@@ -221,13 +241,17 @@
 							<?php if($task_history) { ?>
 								<div class="separated task_histories">
 									<h3>{task_last_exec_results_text}</h3>
-									<?php $i=0; foreach($task_history as $th) { $i++;?>
+									<?php 
+										$i=0; 
+										foreach($task_history as $th) 
+										{ 
+											$i++;
+									?>
 										<div class="row even-odd-bg dont-magnify" >
-											<div class="four columns">
-												<label>#<?php echo $i;?></label>
-												<span>&nbsp;</span>
+											<div class="three columns">
+												<label class="big-font">#<?php echo $i;?></label>
 											</div>
-											<div class="four columns">
+											<div class="three columns">
 												<label>{task_status_text}</label>
 												<span>
 													<?php 
@@ -235,20 +259,20 @@
 													?>
 												</span>
 											</div>											
-											<div class="four columns">
+											<div class="three columns">
 												<label>{task_last_exec_time_text}</label>
 												<span>
 													<?php echo $th->timestamp; ?>
 												</span>
 											</div>
-											<div class="four columns">
+											<div class="three columns">
 												<label>{task_last_exec_user_text}</label>
 												<span>
 													{user_name_text}: <?php echo $th->active_user_name; ?>
 													- {user_code_text}: <?php echo $th->active_user_code; ?>
 												</span>
 											</div>									
-											<div class="four columns">
+											<div class="six columns">
 												<label>{task_last_exec_result_text}</label>
 												<span><?php echo strip_tags($th->last_exec_result); ?></span>
 											</div>
@@ -259,7 +283,7 @@
 												{
 													$link=get_admin_task_exec_file($customer_id,$filename);
 											?>								
-												<div class="four columns">
+												<div class="three columns">
 													<label>
 														{task_last_exec_result_file_text}
 													</label>
@@ -270,7 +294,7 @@
 											<?php 
 												}
 											?>
-											<div class="four columns">
+											<div class="three columns">
 												<label>
 													{task_last_exec_requires_manager_note_text}
 												</label>
@@ -283,7 +307,7 @@
 													?>
 												</span>
 											</div>									
-											<div class="four columns">
+											<div class="three columns">
 												<label>
 													{task_next_exec_text}
 												</label>
@@ -294,8 +318,41 @@
 													?>
 												</span>
 											</div>
+											<?php 
+												if(isset($th->manager_note))
+													foreach($th->manager_note as $note) 
+													{ 
+											?>
+												
+												<div class="twelve columns manager_note">
+													<label>{manager_note_text}</label>
+													<div class="three columns">
+														<label>{task_last_exec_time_text}</label>
+														<span>
+															<?php echo $note->timestamp; ?>
+														</span>
+													</div>
+													<div class="three columns">
+														<label>{task_last_exec_time_text}</label>
+														<span>
+															<?php echo $note->status; ?>
+														</span>
+													</div>
+													<div class="six columns">
+														<label>{task_last_exec_time_text}</label>
+														<span>
+															<?php echo ($note->last_exec_manager_note); ?>
+														</span>
+													</div>
+
+												</div>
+											<?php 
+														} 
+											?>
 										</div>								
-									<?php } ?>
+									<?php
+										} 
+									?>
 								</div>
 							<?php } ?>
 

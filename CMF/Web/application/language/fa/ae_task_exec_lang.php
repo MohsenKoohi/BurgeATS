@@ -7,7 +7,6 @@ $lang['logs']="فعالیت‌ها";
 
 $lang['task']="عنوان";
 $lang['customer']="مشتری";
-$lang['comma']="،";
 
 $lang['executed_tasks']="گزارش وظایف اجرا شده";
 $lang['search_again']="جستجو";

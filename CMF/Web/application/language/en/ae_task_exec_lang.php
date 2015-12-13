@@ -7,7 +7,6 @@ $lang['logs']="Logs";
 
 $lang['task']="Task";
 $lang['customer']="Customer";
-$lang['comma']=",";
 
 $lang['executed_tasks']="Executed Tasks";
 $lang['search_again']="Search";

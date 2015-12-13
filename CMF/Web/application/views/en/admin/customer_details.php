@@ -1,6 +1,6 @@
 <div class="main">
 	<div class="container">
-		<h1>{customer_details_text}</h1>
+		<h1>{customer_details_text} <?php if($customer_info) echo " , ".$customer_info['customer_name']; ?></h1>
 
 		<style type="text/css">
 			

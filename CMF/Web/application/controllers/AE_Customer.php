@@ -164,35 +164,7 @@ class AE_Customer extends Burge_CMF_Controller {
 		}
 		else
 		{
-			$logs_pp=10;
-			$page=1;
-			if($this->input->get("page"))
-				$page=(int)$this->input->get("page");
-
-			$start=($page-1)*$logs_pp;
-			$filter['start']=$start;
-			$filter['length']=$logs_pp;
-			
-			$log_res=$this->customer_manager_model->get_customer_logs($customer_id,$filter);
-			unset($filter['start'],$filter['length']);
-			
-			$total=$log_res['total'];
-			$this->data['customer_logs']=$log_res['results'];
-			$end=$start+sizeof($this->data['customer_logs'])-1;
-
-			$this->data['logs_current_page']=$page;
-			$this->data['logs_total_pages']=ceil($total/$logs_pp);
-			$this->data['logs_total']=$total;
-			if($total)
-			{
-				$this->data['logs_start']=$start+1;
-				$this->data['logs_end']=$end+1;		
-			}
-			else
-			{
-				$this->data['logs_start']=0;
-				$this->data['logs_end']=0;
-			}
+			$this->retrieve_cusomter_logs($customer_id,$filter);	
 		}
 
 		$this->data['filter']=$filter;
@@ -205,10 +177,49 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->data['cities']=$this->customer_manager_model->get_cities();
 
 		$this->data['header_title']=$this->lang->line("customer_details");
+		if($this->data['customer_info'])
+			$this->data['header_title'].=" | ".$this->data['customer_info']['customer_name'];
+		
 
 		$this->send_admin_output("customer_details");
 
+
 		return;	 		
+	}
+
+	private function retrieve_cusomter_logs($customer_id,&$filter)
+	{
+		$logs_pp=10;
+		$page=1;
+		if($this->input->get("page"))
+			$page=(int)$this->input->get("page");
+
+		$start=($page-1)*$logs_pp;
+		$filter['start']=$start;
+		$filter['length']=$logs_pp;
+		
+		$log_res=$this->customer_manager_model->get_customer_logs($customer_id,$filter);
+		unset($filter['start'],$filter['length']);
+		
+		$total=$log_res['total'];
+		$this->data['customer_logs']=$log_res['results'];
+		$end=$start+sizeof($this->data['customer_logs'])-1;
+
+		$this->data['logs_current_page']=$page;
+		$this->data['logs_total_pages']=ceil($total/$logs_pp);
+		$this->data['logs_total']=$total;
+		if($total)
+		{
+			$this->data['logs_start']=$start+1;
+			$this->data['logs_end']=$end+1;		
+		}
+		else
+		{
+			$this->data['logs_start']=0;
+			$this->data['logs_end']=0;
+		}
+
+		return;
 	}
 
 	private function save_customer_new_properties($customer_id,$task_id)

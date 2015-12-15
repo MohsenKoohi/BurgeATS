@@ -140,7 +140,7 @@
 
 						function setCities(province)
 						{
-							var html='option value=""></option>';
+							var html='<option value=""></option>';
 							var provinceCities=cities[province];
 							for(var i in provinceCities)
 								html+='<option value="'+provinceCities[i]+'">'+provinceCities[i]+'</option>';

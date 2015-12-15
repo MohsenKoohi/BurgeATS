@@ -25,4 +25,7 @@ $lang['mobile']="موبایل";
 
 $lang['total']="تعداد";
 
-$lang['search']="جستجوی";
+$lang['code']="کد";
+$lang['province']="استان";
+$lang['city']="شهر";
+$lang['address']="آدرس";

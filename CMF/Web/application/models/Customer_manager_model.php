@@ -136,6 +136,44 @@ class Customer_manager_model extends CI_Model
 			$this->db->where("customer_type",$filter['type']);
 		}
 
+		if(isset($filter['email']))
+		{
+			$filter['email']=persian_normalize($filter['email']);
+			$this->db->where("customer_email LIKE '%".str_replace(' ', '%', $filter['email'])."%'");
+		}
+
+		if(isset($filter['code']))
+		{
+			$filter['code']=persian_normalize($filter['code']);
+			$this->db->where("customer_code LIKE '%".trim($filter['code'])."%'");
+		}
+
+		if(isset($filter['province']))
+		{
+			$filter['province']=persian_normalize($filter['province']);
+			$this->db->where("customer_province LIKE '%".str_replace(' ', '%', $filter['province'])."%'");
+		}
+		if(isset($filter['city']))
+		{
+			$filter['city']=persian_normalize($filter['city']);
+			$this->db->where("customer_city LIKE '%".str_replace(' ', '%', $filter['city'])."%'");
+		}
+		if(isset($filter['address']))
+		{
+			$filter['address']=persian_normalize($filter['address']);
+			$this->db->where("customer_address LIKE '%".str_replace(' ', '%', $filter['address'])."%'");
+		}
+		if(isset($filter['phone_mobile']))
+		{
+			$filter['phone_mobile']=persian_normalize($filter['phone_mobile']);
+			$this->db->where(
+				"(
+					(customer_phone LIKE '%".str_replace(' ', '%', $filter['phone_mobile'])."%' ) OR
+					(customer_mobile LIKE '%".str_replace(' ', '%', $filter['phone_mobile'])."%' )
+				)"
+			);
+		}
+
 		if(isset($filter['id']))
 		{
 			$this->db->where_in("customer_id",$filter['id']);

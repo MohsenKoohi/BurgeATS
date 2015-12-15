@@ -24,3 +24,8 @@ $lang['phone']="Phone";
 $lang['mobile']="Mobile";
 
 $lang['total']="Total";
+
+$lang['code']="Code";
+$lang['province']="Province";
+$lang['city']="City";
+$lang['address']="Address";

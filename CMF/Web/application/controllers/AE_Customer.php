@@ -50,32 +50,13 @@ class AE_Customer extends Burge_CMF_Controller {
 			$page=(int)$this->input->get("page");
 
 		$filter=array();
-		$this->data['filter']=array();
 
-		if($this->input->get("name"))
-		{
-			$filter['name']=$this->input->get("name");
-			$this->data['filter']['name']=$this->input->get("name");
-		}
+		$pfnames=array("name","type","email","code","province","city","address","phone_mobile");
+		foreach($pfnames as $pfname)
+			if($this->input->get($pfname))
+				$filter[$pfname]=$this->input->get($pfname);	
 
-		if($this->input->get("type"))
-		{
-			$filter['type']=$this->input->get("type");
-			$this->data['filter']['type']=$this->input->get("type");
-		}
-
-		if($this->input->get("province"))
-		{
-			$filter['province']=$this->input->get("province");
-			$this->data['filter']['province']=$this->input->get("province");
-		}
-
-		if($this->input->get("city"))
-		{
-			$filter['city']=$this->input->get("city");
-			$this->data['filter']['city']=$this->input->get("city");
-		}
-
+		
 		$total=$this->customer_manager_model->get_total_customers($filter);
 		$this->data['customers_total']=$total;
 		$this->data['customers_total_pages']=ceil($total/$items_per_page);
@@ -103,6 +84,8 @@ class AE_Customer extends Burge_CMF_Controller {
 
 			$this->data['customers_info']=$this->customer_manager_model->get_customers($filter);
 
+			unset($filter['start']);
+			unset($filter['length']);
 		}
 		else
 		{
@@ -110,7 +93,9 @@ class AE_Customer extends Burge_CMF_Controller {
 			$this->data['customers_end']=0;
 			$this->data['customers_info']=array();
 		}
-		
+
+		$this->data['filter']=$filter;
+
 		return;
 	}
 

@@ -24,3 +24,5 @@ $lang['phone']="تلفن";
 $lang['mobile']="موبایل";
 
 $lang['total']="تعداد";
+
+$lang['search']="جستجوی";

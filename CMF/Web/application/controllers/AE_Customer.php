@@ -24,6 +24,9 @@ class AE_Customer extends Burge_CMF_Controller {
 		
 		$this->set_data_customers();
 		$this->data['raw_page_url']=get_link("admin_customer");
+		$this->data['provinces']=$this->customer_manager_model->get_provinces();
+		$this->data['cities']=$this->customer_manager_model->get_cities();
+
 		
 		$page_raw_lang_url=get_link("admin_customer",TRUE);
 		if($this->data['url_queries'])
@@ -53,14 +56,24 @@ class AE_Customer extends Burge_CMF_Controller {
 		{
 			$filter['name']=$this->input->get("name");
 			$this->data['filter']['name']=$this->input->get("name");
-			$this->data['url_queries'].="&name=".urlencode($filter['name']);
 		}
 
 		if($this->input->get("type"))
 		{
 			$filter['type']=$this->input->get("type");
 			$this->data['filter']['type']=$this->input->get("type");
-			$this->data['url_queries'].="&filter=".urlencode($filter['type']);
+		}
+
+		if($this->input->get("province"))
+		{
+			$filter['province']=$this->input->get("province");
+			$this->data['filter']['province']=$this->input->get("province");
+		}
+
+		if($this->input->get("city"))
+		{
+			$filter['city']=$this->input->get("city");
+			$this->data['filter']['city']=$this->input->get("city");
 		}
 
 		$total=$this->customer_manager_model->get_total_customers($filter);

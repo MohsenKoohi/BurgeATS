@@ -1,5 +1,5 @@
 <?php
-class Messages_manager_model extends CI_Model
+class Message_manager_model extends CI_Model
 {
 	public function __construct()
 	{
@@ -10,7 +10,7 @@ class Messages_manager_model extends CI_Model
 
 	public function install()
 	{
-		$module_table=$this->db->dbprefix('messages'); 
+		$module_table=$this->db->dbprefix('message'); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $module_table (
 				`message_id` BIGINT AUTO_INCREMENT NOT NULL
@@ -19,16 +19,30 @@ class Messages_manager_model extends CI_Model
 				,`message_sender_type` enum('customer','user')
 				,`message_sender_id` BIGINT
 				,`message_time_stamp` DATETIME
-				,`message_receiver_type` enum('customer','user','system')
+				,`message_receiver_type` enum('customer','user')
 				,`message_receiver_id` BIGINT
 				,`message_subject` VARCHAR(100)
 				,`message_body` TEXT
+				,`message_verifier_id` INT DEFAULT 0
 				,PRIMARY KEY (message_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
-		$this->add_module("message","message_manager");
-		$this->add_module_names_from_lang_file("message");
+		$module_table=$this->db->dbprefix('message_user'); 
+		$this->db->query(
+			"CREATE TABLE IF NOT EXISTS $module_table (
+				`mu_user_id` INT NOT NULL
+				,`mu_verifier` TINYINT NOT NULL DEFAULT 0 
+				,`mu_message_admin` TINYINT NOT NULL DEFAULT 0
+				,PRIMARY KEY (mu_user_id)	
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+		);
+
+		$this->module_manager_model->add_module("message","message_manager");
+		$this->module_manager_model->add_module_names_from_lang_file("message");
+
+		$this->module_manager_model->add_module("message_access","");
+		$this->module_manager_model->add_module_names_from_lang_file("message_access");
 		
 		return;
 	}

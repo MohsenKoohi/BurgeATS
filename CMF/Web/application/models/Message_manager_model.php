@@ -21,7 +21,7 @@ class Message_manager_model extends CI_Model
 				,`message_time_stamp` DATETIME
 				,`message_receiver_type` enum('customer','user')
 				,`message_receiver_id` BIGINT
-				,`message_subject` VARCHAR(100)
+				,`message_subject` VARCHAR(200)
 				,`message_body` TEXT
 				,`message_verifier_id` INT DEFAULT 0
 				,PRIMARY KEY (message_id)	
@@ -51,6 +51,11 @@ class Message_manager_model extends CI_Model
 	{
 
 		return;
+	}
+
+	public function get_sidebar_text()
+	{
+		//return " (12) ";
 	}
 
 	public function get_dashbord_info()

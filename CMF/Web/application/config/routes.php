@@ -67,6 +67,8 @@ $route[ADMIN_URL_FOLDER."/task"]									="AE_Task";
 $route[ADMIN_URL_FOLDER."/task/details/(\d+)"]				="AE_Task/task_details/$1";
 $route[ADMIN_URL_FOLDER."/task_exec"]							="AE_Task_Exec";
 $route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]="AE_Task_Exec/get_file/$1/$2";
+$route[ADMIN_URL_FOLDER."/message_access"]					="AE_Message_Access";
+$route[ADMIN_URL_FOLDER."/message"]								="AE_Message";
 
 $route['login']		=	"CE_Login";
 $route['logout']		=	"CE_Logout";

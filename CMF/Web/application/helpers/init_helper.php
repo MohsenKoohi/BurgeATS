@@ -44,6 +44,9 @@ function &get_links($just_common=FALSE)
 			,'admin_task_exec'				=> ADMIN_SURL_LANG."/task_exec"
 			,'admin_task_exec_file_format'=> ADMIN_SURL_LANG."/task_exec/get_file/customer_id/file_name"
 
+			,'admin_message_access'			=> ADMIN_SURL_LANG."/message_access"
+			,'admin_message'					=> ADMIN_SURL_LANG."/message"
+
 			,'customer_login'					=>HOME_URL_LANG."/login"
 			,'customer_logout'				=>HOME_URL_LANG."/logout"
 			,'customer_dashboard'			=>HOME_URL_LANG."/dashboard"

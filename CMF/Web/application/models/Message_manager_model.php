@@ -24,6 +24,7 @@ class Message_manager_model extends CI_Model
 				,`message_subject` VARCHAR(200)
 				,`message_body` TEXT
 				,`message_verifier_id` INT DEFAULT 0
+				,`message_replied` TINYINT DEFAULT 0
 				,PRIMARY KEY (message_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);

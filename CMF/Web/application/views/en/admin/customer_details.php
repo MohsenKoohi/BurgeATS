@@ -66,9 +66,7 @@
 
 		<div class="tab-container">
 			<ul class="tabs">
-				<?php if(isset($task_info)) { ?>
 				<li><a href="#tasks">{tasks_text}</a></li>
-				<?php } ?>
 				<li><a href="#props">{properties_text}</a></li>
 				<li><a href="#logs">{customer_logs_text}</a></li>
 			</ul>
@@ -120,10 +118,28 @@
 				});
 			</script>
 
-			<?php if(isset($task_info)) { ?>
-				<div class="tab" id="tasks" style="">
-					<div class="container">
-						<h2>{tasks_text}</h2>	
+			<div class="tab" id="tasks" style="">
+				<div class="container">
+					<h2>{tasks_text}</h2>
+					<div class="row">
+						<div class="three columns">{task_text}</div>
+						<div class="six columns">
+							<select class="full-width" onchange="if($(this).val()) document.location=$(this).val()">
+								<option>&nbsp;</option>
+								<?php 
+									foreach ($customer_tasks as $tid => $tname)
+									{
+										$sel="";
+										if($tid==$task_id)
+											$sel="selected";
+										$link=get_admin_customer_details_link($customer_id,$tid);
+										echo "<option $sel value='$link'>$tname</option>";
+									}
+								?>
+							</select>
+						</div>
+					</div>
+					<?php if(isset($task_info)) { ?>
 						<div class="separated">
 							<h3>{task_specs_text}</h3>
 							<div class="row even-odd-bg dont-magnify" >
@@ -144,301 +160,240 @@
 							</div>
 						</div>
 
-							<?php /*if($task_exec_info) { ?>
-								<div class="separated">
-									<h3>{task_last_exec_results_text}</h3>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											{task_status_text}
-										</div>
-										<div class="eight columns">
-											<?php 
-												echo ${"task_status_".$task_exec_info['te_status']."_text"};
-											?>
-										</div>
+						<?php /*if($task_exec_info) { ?>
+							<div class="separated">
+								<h3>{task_last_exec_results_text}</h3>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										{task_status_text}
 									</div>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											{task_exec_count_text}
-										</div>
-										<div class="eight columns">
-											<?php echo $task_exec_info['te_exec_count']; ?>
-										</div>
+									<div class="eight columns">
+										<?php 
+											echo ${"task_status_".$task_exec_info['te_status']."_text"};
+										?>
 									</div>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											{task_last_exec_time_text}
-										</div>
-										<div class="eight columns">
-											<?php echo $task_exec_info['te_last_exec_timestamp']; ?>
-										</div>
-									</div>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											{task_last_exec_user_text}
-										</div>
-										<div class="eight columns">
-											{user_name_text}: <?php echo $task_exec_info['user_name']; ?>
-											- {user_code_text}: <?php echo $task_exec_info['user_code']; ?>
-										</div>
-									</div>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											{task_last_exec_result_text}
-										</div>
-										<div class="eight columns">
-											<?php echo nl2br($task_exec_info['te_last_exec_result']); ?>
-										</div>
-									</div>
-									<?php 
-										$filename=$task_exec_info['te_last_exec_result_file_name']; 
-										if($filename)
-										{
-											$link=get_admin_task_exec_file($customer_id,$filename);
-									?>								
-											<div class="row even-odd-bg dont-magnify" >
-												<div class="three columns">
-													{task_last_exec_result_file_text}
-												</div>
-												<div class="eight columns">
-													<?php echo "<a target='_blank' href='$link'>$filename</a>";?>
-												</div>
-											</div>
-									<?php 
-										}
-									?>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											{task_last_exec_requires_manager_note_text}
-										</div>
-										<div class="eight columns">
-											<?php 
-												if($task_exec_info['te_last_exec_requires_manager_note'])
-													echo $yes_text;
-												else
-													echo $no_text;
-											?>
-										</div>
-									</div>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											{task_next_exec_text}
-										</div>
-										<div class="eight columns">
-											<?php 
-												if($task_exec_info['te_next_exec']!="0000-00-00 00:00:00")
-													echo $task_exec_info['te_next_exec']; 
-											?>
-										</div>
-									</div>
-									<div class="row even-odd-bg dont-magnify">
-										<div class="three columns">
-											{task_last_exec_manager_note_text}
-										</div>
-										<div class="eight columns">
-											<?php echo nl2br($task_exec_info['te_last_exec_manager_note']); ?>
-										</div>
-									</div>
-									
 								</div>
-							<?php }*/ ?>
-
-							<?php if($task_history) { ?>
-								<div class="separated task_histories">
-									<h3>{task_last_exec_results_text}</h3>
-									<?php 
-										$i=0; 
-										foreach($task_history as $th) 
-										{ 
-											$i++;
-									?>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										{task_exec_count_text}
+									</div>
+									<div class="eight columns">
+										<?php echo $task_exec_info['te_exec_count']; ?>
+									</div>
+								</div>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										{task_last_exec_time_text}
+									</div>
+									<div class="eight columns">
+										<?php echo $task_exec_info['te_last_exec_timestamp']; ?>
+									</div>
+								</div>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										{task_last_exec_user_text}
+									</div>
+									<div class="eight columns">
+										{user_name_text}: <?php echo $task_exec_info['user_name']; ?>
+										- {user_code_text}: <?php echo $task_exec_info['user_code']; ?>
+									</div>
+								</div>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										{task_last_exec_result_text}
+									</div>
+									<div class="eight columns">
+										<?php echo nl2br($task_exec_info['te_last_exec_result']); ?>
+									</div>
+								</div>
+								<?php 
+									$filename=$task_exec_info['te_last_exec_result_file_name']; 
+									if($filename)
+									{
+										$link=get_admin_task_exec_file($customer_id,$filename);
+								?>								
 										<div class="row even-odd-bg dont-magnify" >
 											<div class="three columns">
-												<label class="big-font">#<?php echo $i;?></label>
+												{task_last_exec_result_file_text}
 											</div>
+											<div class="eight columns">
+												<?php echo "<a target='_blank' href='$link'>$filename</a>";?>
+											</div>
+										</div>
+								<?php 
+									}
+								?>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										{task_last_exec_requires_manager_note_text}
+									</div>
+									<div class="eight columns">
+										<?php 
+											if($task_exec_info['te_last_exec_requires_manager_note'])
+												echo $yes_text;
+											else
+												echo $no_text;
+										?>
+									</div>
+								</div>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										{task_next_exec_text}
+									</div>
+									<div class="eight columns">
+										<?php 
+											if($task_exec_info['te_next_exec']!="0000-00-00 00:00:00")
+												echo $task_exec_info['te_next_exec']; 
+										?>
+									</div>
+								</div>
+								<div class="row even-odd-bg dont-magnify">
+									<div class="three columns">
+										{task_last_exec_manager_note_text}
+									</div>
+									<div class="eight columns">
+										<?php echo nl2br($task_exec_info['te_last_exec_manager_note']); ?>
+									</div>
+								</div>
+								
+							</div>
+						<?php }*/ ?>
+
+						<?php if($task_history) { ?>
+							<div class="separated task_histories">
+								<h3>{task_last_exec_results_text}</h3>
+								<?php 
+									$i=0; 
+									foreach($task_history as $th) 
+									{ 
+										$i++;
+								?>
+									<div class="row even-odd-bg dont-magnify" >
+										<div class="three columns">
+											<label class="big-font">#<?php echo $i;?></label>
+										</div>
+										<div class="three columns">
+											<label>{task_status_text}</label>
+											<span>
+												<?php 
+													echo ${"task_status_".$th->status."_text"};
+												?>
+											</span>
+										</div>											
+										<div class="three columns">
+											<label>{task_exec_time_text}</label>
+											<span>
+												<?php echo $th->timestamp; ?>
+											</span>
+										</div>
+										<div class="three columns">
+											<label>{task_last_exec_user_text}</label>
+											<span>
+												{user_name_text}: <?php echo $th->active_user_name; ?>
+												- {user_code_text}: <?php echo $th->active_user_code; ?>
+											</span>
+										</div>									
+										<div class="six columns">
+											<label>{task_exec_result_text}</label>
+											<span><?php echo strip_tags($th->last_exec_result); ?></span>
+										</div>
+								
+										<?php 
+											$filename=$th->last_exec_result_file_name; 
+											if($filename)
+											{
+												$link=get_admin_task_exec_file($customer_id,$filename);
+										?>								
 											<div class="three columns">
-												<label>{task_status_text}</label>
+												<label>
+													{task_exec_file_text}
+												</label>
 												<span>
-													<?php 
-														echo ${"task_status_".$th->status."_text"};
-													?>
-												</span>
-											</div>											
-											<div class="three columns">
-												<label>{task_exec_time_text}</label>
-												<span>
-													<?php echo $th->timestamp; ?>
+													<?php echo "<a target='_blank' href='$link'>$filename</a>";?>
 												</span>
 											</div>
-											<div class="three columns">
-												<label>{task_last_exec_user_text}</label>
-												<span>
-													{user_name_text}: <?php echo $th->active_user_name; ?>
-													- {user_code_text}: <?php echo $th->active_user_code; ?>
-												</span>
-											</div>									
-											<div class="six columns">
-												<label>{task_exec_result_text}</label>
-												<span><?php echo strip_tags($th->last_exec_result); ?></span>
-											</div>
-									
-											<?php 
-												$filename=$th->last_exec_result_file_name; 
-												if($filename)
-												{
-													$link=get_admin_task_exec_file($customer_id,$filename);
-											?>								
+										<?php 
+											}
+										?>
+										<div class="three columns">
+											<label>
+												{task_last_exec_requires_manager_note_text}
+											</label>
+											<span>
+												<?php 
+													if($th->last_exec_requires_manager_note)
+														echo $yes_text;
+													else
+														echo $no_text;
+												?>
+											</span>
+										</div>									
+										<div class="three columns">
+											<label>
+												{task_next_exec_text}
+											</label>
+											<span>
+												<?php 
+													if($th->next_exec!="0000-00-00 00:00:00")
+														echo "<span style='display:inline;dir:ltr'>".$th->next_exec."</span>"; 
+												?>
+											</span>
+										</div>
+										<?php 
+											if(isset($th->manager_note))
+												foreach($th->manager_note as $note) 
+												{ 
+										?>
+											
+											<div class="twelve columns manager_note">
+												<label>{manager_note_text}</label>
 												<div class="three columns">
-													<label>
-														{task_exec_file_text}
-													</label>
+													<label>{time_text}</label>
 													<span>
-														<?php echo "<a target='_blank' href='$link'>$filename</a>";?>
+														<?php echo $note->timestamp; ?>
 													</span>
 												</div>
-											<?php 
-												}
-											?>
-											<div class="three columns">
-												<label>
-													{task_last_exec_requires_manager_note_text}
-												</label>
-												<span>
-													<?php 
-														if($th->last_exec_requires_manager_note)
-															echo $yes_text;
-														else
-															echo $no_text;
-													?>
-												</span>
-											</div>									
-											<div class="three columns">
-												<label>
-													{task_next_exec_text}
-												</label>
-												<span>
-													<?php 
-														if($th->next_exec!="0000-00-00 00:00:00")
-															echo "<span style='display:inline;dir:ltr'>".$th->next_exec."</span>"; 
-													?>
-												</span>
-											</div>
-											<?php 
-												if(isset($th->manager_note))
-													foreach($th->manager_note as $note) 
-													{ 
-											?>
-												
-												<div class="twelve columns manager_note">
-													<label>{manager_note_text}</label>
-													<div class="three columns">
-														<label>{time_text}</label>
-														<span>
-															<?php echo $note->timestamp; ?>
-														</span>
-													</div>
-													<div class="three columns">
-														<label>{status_text}</label>
-														<span>
-															<?php echo ${"task_status_".$note->status."_text"};?>
-														</span>
-													</div>
-													<div class="six columns">
-														<label>{note_text}</label>
-														<span>
-															<?php echo ($note->last_exec_manager_note); ?>
-														</span>
-													</div>
-
+												<div class="three columns">
+													<label>{status_text}</label>
+													<span>
+														<?php echo ${"task_status_".$note->status."_text"};?>
+													</span>
 												</div>
-											<?php 
-														} 
-											?>
-										</div>								
-									<?php
-										} 
-									?>
-								</div>
-							<?php } ?>
+												<div class="six columns">
+													<label>{note_text}</label>
+													<span>
+														<?php echo ($note->last_exec_manager_note); ?>
+													</span>
+												</div>
 
-							<?php if($task_exec_info && $user_is_manager) { ?>
-								<div class="separated">
-									<h3>{manager_note_text}</h3>
-									<?php echo form_open_multipart(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
-										<input type="hidden" name="post_type" value="manager_note" />	
-										<span></span>
-										<div class="row even-odd-bg dont-magnify" >
-											<div class="three columns">
-												<span>{task_status_text}</span>
 											</div>
-											<div class="six columns">
-												<select name="manager_task_status" class="full-width" onchange="managerTaskStatusChanged();">
-													<?php 
-														foreach($task_exec_statuses as $status)
-														{
-															$sel="";
-															if($task_exec_info['te_status'] === $status)
-																$sel="selected";
-															echo "<option $sel value='$status'>".${"task_status_".$status."_text"}."</option>";
-														}
-													?>
-												</select>
-											</div>					
-										</div>
-										<div class="row even-odd-bg dont-magnify" >
-											<div class="three columns">
-												<span>{manager_note_text}</span>
-											</div>
-											<div class="six columns">
-												<textarea rows="3" name="manager_note" class="full-width"></textarea>
-											</div>					
-										</div>
-										<div class="row even-odd-bg dont-magnify" id="manager_remind_days_row" >
-											<div class="three columns">
-												<span>{task_exec_remind_in_text}</span>
-											</div>
-											<div class="six columns">
-												<input type="number" name="manager_remind_in" value=""/>
-												{days_text}
-											</div>					
-										</div>
-										<script type="text/javascript">
-											$(managerTaskStatusChanged);
-											function managerTaskStatusChanged()
-											{
-												val=$("select[name='manager_task_status']").val();
-												if(val == "changing")
-													$("#manager_remind_days_row").fadeIn();
-												else
-													$("#manager_remind_days_row").fadeOut();
-											}
-										</script>
-									
-										<br><br>
-										<div class="row">
-												<div class="four columns">&nbsp;</div>
-												<input type="submit" class=" button-primary four columns" value="{save_text}"/>
-										</div>
-									</form>
-								</div>
-							<?php } ?>
-							
+										<?php 
+													} 
+										?>
+									</div>								
+								<?php
+									} 
+								?>
+							</div>
+						<?php } ?>
+
+						<?php if($task_exec_info && $user_is_manager) { ?>
 							<div class="separated">
-								<h3>{task_exec_text}</h3>
+								<h3>{manager_note_text}</h3>
 								<?php echo form_open_multipart(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
-									<input type="hidden" name="post_type" value="task_exec" />	
+									<input type="hidden" name="post_type" value="manager_note" />	
 									<span></span>
 									<div class="row even-odd-bg dont-magnify" >
 										<div class="three columns">
 											<span>{task_status_text}</span>
 										</div>
 										<div class="six columns">
-											<select name="task_status" class="full-width" onchange="taskStatusChanged();">
+											<select name="manager_task_status" class="full-width" onchange="managerTaskStatusChanged();">
 												<?php 
 													foreach($task_exec_statuses as $status)
 													{
 														$sel="";
-														if($task_exec_info && ($task_exec_info['te_status'] === $status))
+														if($task_exec_info['te_status'] === $status)
 															$sel="selected";
 														echo "<option $sel value='$status'>".${"task_status_".$status."_text"}."</option>";
 													}
@@ -448,58 +403,120 @@
 									</div>
 									<div class="row even-odd-bg dont-magnify" >
 										<div class="three columns">
-											<span>{task_exec_result_text}</span>
+											<span>{manager_note_text}</span>
 										</div>
 										<div class="six columns">
-											<textarea rows="3" name="task_exec_result" class="full-width"></textarea>
+											<textarea rows="3" name="manager_note" class="full-width"></textarea>
 										</div>					
 									</div>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											<span>{task_exec_result_file_text}</span>
-										</div>
-										<div class="six columns">
-											<input type="file" name="task_exec_file" />
-										</div>					
-									</div>
-									<div class="row even-odd-bg dont-magnify" >
-										<div class="three columns">
-											<span>{task_exec_request_manager_note_text}</span>
-										</div>
-										<div class="six columns">
-											<input type="checkbox" name="task_exec_requires_manager_note" class="graphical"/>
-										</div>					
-									</div>
-									<div class="row even-odd-bg dont-magnify" id="remind_days_row" >
+									<div class="row even-odd-bg dont-magnify" id="manager_remind_days_row" >
 										<div class="three columns">
 											<span>{task_exec_remind_in_text}</span>
 										</div>
 										<div class="six columns">
-											<input type="number" name="task_exec_remind_in" value="1"/>
+											<input type="number" name="manager_remind_in" value=""/>
 											{days_text}
 										</div>					
 									</div>
+									<script type="text/javascript">
+										$(managerTaskStatusChanged);
+										function managerTaskStatusChanged()
+										{
+											val=$("select[name='manager_task_status']").val();
+											if(val == "changing")
+												$("#manager_remind_days_row").fadeIn();
+											else
+												$("#manager_remind_days_row").fadeOut();
+										}
+									</script>
+								
 									<br><br>
 									<div class="row">
 											<div class="four columns">&nbsp;</div>
 											<input type="submit" class=" button-primary four columns" value="{save_text}"/>
-									</div>				
+									</div>
 								</form>
-								<script type="text/javascript">
-									$(taskStatusChanged);
-									function taskStatusChanged()
-									{
-										val=$("select[name='task_status']").val();
-										if(val == "changing")
-											$("#remind_days_row").fadeIn();
-										else
-											$("#remind_days_row").fadeOut();
-									}
-								</script>
-							</div>	
-					</div>
+							</div>
+						<?php } ?>
+						
+						<div class="separated">
+							<h3>{task_exec_text}</h3>
+							<?php echo form_open_multipart(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
+								<input type="hidden" name="post_type" value="task_exec" />	
+								<span></span>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										<span>{task_status_text}</span>
+									</div>
+									<div class="six columns">
+										<select name="task_status" class="full-width" onchange="taskStatusChanged();">
+											<?php 
+												foreach($task_exec_statuses as $status)
+												{
+													$sel="";
+													if($task_exec_info && ($task_exec_info['te_status'] === $status))
+														$sel="selected";
+													echo "<option $sel value='$status'>".${"task_status_".$status."_text"}."</option>";
+												}
+											?>
+										</select>
+									</div>					
+								</div>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										<span>{task_exec_result_text}</span>
+									</div>
+									<div class="six columns">
+										<textarea rows="3" name="task_exec_result" class="full-width"></textarea>
+									</div>					
+								</div>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										<span>{task_exec_result_file_text}</span>
+									</div>
+									<div class="six columns">
+										<input type="file" name="task_exec_file" />
+									</div>					
+								</div>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										<span>{task_exec_request_manager_note_text}</span>
+									</div>
+									<div class="six columns">
+										<input type="checkbox" name="task_exec_requires_manager_note" class="graphical"/>
+									</div>					
+								</div>
+								<div class="row even-odd-bg dont-magnify" id="remind_days_row" >
+									<div class="three columns">
+										<span>{task_exec_remind_in_text}</span>
+									</div>
+									<div class="six columns">
+										<input type="number" name="task_exec_remind_in" value="1"/>
+										{days_text}
+									</div>					
+								</div>
+								<br><br>
+								<div class="row">
+										<div class="four columns">&nbsp;</div>
+										<input type="submit" class=" button-primary four columns" value="{save_text}"/>
+								</div>				
+							</form>
+							<script type="text/javascript">
+								$(taskStatusChanged);
+								function taskStatusChanged()
+								{
+									val=$("select[name='task_status']").val();
+									if(val == "changing")
+										$("#remind_days_row").fadeIn();
+									else
+										$("#remind_days_row").fadeOut();
+								}
+							</script>
+						</div>	
+					<?php } ?>
 				</div>
-			<?php } ?>
+			</div>
+			
 			<div class="tab" id="props" style="">
 				<div class="container">
 					<h2>{properties_text}</h2>	

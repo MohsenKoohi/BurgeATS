@@ -62,6 +62,18 @@ class Task_exec_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_executed_tasks($customer_id)
+	{
+		$this->db->select("task_id,task_name");
+		$this->db->from("task");
+		$this->db->join("task_exec","task_id = te_task_id","left");
+		$this->db->where("te_customer_id",$customer_id);
+		$this->db->order_by("task_id ASC");
+		$result=$this->db->get();
+
+		return $result->result_array();
+	}
+
 	public function get_counts()
 	{
 		$df=DATE_FUNCTION;

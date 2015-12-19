@@ -30,6 +30,7 @@ $lang['to']="to";
 
 
 $lang['tasks']="Tasks";
+$lang['task']="Task";
 
 $lang['task_last_exec_results']="Previous Execution Results";
 $lang['task_exec_time']="Time";

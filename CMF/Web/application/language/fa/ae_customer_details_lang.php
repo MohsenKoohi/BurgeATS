@@ -30,6 +30,7 @@ $lang['to']="تا";
 
 
 $lang['tasks']="وظایف";
+$lang['task']="وظیفه";
 
 $lang['task_last_exec_results']="نتیجه اجراهای پیشین";
 $lang['task_exec_time']="زمان اجرا";

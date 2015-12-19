@@ -138,6 +138,17 @@ class AE_Customer extends Burge_CMF_Controller {
 		if($task_id)
 			$this->task_exec($customer_id,$task_id);
 
+		$this->load->model("task_exec_manager_model");
+		$extasks=$this->task_exec_manager_model->get_executed_tasks($customer_id);
+		$customer_tasks=array();
+		foreach($extasks as $et)
+			$customer_tasks[$et['task_id']]=$et['task_name'];
+		
+		if($task_id && !isset($customer_tasks[$task_id]) && isset($this->data['task_info']))
+			$customer_tasks[$this->data['task_info']['task_id']]=$this->data['task_info']['task_name'];
+
+		$this->data['customer_tasks']=$customer_tasks;
+
 		$this->data['message']=get_message();
 		
 		if($this->input->post())

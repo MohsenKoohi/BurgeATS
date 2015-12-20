@@ -2,7 +2,10 @@
 class Customer_manager_model extends CI_Model
 {
 	private $customer_table_name="customer";
+	private $customer_event_table_name="customer_event";
 	private $customer_types=array("regular","agent");
+
+	private $event_types=array("has_news","verification","has_email");
 
 	private $customer_props_can_be_written=array(
 		"customer_type"
@@ -40,6 +43,8 @@ class Customer_manager_model extends CI_Model
 		,"CUSTOMER_LOGIN"						=>1005
 		,"CUSTOMER_LOGOUT"					=>1006
 		,"CUSTOMER_PASS_CHANGE"				=>1007
+		,"CUSTOMER_SET_EVENT"				=>1008
+		,"CUSTOMER_UNSET_EVENT"				=>1009
 	);
 	
 	public function __construct()
@@ -72,6 +77,16 @@ class Customer_manager_model extends CI_Model
 				,`customer_phone` varchar(32) DEFAULT NULL 
 				,`customer_mobile` varchar(32) DEFAULT NULL 
 				,PRIMARY KEY (customer_id)	
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+		);
+
+		$table=$this->db->dbprefix($this->customer_event_table_name); 
+		$this->db->query(
+			"CREATE TABLE IF NOT EXISTS $table (
+				`ce_customer_id` INT NOT NULL
+				,`ce_event_type` VARCHAR(100) NOT NULL
+				,`ce_timestamp` DATETIME NOT NULL
+				,PRIMARY KEY (ce_customer_id, ce_event_type)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
@@ -212,6 +227,53 @@ class Customer_manager_model extends CI_Model
 		$ret=$CI->parser->parse($CI->get_admin_view_file("customer_dashboard"),$data,TRUE);
 		
 		return $ret;		
+	}
+
+	public function get_customer_event_types()
+	{
+		return $this->event_types;
+	}
+
+	public function get_customer_events($customer_id)
+	{
+		$this->db->from($this->customer_event_table_name);
+		$this->db->where("ce_customer_id",$customer_id);
+		$this->db->order_by("ce_event_type ASC");
+		$result=$this->db->get();
+
+		return $result->result_array();
+	}
+
+	public function set_customer_events($customer_id,$events)
+	{
+		$this->db->from($this->customer_event_table_name);
+		$this->db->where("ce_customer_id",$customer_id);
+		$this->db->delete();
+
+		if($events)
+		{
+			$df=DATE_FUNCTION;
+			$now=$df("Y-m-d H:i:s");
+
+			$ins=array();
+			foreach($events as $ev)
+				$ins[]=array(
+					"ce_customer_id"=>$customer_id
+					,"ce_event_type"=>$ev
+					,"ce_timestamp"=>$now
+				);
+			$this->db->insert_batch($this->customer_event_table_name,$ins);
+		}
+
+		$props=array();
+		$props['customer_id']=$customer_id;
+		$props['events']=implode(" , ",$events);
+		
+		$this->log_manager_model->info("CUSTOMER_SET_EVENT",$props);
+
+		$this->add_customer_log($customer_id,'CUSTOMER_SET_EVENT',$props);
+
+		return;		
 	}
 
 	public function get_customer_types()

@@ -72,3 +72,6 @@ $lang['no']="نه";
 $lang['manager_note']="نظر مدیر";
 $lang['note_saved_successfully']="نظر شما با موفقیت ثبت شد.";
 $lang['task_next_exec']="تاریخ اجرای مجدد";
+
+$lang['events']="رویدادها";
+$lang['events_set_successfully']="رویدادها با موفقیت ثبت شد.";

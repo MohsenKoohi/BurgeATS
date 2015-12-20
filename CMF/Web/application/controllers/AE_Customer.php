@@ -135,9 +135,22 @@ class AE_Customer extends Burge_CMF_Controller {
 
 		$this->lang->load('ae_customer_details',$this->selected_lang);
 
+		if($this->input->post())
+		{
+			$this->lang->load('error',$this->selected_lang);
+
+			if("customer_properties" === $this->input->post("post_type"))
+				$this->save_customer_new_properties($customer_id,$task_id);
+		}
+
+		//check customer events for events tab
+		$this->get_and_set_events($customer_id,$task_id);
+
+		//submit task exec results and retreive all fields for tasks tab
 		if($task_id)
 			$this->task_exec($customer_id,$task_id);
 
+		//get all executed tasks with current one
 		$this->load->model("task_exec_manager_model");
 		$extasks=$this->task_exec_manager_model->get_executed_tasks($customer_id);
 		$customer_tasks=array();
@@ -149,44 +162,19 @@ class AE_Customer extends Burge_CMF_Controller {
 
 		$this->data['customer_tasks']=$customer_tasks;
 
+		$this->data['customer_info']=$this->customer_manager_model->get_customer_info($customer_id);		
+		
+		$this->get_logs($customer_id);
+
 		$this->data['message']=get_message();
 		
-		if($this->input->post())
-		{
-			$this->lang->load('error',$this->selected_lang);
-
-			if("customer_properties" === $this->input->post("post_type"))
-				$this->save_customer_new_properties($customer_id,$task_id);
-		}
-
-		$filter=array();
-		$log_filter=array();
-
-		if($this->input->get('log_type'))
-		{
-			//this var is sent to view
-			$filter['log_type']=$this->input->get('log_type');
-
-			//this var is sent to retreive_customer_logs
-			$log_filter['log_types']=array($this->input->get('log_type'));
-		}
-
-		$this->data['customer_info']=$this->customer_manager_model->get_customer_info($customer_id);
 		if(NULL == $this->data['customer_info'])
-		{
 			$this->data['message']=$this->lang->line("customer_not_found");
-		}
-		else
-		{
-			$this->retrieve_cusomter_logs($customer_id,$log_filter);	
-		}
-
-		$this->data['filter']=$filter;
+		
 		$this->data['raw_page_url']=get_admin_customer_details_link($customer_id,$task_id);
 		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,$task_id,NULL,TRUE));
 
 		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();		
-		$this->data['log_types']=$this->customer_manager_model->get_customer_log_types();
 		$this->data['provinces']=$this->customer_manager_model->get_provinces();
 		$this->data['cities']=$this->customer_manager_model->get_cities();
 
@@ -201,18 +189,64 @@ class AE_Customer extends Burge_CMF_Controller {
 		return;	 		
 	}
 
-	private function retrieve_cusomter_logs($customer_id,$filter)
+	private function get_and_set_events($customer_id,$task_id)
 	{
+		$evtypes=$this->customer_manager_model->get_customer_event_types();
+
+		if($this->input->post() && ("set_events" === $this->input->post("post_type")))
+		{
+			$events=array();	
+			foreach($evtypes as $et)
+				if($this->input->post($et) === "on")
+					$events[]=$et;
+
+			$this->customer_manager_model->set_customer_events($customer_id,$events);
+
+			set_message($this->lang->line("events_set_successfully"));
+
+			return redirect(get_admin_customer_details_link($customer_id,$task_id,"events"));
+		}
+
+		$this->data['customer_event_types']=$evtypes;
+
+		$cevs=$this->customer_manager_model->get_customer_events($customer_id);
+		$cus_events=array();
+		foreach ($cevs as $event)
+			$cus_events[$event['ce_event_type']]=$event['ce_timestamp'];
+		
+		$this->data['customer_events']=$cus_events;
+
+		return;
+	}
+
+	private function get_logs($customer_id)
+	{
+		$this->data['log_types']=$this->customer_manager_model->get_customer_log_types();
+		
+		$filter=array();
+		$log_filter=array();
+
+		if($this->input->get('log_type'))
+		{
+			//this var is sent to view
+			$filter['log_type']=$this->input->get('log_type');
+
+			//this var is sent to retreive_customer_logs
+			$log_filter['log_types']=array($this->input->get('log_type'));
+		}
+
+		$this->data['filter']=$filter;
+		
 		$logs_pp=10;
 		$page=1;
 		if($this->input->get("page"))
 			$page=(int)$this->input->get("page");
 
 		$start=($page-1)*$logs_pp;
-		$filter['start']=$start;
-		$filter['length']=$logs_pp;
+		$log_filter['start']=$start;
+		$log_filter['length']=$logs_pp;
 		
-		$log_res=$this->customer_manager_model->get_customer_logs($customer_id,$filter);
+		$log_res=$this->customer_manager_model->get_customer_logs($customer_id,$log_filter);
 		
 		$total=$log_res['total'];
 		$this->data['customer_logs']=$log_res['results'];
@@ -423,4 +457,6 @@ class AE_Customer extends Burge_CMF_Controller {
 
 		return $ret;
 	}
+
+
 }

@@ -8,3 +8,7 @@ $lang['select']="انتخاب نمایید";
 $lang['task_status_changing']="در حال تغییر";
 $lang['task_status_complete']="کامل";
 $lang['task_status_canceled']="لغو شده";
+
+$lang['customer_event_has_news']="اخبار جدید";
+$lang['customer_event_verification']="تایید";
+$lang['customer_event_has_email']="ایمیل";

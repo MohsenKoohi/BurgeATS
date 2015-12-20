@@ -67,6 +67,7 @@
 		<div class="tab-container">
 			<ul class="tabs">
 				<li><a href="#tasks">{tasks_text}</a></li>
+				<li><a href="#events">{events_text}</a></li>
 				<li><a href="#props">{properties_text}</a></li>
 				<li><a href="#logs">{customer_logs_text}</a></li>
 			</ul>
@@ -517,6 +518,35 @@
 				</div>
 			</div>
 			
+			<div class="tab" id="events" style="">
+				<div class="container">
+					<h2>{events_text}</h2>
+					<?php echo form_open(get_admin_customer_details_link($customer_id,$task_id,"events"),array()); ?>
+						<input type="hidden" name="post_type" value="set_events" />
+						<?php foreach($customer_event_types as $et) { ?>
+							<div class="row even-odd-bg dont-magnify" >
+								<div class="four columns">
+									<?php echo ${"customer_event_".$et."_text"}; ?>
+								</div>
+								<div class="four columns">
+									<input type="checkbox" name="<?php echo $et;?>" class="graphical"
+										<?php if(isset($customer_events[$et])) echo "checked" ?>
+									/>
+								</div>
+								<div class="four columns">
+									<?php if(isset($customer_events[$et])) echo $customer_events[$et]; ?>
+								</div>
+							</div>
+						<?php } ?>
+						<br><br>
+						<div class="row">
+							<div class="four columns">&nbsp;</div>
+							<input type="submit" class="button-primary four columns" value="{save_text}"/>
+						</div>				
+					</form>
+				</div>
+			</div>
+
 			<div class="tab" id="props" style="">
 				<div class="container">
 					<h2>{properties_text}</h2>	

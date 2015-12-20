@@ -71,3 +71,6 @@ $lang['no']="No";
 $lang['manager_note']="Manager note";
 $lang['note_saved_successfully']="Your note saved successfully.";
 $lang['task_next_exec']="Repeat execution after";
+
+$lang['events']="Events";
+$lang['events_set_successfully']="Events set successfully.";

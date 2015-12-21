@@ -7,6 +7,7 @@ $lang['tasks_list']="Tasks List";
 $lang['add_task']="Add a task";
 $lang['add']="Add";
 $lang['task_name']="Name";
+$lang['task_number']="Number";
 $lang['task_desc']="Description";
 $lang['yes']="Yes";
 $lang['no']="No";

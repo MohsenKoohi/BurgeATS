@@ -4,7 +4,7 @@ class Task_manager_model extends CI_Model
 	private $task_table="task";
 	private $task_user_table="task_user";
 	private $task_props_for_write=array(
-		"task_name","task_desc","task_class_name"
+		"task_id","task_name","task_desc","task_class_name"
 		,"task_period","task_active","task_priority"
 	);
 	
@@ -20,7 +20,7 @@ class Task_manager_model extends CI_Model
 		$table_name=$this->db->dbprefix($this->task_table); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $table_name (
-				`task_id` int NOT NULL AUTO_INCREMENT
+				`task_id` int NOT NULL 
 				,`task_name` varchar(100)
 				,`task_desc` text
 				,`task_class_name` varchar(100)

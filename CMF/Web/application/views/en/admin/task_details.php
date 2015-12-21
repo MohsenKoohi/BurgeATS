@@ -8,6 +8,12 @@
 				<input type="hidden" name="post_type" value="edit_task" />	
 				<div class="row even-odd-bg dont-magnify" >
 					<div class="seven columns">
+						<label>{task_number_text}</label>
+						<input type="text" name="task_id" class="full-width" 
+							value="<?php echo $task_info['task_id'];?>"
+						/>
+					</div>
+					<div class="seven columns">
 						<label>{task_name_text}</label>
 						<input type="text" name="task_name" class="full-width" 
 							value="<?php echo $task_info['task_name'];?>"

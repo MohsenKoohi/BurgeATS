@@ -39,11 +39,15 @@
 			<?php echo form_open(get_link("admin_task"),array()); ?>
 				<input type="hidden" name="post_type" value="add_task" />	
 				<div class="row even-odd-bg" >
-					<div class="three columns half-col-margin">
+					<div class="three columns">
+						<label>{task_number_text}</label>
+						<input type="text" name="id" class="full-width" />
+					</div>
+					<div class="three columns">
 						<label>{task_name_text}</label>
 						<input type="text" name="name" class="full-width" />
 					</div>
-					<div class="six columns half-col-margin">
+					<div class="six columns">
 						<label>{task_desc_text}</label>
 						<textarea name="desc" class="full-width" rows="4"></textarea>
 					</div>

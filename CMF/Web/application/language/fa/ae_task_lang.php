@@ -9,6 +9,7 @@ $lang['tasks_list']="لیست وظایف";
 $lang['add_task']="افزودن یک وظیفه";
 $lang['add']="ثبت";
 $lang['task_name']="نام";
+$lang['task_number']="شماره";
 $lang['task_desc']="توضیح";
 $lang['yes']="بله";
 $lang['no']="خیر";

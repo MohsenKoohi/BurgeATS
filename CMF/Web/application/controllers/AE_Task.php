@@ -37,7 +37,8 @@ class AE_Task extends Burge_CMF_Controller {
 	private function add_task()
 	{
 		$task_props=array(
-			"task_name"		=>	persian_normalize_word($this->input->post("name"))
+			"task_id"		=>	persian_normalize_word($this->input->post("id"))
+			,"task_name"		=>	persian_normalize_word($this->input->post("name"))
 			,"task_desc"	=>	persian_normalize_word($this->input->post("desc"))
 		);
 
@@ -46,6 +47,8 @@ class AE_Task extends Burge_CMF_Controller {
 		set_message($this->lang->line("task_added_successfully"));
 
 		redirect(get_link("admin_task"));
+
+		return;
 	}
 
 	public function task_details($task_id)
@@ -87,8 +90,10 @@ class AE_Task extends Burge_CMF_Controller {
 
 	private function edit_task_info($task_id)
 	{
+		$new_task_id=persian_normalize_word($this->input->post("task_id"));
 		$this->task_manager_model->set_task_info($task_id,array(
-			"task_name"=>persian_normalize_word($this->input->post("task_name"))
+			"task_id"=>$new_task_id
+			,"task_name"=>persian_normalize_word($this->input->post("task_name"))
 			,"task_desc"=>persian_normalize_word($this->input->post("task_desc"))
 			,"task_class_name"=>persian_normalize_word($this->input->post("task_class_name"))
 			,"task_active"=>(($this->input->post("task_active")==="on")?1:0)
@@ -117,6 +122,6 @@ class AE_Task extends Burge_CMF_Controller {
 
 		set_message($this->lang->line("task_changed_successfully"));
 
-		redirect(get_admin_task_details_link($task_id));
+		redirect(get_admin_task_details_link($new_task_id));
 	}
 }

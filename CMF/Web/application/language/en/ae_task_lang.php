@@ -30,6 +30,7 @@ $lang['save']="Save";
 $lang['task_users']="Users";
 
 $lang["task_changed_successfully"]="Task info changed successfully.";
+$lang['task_number_has_been_used']="Task number has been used previously.";
 $lang['user_code']="Code";
 $lang['task_manager']="Manager";
 $lang['task_exec']="Execute";

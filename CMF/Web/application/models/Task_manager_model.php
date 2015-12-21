@@ -162,17 +162,37 @@ class Task_manager_model extends CI_Model
 	{
 		$props_array=select_allowed_elements($props,$this->task_props_for_write);
 
+		$result=$this->db->get_where($this->task_table,array(
+			"task_id"=>$props_array['task_id']	
+		));
+
+		$rows=$result->result_array();
+		if(sizeof($rows))
+			return FALSE;
+	
 		$this->db->insert($this->task_table,$props_array);
 		
 		$props_array['task_id']=$this->db->insert_id();
 		$this->log_manager_model->info("TASK_ADD",$props_array);
 
-		return;
+		return TRUE;
 	}
 
 	public function set_task_info($task_id,$props)
 	{
 		$props_array=select_allowed_elements($props,$this->task_props_for_write);
+
+		if(isset($props_array['task_id']) && ($props_array['task_id']!=$task_id))
+		{
+			$result=$this->db->get_where($this->task_table,array(
+				"task_id"=>$props_array['task_id']	
+			));
+
+			$rows=$result->result_array();
+			if(sizeof($rows))
+				return FALSE;
+		}
+		
 		$this->db->set($props_array);
 		$this->db->where("task_id",$task_id);
 		$this->db->update($this->task_table);
@@ -180,7 +200,7 @@ class Task_manager_model extends CI_Model
 		$props_array['task_id']=$task_id;
 		$this->log_manager_model->info("TASK_INFO_CHANGE",$props_array);
 
-		return;
+		return TRUE;
 	}
 
 	public function get_changeable_task_props()

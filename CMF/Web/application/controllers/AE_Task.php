@@ -42,9 +42,11 @@ class AE_Task extends Burge_CMF_Controller {
 			,"task_desc"	=>	persian_normalize_word($this->input->post("desc"))
 		);
 
-		$this->task_manager_model->add_task($task_props);
-
-		set_message($this->lang->line("task_added_successfully"));
+		$result=$this->task_manager_model->add_task($task_props);
+		if($result)
+			set_message($this->lang->line("task_added_successfully"));
+		else
+			set_message($this->lang->line("task_number_has_been_used"));
 
 		redirect(get_link("admin_task"));
 
@@ -91,7 +93,7 @@ class AE_Task extends Burge_CMF_Controller {
 	private function edit_task_info($task_id)
 	{
 		$new_task_id=persian_normalize_word($this->input->post("task_id"));
-		$this->task_manager_model->set_task_info($task_id,array(
+		$result=$this->task_manager_model->set_task_info($task_id,array(
 			"task_id"=>$new_task_id
 			,"task_name"=>persian_normalize_word($this->input->post("task_name"))
 			,"task_desc"=>persian_normalize_word($this->input->post("task_desc"))
@@ -100,6 +102,14 @@ class AE_Task extends Burge_CMF_Controller {
 			,"task_period"=>(int)$this->input->post("task_period")
 			,"task_priority"=>(int)$this->input->post("task_priority")
 		));
+
+		if(!$result)
+		{
+			set_message($this->lang->line("task_number_has_been_used"));
+			redirect(get_admin_task_details_link($task_id));
+
+			return;
+		}
 
 		$pusers=$this->access_manager_model->get_users_have_access_to_module("task_exec");
 		
@@ -121,7 +131,9 @@ class AE_Task extends Burge_CMF_Controller {
 		$this->task_manager_model->set_task_users($task_id,$task_users,$task_managers);
 
 		set_message($this->lang->line("task_changed_successfully"));
-
+		
 		redirect(get_admin_task_details_link($new_task_id));
+
+		return;		
 	}
 }

@@ -32,6 +32,7 @@ $lang['save']="ثبت";
 $lang['task_users']="کاربران";
 
 $lang["task_changed_successfully"]="تغییرات با موفقیت ثبت شد.";
+$lang['task_number_has_been_used']="شماره وظیفه قبلا استفاده شده است.";
 $lang['user_code']="کد";
 $lang['task_manager']="مدیر";
 $lang['task_exec']="اجرا";

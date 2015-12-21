@@ -90,6 +90,12 @@ class AE_Task extends Burge_CMF_Controller {
 		return;
 	}
 
+	//note that we allow task_id to be changed 
+	//but if you change task_id after some tasks has been executed for some users
+	//their task_exec table will not be updated, since the logs written can't 
+	//be changed, 
+	//Thus Note that this id changing is just for start of task
+	//and for arragning tasks
 	private function edit_task_info($task_id)
 	{
 		$new_task_id=persian_normalize_word($this->input->post("task_id"));

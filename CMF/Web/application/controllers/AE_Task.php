@@ -128,7 +128,7 @@ class AE_Task extends Burge_CMF_Controller {
 			}
 		}
 
-		$this->task_manager_model->set_task_users($task_id,$task_users,$task_managers);
+		$this->task_manager_model->set_task_users($new_task_id,$task_users,$task_managers);
 
 		set_message($this->lang->line("task_changed_successfully"));
 		

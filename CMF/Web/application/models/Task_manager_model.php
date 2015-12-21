@@ -191,6 +191,8 @@ class Task_manager_model extends CI_Model
 			$rows=$result->result_array();
 			if(sizeof($rows))
 				return FALSE;
+
+			$this->set_task_users($task_id,NULL,NULL);
 		}
 		
 		$this->db->set($props_array);

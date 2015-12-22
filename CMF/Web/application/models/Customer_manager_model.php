@@ -586,7 +586,7 @@ class Customer_manager_model extends CI_Model
 	{
 		$ret=FALSE;
 
-		$result=$this->db->get_where($this->customer_table_name,array("customer_email"=>$email));
+		$result=$this->db->get_where($this->customer_table_name,array("LOWER(customer_email)"=>strtolower($email)));
 		if($result->num_rows() == 1)
 		{
 			$row=$result->row_array();		

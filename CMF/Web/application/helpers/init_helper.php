@@ -32,8 +32,11 @@ function &get_links($just_common=FALSE)
 			,'admin_user'				=> ADMIN_SURL_LANG."/user"
 			,'admin_module'			=> ADMIN_SURL_LANG."/module"
 			,'admin_hit_counter'		=> ADMIN_SURL_LANG."/hit_counter"
-			,'admin_post'				=> ADMIN_SURL_LANG."/post"
 			,'admin_log'				=> ADMIN_SURL_LANG."/log"
+
+			,'admin_post'						=> ADMIN_SURL_LANG."/post"
+			,'admin_post_search'				=> ADMIN_SURL_LANG."/post/search"
+			,'admin_post_details_format'	=> ADMIN_SURL_LANG."/post/post_id"
 
 			,'admin_customer'						=> ADMIN_SURL_LANG."/customer"
 			,'admin_customer_details_format'	=> ADMIN_SURL_LANG."/customer/details/customer_id/task_id"
@@ -50,6 +53,7 @@ function &get_links($just_common=FALSE)
 			,'customer_login'					=>HOME_URL_LANG."/login"
 			,'customer_logout'				=>HOME_URL_LANG."/logout"
 			,'customer_dashboard'			=>HOME_URL_LANG."/dashboard"
+
 		));
 	}
 
@@ -116,6 +120,11 @@ function get_link($page,$do_not_set_lang=FALSE)
 		$lang_pattern=URL_LANGUAGE_PATTERN;
 
 	return str_replace($lang_pattern,$lang, $ret_link);
+}
+
+function get_admin_post_details_link($post_id)
+{
+	return str_replace("post_id",$post_id,get_link("admin_post_details_format"));	
 }
 
 

@@ -29,8 +29,6 @@ class AE_Customer extends Burge_CMF_Controller {
 
 		
 		$page_raw_lang_url=get_link("admin_customer",TRUE);
-		if($this->data['url_queries'])
-			$page_raw_lang_url.="?".$this->data['url_queries'];
 		$this->data['lang_pages']=get_lang_pages($page_raw_lang_url);
 
 		$this->data['header_title']=$this->lang->line("customers");
@@ -43,7 +41,6 @@ class AE_Customer extends Burge_CMF_Controller {
 
 	private function set_data_customers()
 	{
-		$this->data['url_queries']="";
 		$items_per_page=10;
 		$page=1;
 		if($this->input->get("page"))
@@ -67,9 +64,7 @@ class AE_Customer extends Burge_CMF_Controller {
 			if($page<1)
 				$page=1;
 			$this->data['customers_current_page']=$page;
-			if($page!=1)
-				$this->data['url_queries'].="&page=".$page;
-
+			
 			$start=($page-1)*$items_per_page;
 			$filter['start']=$start;
 			$filter['length']=$items_per_page;
@@ -84,8 +79,7 @@ class AE_Customer extends Burge_CMF_Controller {
 
 			$this->data['customers_info']=$this->customer_manager_model->get_customers($filter);
 
-			unset($filter['start']);
-			unset($filter['length']);
+			unset($filter['start'],$filter['length'],$filter['order_by']);
 		}
 		else
 		{

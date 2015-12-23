@@ -381,7 +381,7 @@
 						<?php if($task_exec_info && $user_is_manager) { ?>
 							<div class="separated">
 								<h3>{manager_note_text}</h3>
-								<?php echo form_open_multipart(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
+								<?php echo form_open(get_admin_customer_details_link($customer_id,$task_id,"tasks"),array()); ?>
 									<input type="hidden" name="post_type" value="manager_note" />	
 									<span></span>
 									<div class="row even-odd-bg dont-magnify" >

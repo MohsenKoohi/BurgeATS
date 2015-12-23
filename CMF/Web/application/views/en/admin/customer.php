@@ -58,7 +58,7 @@
 				<h2>{customers_list_text}</h2>
 				<div class="container separated">
 					<div class="row filter">
-						<div class="three columns half-col-margin">
+						<div class="three columns">
 							<label>{name_text}</label>
 							<input type="text" name="name" class="full-width" />
 						</div>
@@ -76,7 +76,7 @@
 							<label>{email_text}</label>
 							<input type="text" name="email" class="full-width" />
 						</div>
-						<div class="three columns half-col-margin">
+						<div class="three columns">
 							<label>{code_text}</label>
 							<input type="text" name="code" class="full-width" />
 						</div>
@@ -96,7 +96,7 @@
 							</select>
 						</div>
 
-						<div class="three columns half-col-margin">
+						<div class="three columns ">
 							<label>{address_text}</label>
 							<input type="text" name="address" class="full-width" />
 						</div>

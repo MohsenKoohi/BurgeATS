@@ -1,6 +1,8 @@
 <?php 
 
 $lang['customer_details']="Customer Details";
+$lang['print_address']="Print Address";
+
 $lang['properties']="Properties";
 $lang['name']="Full Name";
 $lang['type']="Type";
@@ -74,3 +76,7 @@ $lang['task_next_exec']="Repeat execution after";
 
 $lang['events']="Events";
 $lang['events_set_successfully']="Events set successfully.";
+
+$lang['address_has_not_been_specified']="Address has not been specified.";
+$lang['reciever']="Reciever";
+$lang['sender']="Sender";

@@ -2,9 +2,13 @@
 	<div class="container">
 		<h1>{customer_details_text} <?php if($customer_info) echo $comma_text." ".$customer_info['customer_name']; ?></h1>
 
-		<style type="text/css">
-			
+		<div class="row general-buttons">
+			<div class="two columns button sub-primary button-type1" onclick="printAddress()">
+				{print_address_text}
+			</div>
+		</div>
 
+		<style type="text/css">
 			.row.even-odd-bg .button-primary
 			{
 				font-size: 1.1em;
@@ -795,5 +799,35 @@
 		</div>
 		<br>	
 		<br>
+	<script type="text/javascript">
+		var our_address="<?php echo $our_address;?>";
+
+		function printAddress()
+		{
+			if(!our_address)
+			{
+				alert("{address_has_not_been_specified_text}");
+				return;
+			}
+
+			html="<html><head><meta charset='UTF-8' /></head><body style='direction:rtl;font-family: b mitra;font-size:40px;font-weight:bold'>";
+			html+="{reciever_text}:<br>";
+			html+=$("#props [name='customer_province']").val();
+			html+=" "+$("#props [name='customer_city']").val();
+			html+=" "+$("#props [name='customer_address']").val();
+			html+="<br>"+$("#props [name='customer_name']").val();
+			html+="<br><br>";
+			html+="{sender_text}:<br>";
+			html+=our_address;
+			html+="</body></html>";
+
+			var win=window.open("","");
+
+			win.document.write(html);
+			
+			win.stop();
+		}
+		
+	</script>
 	</div>
 </div>

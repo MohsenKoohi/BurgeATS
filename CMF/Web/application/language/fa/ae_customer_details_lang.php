@@ -1,6 +1,8 @@
 <?php 
 
 $lang['customer_details']="اطلاعات مشتری";
+$lang['print_address']="چاپ آدرس";
+
 $lang['properties']="مشخصات";
 $lang['name']="نام و نام خانوادگی";
 $lang['type']="نوع";
@@ -75,3 +77,6 @@ $lang['task_next_exec']="تاریخ اجرای مجدد";
 
 $lang['events']="رویدادها";
 $lang['events_set_successfully']="رویدادها با موفقیت ثبت شد.";
+$lang['address_has_not_been_specified']="آدرس مبدا مشخص نشده است.";
+$lang['reciever']="گیرنده";
+$lang['sender']="فرستنده";

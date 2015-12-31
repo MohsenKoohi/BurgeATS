@@ -26,7 +26,6 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->data['raw_page_url']=get_link("admin_customer");
 		$this->data['provinces']=$this->customer_manager_model->get_provinces();
 		$this->data['cities']=$this->customer_manager_model->get_cities();
-
 		
 		$page_raw_lang_url=get_link("admin_customer",TRUE);
 		$this->data['lang_pages']=get_lang_pages($page_raw_lang_url);
@@ -161,6 +160,9 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->get_logs($customer_id);
 
 		$this->data['message']=get_message();
+
+		$this->load->model("constant_manager_model");
+		$this->data['our_address']=$this->constant_manager_model->get("address_".$this->language->get());
 		
 		if(NULL == $this->data['customer_info'])
 			$this->data['message']=$this->lang->line("customer_not_found");

@@ -87,6 +87,8 @@ class AE_Setup extends CI_Controller {
 
 		$this->module_manager_model->install_module("log_manager");
 
+		$this->module_manager_model->install_module("constant_manager");
+
 		$this->module_manager_model->install_module("customer_manager");
 
 		$this->module_manager_model->install_module("task_manager");

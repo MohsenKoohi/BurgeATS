@@ -9,6 +9,7 @@ $lang['hit_counter']="تعداد بازدید";
 $lang['dashboard']="داشبورد";
 $lang['post']="پست‌ها";
 $lang['log']="فعالیت‌ها";
+$lang['constant']="مقادیر ثابت";
 
 $lang['customer']="مشتریان";
 $lang['task']="وظایف";

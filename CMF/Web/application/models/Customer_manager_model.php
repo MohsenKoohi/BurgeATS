@@ -647,11 +647,10 @@ class Customer_manager_model extends CI_Model
 			,"type"=>"user_logged_in_as_customer"
 		);
 
-		if(isset($customer_id))
-		{
-			$this->add_customer_log($customer_id,'CUSTOMER_LOGIN',$props);
-			$props['customer_id']=$customer_id;
-		}
+		if(isset($customer_email))
+			$props['customer_email']=$customer_id;
+		
+		$this->add_customer_log($customer_id,'CUSTOMER_LOGIN',$props);
 
 		$this->log_manager_model->info("CUSTOMER_LOGIN",$props);
 

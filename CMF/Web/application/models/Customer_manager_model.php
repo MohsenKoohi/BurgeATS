@@ -620,7 +620,7 @@ class Customer_manager_model extends CI_Model
 	{
 		//You may disable this feature by uncommenting the following line
 		//specially when each customer has financial records and credits on your system
-		//It is also possible to create sudo-module for this action and limit users
+		//It is also possible to create a sudo-module for this action and limit users
 		//who may access customers accounts directly
 
 		//return FALSE;
@@ -644,7 +644,7 @@ class Customer_manager_model extends CI_Model
 		$props=array(
 			"customer_id"=>$customer_id
 			,"result"=>(int)$ret
-			,"type"=>"user_logged_as_customer"
+			,"type"=>"user_logged_in_as_customer"
 		);
 
 		if(isset($customer_id))

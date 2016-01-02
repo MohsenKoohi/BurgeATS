@@ -3,8 +3,11 @@
 		<h1>{customer_details_text} <?php if($customer_info) echo $comma_text." ".$customer_info['customer_name']; ?></h1>
 
 		<div class="row general-buttons">
-			<div class="two columns button sub-primary button-type1" onclick="printAddress()">
+			<div class="two columns button sub-primary button-type1 half-col-margin" onclick="printAddress()">
 				{print_address_text}
+			</div>
+			<div class="two columns button sub-primary button-type2" onclick="customerLogin()">
+				{login_text}
 			</div>
 		</div>
 
@@ -795,39 +798,62 @@
 						</script>
 					<?php } ?>
 				</div>
-			<div>
+			</div>
 		</div>
 		<br>	
 		<br>
-	<script type="text/javascript">
-		var our_address="<?php echo $our_address;?>";
+		<?php 
+			echo form_open(get_admin_customer_details_link($customer_id,$task_id),
+						array(
+							"style"=>'display:none'
+							,"id"=>"hidden_form"
+							,"target"=>"_blank"
+						)
+					);
+		?>
+			<input type="hidden" name="post_type"> 
+		</form>
+		<script type="text/javascript">
+			var our_address="<?php echo $our_address;?>";
 
-		function printAddress()
-		{
-			if(!our_address)
+			function printAddress()
 			{
-				alert("{address_has_not_been_specified_text}");
-				return;
+				if(!our_address)
+				{
+					alert("{address_has_not_been_specified_text}");
+					return;
+				}
+
+				html="<html><head><meta charset='UTF-8' /></head><body style='direction:rtl;font-family: b mitra;font-size:40px;font-weight:bold'>";
+				html+="{reciever_text}:<br>";
+				html+=$("#props [name='customer_province']").val();
+				html+=" - "+$("#props [name='customer_city']").val();
+				html+=" - "+$("#props [name='customer_address']").val();
+				html+="<br>"+$("#props [name='customer_name']").val();
+				html+="<br><br>";
+				html+="{sender_text}:<br>";
+				html+=our_address;
+				html+="</body></html>";
+
+				var win=window.open("","");
+
+				win.document.write(html);
+				
+				win.stop();
 			}
 
-			html="<html><head><meta charset='UTF-8' /></head><body style='direction:rtl;font-family: b mitra;font-size:40px;font-weight:bold'>";
-			html+="{reciever_text}:<br>";
-			html+=$("#props [name='customer_province']").val();
-			html+=" - "+$("#props [name='customer_city']").val();
-			html+=" - "+$("#props [name='customer_address']").val();
-			html+="<br>"+$("#props [name='customer_name']").val();
-			html+="<br><br>";
-			html+="{sender_text}:<br>";
-			html+=our_address;
-			html+="</body></html>";
+			function customerLogin()
+			{
+				if(!$("#props input[name='customer_email']").val())
+				{
+					alert("{customer_email_has_not_been_specified_text}");
+					return;
+				}
 
-			var win=window.open("","");
-
-			win.document.write(html);
+				$("#hidden_form input[name='post_type']").val("customer_login");
+				$("#hidden_form").submit();
+			}
 			
-			win.stop();
-		}
-		
-	</script>
+		</script>
 	</div>
 </div>

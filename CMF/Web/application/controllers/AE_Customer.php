@@ -133,7 +133,11 @@ class AE_Customer extends Burge_CMF_Controller {
 			$this->lang->load('error',$this->selected_lang);
 
 			if("customer_properties" === $this->input->post("post_type"))
-				$this->save_customer_new_properties($customer_id,$task_id);
+				return $this->save_customer_new_properties($customer_id,$task_id);
+
+			if("customer_login" === $this->input->post("post_type"))
+				return $this->user_login_as_customer($customer_id);
+
 		}
 
 		//check customer events for events tab
@@ -183,6 +187,16 @@ class AE_Customer extends Burge_CMF_Controller {
 
 
 		return;	 		
+	}
+
+	private function user_login_as_customer($customer_id)
+	{
+		if($this->customer_manager_model->user_login_as_customer($customer_id))
+			return redirect(get_link("customer_dashboard"));
+
+		set_message($this->lang->line("customer_email_has_not_been_specified"));
+
+		redirect(get_admin_customer_details_link($customer_id));
 	}
 
 	private function get_and_set_events($customer_id,$task_id)

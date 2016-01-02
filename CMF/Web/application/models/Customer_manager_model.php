@@ -616,6 +616,41 @@ class Customer_manager_model extends CI_Model
 		return $ret;
 	}
 
+	public function user_login_as_customer($customer_id)
+	{
+		$ret=FALSE;
+		
+		$result=$this->db->get_where($this->customer_table_name,array("customer_id"=>$customer_id));
+		
+		if($result->num_rows() == 1)
+		{
+			$row=$result->row_array();
+			$customer_email=$row['customer_email'];
+
+			if($customer_email)
+			{
+				$this->set_customer_logged_in($customer_id,$customer_email);
+				$ret=TRUE;
+			}
+		}
+
+		$props=array(
+			"customer_id"=>$customer_id
+			,"result"=>(int)$ret
+			,"type"=>"user_logged_as_customer"
+		);
+
+		if(isset($customer_id))
+		{
+			$this->add_customer_log($customer_id,'CUSTOMER_LOGIN',$props);
+			$props['customer_id']=$customer_id;
+		}
+
+		$this->log_manager_model->info("CUSTOMER_LOGIN",$props);
+
+		return $ret;
+	}
+
 	public function login_openid($email,$openid_server)
 	{
 		$ret=FALSE;

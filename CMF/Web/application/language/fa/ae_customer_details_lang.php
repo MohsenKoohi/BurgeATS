@@ -80,3 +80,5 @@ $lang['events_set_successfully']="رویدادها با موفقیت ثبت شد
 $lang['address_has_not_been_specified']="آدرس مبدا مشخص نشده است.";
 $lang['reciever']="گیرنده";
 $lang['sender']="فرستنده";
+$lang['login']="ورود به سیستم";
+$lang['customer_email_has_not_been_specified']="پست الکترونیک مشتری مشخص نشده است.";

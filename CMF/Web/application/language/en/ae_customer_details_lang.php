@@ -80,3 +80,5 @@ $lang['events_set_successfully']="Events set successfully.";
 $lang['address_has_not_been_specified']="Address has not been specified.";
 $lang['reciever']="Reciever";
 $lang['sender']="Sender";
+$lang['login']="Login as Customer";
+$lang['customer_email_has_not_been_specified']="Customer's email has not been specified.";

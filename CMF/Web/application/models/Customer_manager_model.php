@@ -618,6 +618,13 @@ class Customer_manager_model extends CI_Model
 
 	public function user_login_as_customer($customer_id)
 	{
+		//You may disable this feature by uncommenting the following line
+		//specially when each customer has financial records and credits on your system
+		//It is also possible to create sudo-module for this action and limit users
+		//who may access customers accounts directly
+
+		//return FALSE;
+		
 		$ret=FALSE;
 		
 		$result=$this->db->get_where($this->customer_table_name,array("customer_id"=>$customer_id));

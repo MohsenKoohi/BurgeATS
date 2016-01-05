@@ -519,13 +519,19 @@ class Customer_manager_model extends CI_Model
 	{
 		$customer_dir=$this->get_customer_directory($customer_id);
 		
-		$dtf=DATE_FUNCTION;	
-		$dt=$dtf("Y-m-d,H-i-s");	
-		
-		$ext=$this->customer_log_file_extension;
-		$tp=sprintf("%02d",$type_index);
+		$dtf=DATE_FUNCTION;
 
-		$log_path=$customer_dir."/log-".$dt."#".$tp.".".$ext;
+		$s=0;
+		do	
+		{
+			$dt=$dtf("Y-m-d,H-i-s",time()+$s);	
+			
+			$ext=$this->customer_log_file_extension;
+			$tp=sprintf("%02d",$type_index);
+
+			$log_path=$customer_dir."/log-".$dt."#".$tp.".".$ext;
+			$s+=1;
+		}while(file_exists($log_path));
 		
 		return $log_path;
 	}

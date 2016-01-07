@@ -304,7 +304,7 @@ class Task_exec_manager_model extends CI_Model
 
 		if(isset($filter['start']))
 		{
-			$this->db->order_by('te_last_exec_timestamp');
+			$this->db->order_by('te_last_exec_timestamp DESC');
 			$this->db->limit($filter['length'],$filter['start']);
 		}
 

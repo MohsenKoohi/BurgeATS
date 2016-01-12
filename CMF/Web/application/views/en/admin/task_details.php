@@ -43,7 +43,7 @@
 							value="<?php echo $task_info['task_period'];?>"
 						/>
 					</div>
-					<div class="seven columns">
+					<div class="twelve columns">
 						<label>{task_desc_text}</label>
 						<textarea name="task_desc" class="full-width" 
 						rows="4"><?php echo $task_info['task_desc'];?></textarea>

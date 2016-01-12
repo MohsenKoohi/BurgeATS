@@ -320,14 +320,12 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->load->model("task_manager_model");
 		$can_exec=$this->task_manager_model->check_user_can_execute_task($user_id,$task_id);
 
-		if(!$can_exec)
-			return;
-
+		$this->data['user_can_exec']=($can_exec > 0);
 		$this->data['user_is_manager']=(2 === $can_exec);
 
 		$this->load->model("task_exec_manager_model");
 		
-		if($this->input->post("post_type") === "manager_note")
+		if((2 === $can_exec) && ($this->input->post("post_type") === "manager_note"))
 		{
 			$note=$this->input->post("manager_note");
 			$note.="\n".$this->user->get_name()." - ".$this->user->get_code();
@@ -356,7 +354,7 @@ class AE_Customer extends Burge_CMF_Controller {
 			redirect(get_admin_customer_details_link($customer_id,$task_id,"tasks"));
 		}
 
-		if($this->input->post("post_type") === "task_exec")
+		if(($can_exec > 0) && ($this->input->post("post_type") === "task_exec"))
 		{
 			$date_function=DATE_FUNCTION;
 

@@ -47,6 +47,11 @@
 			{
 				box-shadow: -1px -1px #888,1px 1px #ccc;
 			}
+			.task_histories .even-odd-bg  .two.columns
+			{
+				margin:5px;
+				width:calc(16.66% - 10px);
+			}
 
 			.task_histories .even-odd-bg  .three.columns
 			{
@@ -351,31 +356,34 @@
 											if(isset($th->manager_note))
 												foreach($th->manager_note as $note) 
 												{ 
+													$cols="three";
+													if(isset($note->next_exec))
+														$cols="two";
 										?>
 											
 											<div class="twelve columns manager_note">
 												<label>{manager_note_text}</label>
-												<div class="four columns">
+												<div class="<?php echo $cols;?> columns">
 													<label>{time_text}</label>
 													<span>
 														<?php echo $note->timestamp; ?>
 													</span>
 												</div>
-												<div class="four columns">
+												<div class="<?php echo $cols;?> columns">
 													<label>{status_text}</label>
 													<span>
 														<?php echo ${"task_status_".$note->status."_text"};?>
 													</span>
 												</div>
 												<?php if(isset($note->next_exec)) { ?>
-													<div class="four columns">
+													<div class="two columns">
 														<label>{task_next_exec_text}</label>
 														<span>
 															<?php echo $note->next_exec;?>
 														</span>
 													</div>
 												<?php } ?>
-												<div class="twelve columns">
+												<div class="six columns">
 													<label>{note_text}</label>
 													<span>
 														<?php echo ($note->last_exec_manager_note); ?>

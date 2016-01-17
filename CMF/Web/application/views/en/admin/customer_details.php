@@ -355,25 +355,30 @@
 											
 											<div class="twelve columns manager_note">
 												<label>{manager_note_text}</label>
-												<div class="three columns">
+												<div class="four columns">
 													<label>{time_text}</label>
 													<span>
 														<?php echo $note->timestamp; ?>
 													</span>
 												</div>
-												<div class="three columns">
+												<div class="four columns">
 													<label>{status_text}</label>
 													<span>
 														<?php echo ${"task_status_".$note->status."_text"};?>
 													</span>
 												</div>
-												<div class="six columns">
+												<div class="four columns">
+													<label>{task_next_exec_text}</label>
+													<span>
+														<?php echo $note->next_exec;?>
+													</span>
+												</div>
+												<div class="twelve columns">
 													<label>{note_text}</label>
 													<span>
 														<?php echo ($note->last_exec_manager_note); ?>
 													</span>
 												</div>
-
 											</div>
 										<?php 
 													} 

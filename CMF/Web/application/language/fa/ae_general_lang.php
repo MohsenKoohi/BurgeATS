@@ -4,6 +4,7 @@ $lang['submit']="ثبت";
 $lang['email']="پست الکترونیک";
 $lang['delete']="حذف";
 $lang['select']="انتخاب نمایید";
+$lang['code']="کد";
 
 $lang['task_status_changing']="در حال تغییر";
 $lang['task_status_complete']="کامل";

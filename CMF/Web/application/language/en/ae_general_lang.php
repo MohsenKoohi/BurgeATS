@@ -4,6 +4,7 @@ $lang['submit']="Submit";
 $lang['email']="Email";
 $lang['delete']="Delete";
 $lang['select']="Select";
+$lang['code']="Code";
 
 $lang['task_status_changing']="Changing";
 $lang['task_status_complete']="Complete";

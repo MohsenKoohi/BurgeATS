@@ -367,12 +367,14 @@
 														<?php echo ${"task_status_".$note->status."_text"};?>
 													</span>
 												</div>
-												<div class="four columns">
-													<label>{task_next_exec_text}</label>
-													<span>
-														<?php echo $note->next_exec;?>
-													</span>
-												</div>
+												<?php if(isset($note->next_exec)) { ?>
+													<div class="four columns">
+														<label>{task_next_exec_text}</label>
+														<span>
+															<?php echo $note->next_exec;?>
+														</span>
+													</div>
+												<?php } ?>
 												<div class="twelve columns">
 													<label>{note_text}</label>
 													<span>

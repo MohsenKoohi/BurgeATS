@@ -336,6 +336,10 @@ class Customer_manager_model extends CI_Model
 		return $row['customer_id'];
 	}
 
+	//returns 0 if every thing is  OK
+	//returns -1 if customer_name is NULL
+	//returns -2 if customer_email is used by antoher id
+	//returns -3 if new customer_email is NULL 
 	public function set_customer_properties($customer_id, $props_array, $desc)
 	{
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
@@ -343,7 +347,7 @@ class Customer_manager_model extends CI_Model
 		$should_send_registeration_mail=FALSE;
 
 		if(isset($props['customer_name']) && !$props['customer_name'])
-			return FALSE;
+			return -1;
 
 		if(isset($props['customer_email']))
 		{
@@ -357,7 +361,7 @@ class Customer_manager_model extends CI_Model
 				$row=$result->row_array();
 				$count=$row['count'];
 				if($count)
-					return FALSE;
+					return -2;
 			}
 
 			$this->db->select("customer_email");
@@ -367,7 +371,7 @@ class Customer_manager_model extends CI_Model
 			if($row['customer_email'])
 			{
 				if(!$props['customer_email'])
-					return FALSE;
+					return -3;
 			}
 			else
 				if($props['customer_email'])
@@ -390,7 +394,7 @@ class Customer_manager_model extends CI_Model
 			$this->send_registeration_mail($props['customer_email'],$pass);
 		}
 
-		return TRUE;
+		return 0;
 	}
 
 	public function get_customer_log_types()

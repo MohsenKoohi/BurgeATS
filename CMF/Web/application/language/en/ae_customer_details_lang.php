@@ -16,6 +16,9 @@ $lang['phone']="Phone";
 $lang['mobile']="Mobile";
 $lang['save']="Save";
 $lang['saved_successfully']="The new properties saved successfully.";
+$lang['customer_name_is_null']="Custome name hasn't been specified.";
+$lang['customer_email_is_repetitive']="Email is repetitive.";
+$lang['customer_email_cant_be_deleted']="Email can't be deleted.";
 
 $lang['type_regular']="Regular";
 $lang['type_agent']="Agent";

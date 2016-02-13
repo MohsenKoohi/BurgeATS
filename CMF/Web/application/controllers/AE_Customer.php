@@ -297,8 +297,24 @@ class AE_Customer extends Burge_CMF_Controller {
 
 		$result=$this->customer_manager_model->set_customer_properties($customer_id,$args,$desc);
 
-		if($result)
-			set_message($this->lang->line("saved_successfully"));
+		switch($result)
+		{
+			case 0:
+				set_message($this->lang->line("saved_successfully"));
+				break;
+
+			case -1:
+				set_message($this->lang->line("customer_name_is_null"));
+				break;
+
+			case -2:
+				set_message($this->lang->line("customer_email_is_repetitive"));
+				break;
+
+			case -3:
+				set_message($this->lang->line("customer_email_cant_be_deleted"));
+				break;
+		}
 
 		redirect(get_admin_customer_details_link($customer_id,$task_id));
 

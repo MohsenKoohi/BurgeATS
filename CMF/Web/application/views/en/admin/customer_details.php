@@ -31,11 +31,6 @@
 				display: block;
 			}
 
-			.row.even-odd-bg div.nine.columns
-			{
-				font-size:1.2em;
-			}
-
 			.task_histories .even-odd-bg  div.columns
 			{
 				box-shadow: 1px 1px #888,-1px -1px #ccc;

@@ -20,7 +20,6 @@ $lang['customer_name_is_null']="نام مشخص نشده است.";
 $lang['customer_email_is_repetitive']="پست الکترونیک تکراری است.";
 $lang['customer_email_cant_be_deleted']="امکان حذف پست الکترونیک وجود ندارد.";
 
-
 $lang['type_regular']="عادی";
 $lang['type_agent']="نماینده";
 $lang['desc']="توضیح";

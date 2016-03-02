@@ -850,12 +850,13 @@
 				html+="<br><br>";
 				html+="{sender_text}:<br>";
 				html+=our_address;
+				html+="<div style='page-break-after:always'></div>";
 				html+="</body></html>";
 
-				var win=window.open("","");
+				var win=window.open("","customer_address");
 
-				win.document.write(html);
-				
+				win.document.documentElement.innerHTML+=html;
+				 
 				win.stop();
 			}
 

@@ -579,6 +579,20 @@ class Customer_manager_model extends CI_Model
 		return $ret;		
 	}
 
+	public function get_cities_with_ids()
+	{
+		$this->db->from("city");
+		$this->db->join("province","city_province_id = province_id","left");
+		$this->db->order_by("province_id asc, city_id asc");
+		$query=$this->db->get();	
+
+		$ret=array();
+		foreach($query->result_array() as $row)
+			$ret[$row['province_id']][$row['city_id']]=$row['city_name'];
+
+		return $ret;		
+	}
+
 	private function insert_province_and_citiy_tables_to_db()
 	{
 		$result=$this->db->query("show tables like '%city' ");

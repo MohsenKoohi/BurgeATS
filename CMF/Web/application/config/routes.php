@@ -95,10 +95,6 @@ $route['login']		=	"CE_Login";
 $route['logout']		=	"CE_Logout";
 $route['dashboard']	=	"CE_Dashboard";
 
-$route[urlencode('ثبت')]="register";
-$route['register/request_pay/(.*)']="register/request_pay/$1";
-$route['register/pay_result/(.*)/(.*)']="register/pay_result/$1/$2";
-
 $route['(((:any)/)*:any)']="CE_Home";
 
 /* End of file routes.php */

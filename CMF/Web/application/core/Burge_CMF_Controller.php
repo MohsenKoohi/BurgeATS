@@ -14,6 +14,9 @@ class Burge_CMF_Controller extends CI_Controller{
 	protected $default_lang;
 	protected $all_langs;
 
+	//visit logging should go to the end of controller
+	//which allows the hit_level to change during the controller execution
+	//and also allows not logging redirected visits
 	protected $hit_level=0;
 
 	protected $data;
@@ -22,6 +25,8 @@ class Burge_CMF_Controller extends CI_Controller{
 	public function __construct()
 	{
 		parent::__construct();
+
+		mb_internal_encoding("UTF-8");
 
 		$parts=explode("/",uri_string());
 		if(sizeof($parts)>0 &&  $parts[0]===ADMIN_URL_FOLDER)
@@ -37,6 +42,14 @@ class Burge_CMF_Controller extends CI_Controller{
 			$access_result=$this->access_manager_model->check_access($module,$this->user);
 			if(!$access_result)
 			{
+				//there is a problem here which should be fixed in our next versions
+				//when the connection has been started from an iframe
+				//or from a javascript ajax, 
+				//we shouldn't redirect 
+				//we should send a response indicates that there is no access
+				//and the connection starter should be able to intrepret it
+				//and redirect the main page to the home_url
+				
 				redirect(get_link("home_url"));
 				return;
 			}
@@ -51,13 +64,16 @@ class Burge_CMF_Controller extends CI_Controller{
 		$this->default_lang=Language::get_default_language();
 		$this->all_langs=Language::get_languages();
 
-
 		if($this->in_admin_env)
 		{
 			//setting initial common data for the admin env
 			$this->lang->load('ae_general',$this->selected_lang);	
 
 			$this->data=get_initialized_data(FALSE);
+			
+			$this->data['selected_lang']=$this->selected_lang;
+			$this->data['all_langs']=$this->all_langs;
+
 			$this->data['user_logged_in']=TRUE;
 		}
 		else
@@ -73,10 +89,12 @@ class Burge_CMF_Controller extends CI_Controller{
 
 			$this->data=get_initialized_data(TRUE);	
 
+			$this->data['selected_lang']=$this->selected_lang;
+			$this->data['all_langs']=$this->all_langs;
+
 			$this->data['header_title']=$this->lang->line("header_title");
 			$this->data['header_meta_description']=$this->lang->line("header_meta_description");
 			$this->data['header_meta_keywords']=$this->lang->line("header_meta_keywords");
-
 		}
 		
 		return;
@@ -149,6 +167,10 @@ class Burge_CMF_Controller extends CI_Controller{
 	{
 		foreach($this->lang->language as $index => $val)
 			$this->data[$index."_text"]=$val;
+
+		$this->load->model("category_manager_model");
+		$categories=$this->category_manager_model->get_all();
+		$this->data['categories']=$categories[0]['children'];
 
 		$this->load->library('parser');
 		$this->parser->parse($this->get_customer_view_file("header"),$this->data);

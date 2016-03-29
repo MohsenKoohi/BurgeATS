@@ -77,6 +77,12 @@ define ('CAPTCHA_URL', IMAGES_URL."/captcha");
 define ('STYLES_URL', HOME_URL."/styles");
 
 define ('SCRIPTS_URL', HOME_URL."/scripts");
+define ('SCRIPTS_DIR', HOME_DIR."/scripts");
+
+define ('UPLOAD_DIR', HOME_DIR."/upload");
+define ('UPLOAD_URL', HOME_URL."/upload");
+
+define ('CATEGORY_CACHE_DIR', HOME_DIR."/application/cache/category");
 
 //settings for BurgeATS
 define ('CUSTOMER_SESSION_EXPIRATION',60*60*3);

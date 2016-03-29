@@ -58,8 +58,25 @@ $route[ADMIN_URL_FOLDER."/log"]				="AE_Log";
 $route[ADMIN_URL_FOLDER."/constant"]		="AE_Constant";
 
 $route[ADMIN_URL_FOLDER."/post"]					="AE_Post";
-$route[ADMIN_URL_FOLDER."/post/search"]		="AE_Post/search";
 $route[ADMIN_URL_FOLDER."/post/(\d+)"]			="AE_Post/details/$1";
+$route["post-(\d+)/?"]								="CE_Post/index/$1";
+$route["post-(\d+)/([^\/]*)/?"]					="CE_Post/index/$1/$2";
+
+$route[ADMIN_URL_FOLDER."/file"]					="AE_File";
+$route[ADMIN_URL_FOLDER."/file/inline"]		="AE_File/inline";
+$route[ADMIN_URL_FOLDER."/file/conf.json"]	="AE_File/conf";
+$route[ADMIN_URL_FOLDER."/file/([^\/]+)"]		="AE_File/action/$1";
+
+$route[ADMIN_URL_FOLDER."/category"]			="AE_Category";
+$route[ADMIN_URL_FOLDER."/category/(\d+)"]	="AE_Category/details/$1";
+$route["category-(\d+)/?"]							="CE_Category/index/$1";
+$route["category-(\d+)/([^\/]*)/?"]				="CE_Category/index/$1/$2";
+$route["category-(\d+)/([^\/]*)/(\d+)"]		="CE_Category/index/$1/$2/$3";
+
+$route[ADMIN_URL_FOLDER."/contact_us"]				="AE_Contact_Us";
+$route[ADMIN_URL_FOLDER."/contact_us/send_new"]	="AE_Contact_Us/send_new";
+$route[ADMIN_URL_FOLDER."/contact_us/(\d+)"]		="AE_Contact_Us/details/$1";
+$route["contact_us"]										="CE_Contact_Us";
 
 $route["retry"]="retry";
 $route["watermark"]="CE_Watermark";
@@ -82,9 +99,7 @@ $route[urlencode('ثبت')]="register";
 $route['register/request_pay/(.*)']="register/request_pay/$1";
 $route['register/pay_result/(.*)/(.*)']="register/pay_result/$1/$2";
 
-$route['(((:any)/)*:any)']="home";
-
-
+$route['(((:any)/)*:any)']="CE_Home";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

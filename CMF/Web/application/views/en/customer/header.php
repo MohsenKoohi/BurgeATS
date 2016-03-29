@@ -2,15 +2,21 @@
 <html dir="ltr" lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=yes">
   <meta name="keywords" content="{header_meta_keywords}"/>
   <meta name="description" content="{header_meta_description}"/>
   <?php if(isset($header_meta_robots)) {?> 
     <meta name="robots" content="{header_meta_robots}" />
   <?php } ?>
-  <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=yes">
   <title>{header_title}</title>
   <?php if(isset($header_canonical_url) && $header_canonical_url) {?> 
     <link rel="canonical" href="{header_canonical_url}"/>
+  <?php } ?>
+  <?php if(isset($header_next_url)) {?> 
+    <link rel="next" href="{header_next_url}"/>
+  <?php } ?>
+  <?php if(isset($header_prev_url)) {?> 
+    <link rel="prev" href="{header_prev_url}"/>
   <?php } ?>
   <?php 
     if(isset($lang_pages))
@@ -35,8 +41,7 @@
   <link rel="stylesheet" type="text/css" href="{styles_url}/jquery-ui.min.css" />
   <link rel="stylesheet" type="text/css" href="{styles_url}/colorbox.css" />
   <link rel="stylesheet" type="text/css" href="{styles_url}/skeleton.css" />  
-  <link rel="stylesheet" type="text/css" href="{styles_url}/customer/style-common.css" />
-  <link rel="stylesheet" type="text/css" href="{styles_url}/customer/style-ltr.css" />  
+  <link rel="stylesheet" type="text/css" href="{styles_url}/customer.css" />
   
   <!--[if ! lte IE 8]>-->
     <script src="{scripts_url}/jquery-2.1.3.min.js"></script>
@@ -74,10 +79,17 @@
             <a class="lang"></a>
             <ul>
               <?php foreach($lang_pages as $lang => $spec ) { ?>
-                <li><a <?php if($spec['selected']) echo "class='selected'";?>
+                <li>
+                  <a 
+                    <?php 
+                      $class="lang-".$spec['lang_abbr'];
+                      if($spec['selected'])
+                        $class.=" selected";
+                      echo "class='$class'";
+                    ?>  
                     href="<?php echo $spec['link']; ?>">
                       <?php echo $lang;?>
-                    </a>
+                  </a>
                 </li>
               <?php } ?>
             </ul>
@@ -88,31 +100,48 @@
 
   </div>
   <div class="content">
-    <?php if(isset($message) && strlen($message)>0)
-      echo '<div class="message">'.$message.'</div>';
-    ?>
-
     <div>
-      <?php if(TRUE || isset($side_menu_modules)) { ?>
-        <div class="side-menu">
-          <div class="mobile">
-            <img src="{images_url}/logo-text.png"/>
-            <div class="click">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
+      <div class="side-menu">
+        <div class="mobile">
+          <img src="{images_url}/logo-text.png"/>
+          <div class="click">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
-           <ul>
-            <li><a href="<?php echo get_link("customer_login");?>">Login</a></li>
-            <li><a href="<?php echo get_link("customer_logout");?>">Logout</a></li>
-            <li>Item2</li>
-            <li>Item3</li>
-            <?php 
-              if(isset($side_menu_modules))
-                foreach ($side_menu_modules as $mod) 
-                  echo "<li><a href='".$mod['link']."'>".$mod['name']."</a></li>";
-            ?>
-          </ul>
-        </div><?php } ?>
+        </div>
+         <ul class="side-menu-ul">
+          <?php 
+            foreach($categories as $cat)
+            {
+              $id=$cat['id'];
+              $name=$cat['names'][$selected_lang];
+              $link=get_customer_category_details_link($id,$cat['urls'][$selected_lang]);
+              echo "<li><a href='$link'>$name</a>\n";
+
+              if($cat['children'])
+              {
+                echo "<ul>\n";
+                foreach($cat['children'] as $child)
+                {
+                  $id=$child['id'];
+                  $name=$child['names'][$selected_lang];
+                  $link=get_customer_category_details_link($id,$child['urls'][$selected_lang]);
+                  echo "<li><a href='$link'>$name</a>\n";
+                }
+                echo "</ul>\n";
+              }
+              echo "</li>\n";
+            }
+          ?>
+          <li><a href='<?php echo get_link("customer_contact_us");?>'>{contact_us_text}</a>
+          <li><a href="<?php echo get_link("customer_login");?>">Login</a></li>
+          <li><a href="<?php echo get_link("customer_logout");?>">Logout</a></li>
+        </ul>
+      </div>
+
+      <div class="message-main">
+        <?php if(isset($message) && strlen($message)>0)
+          echo '<div class="message">'.$message.'</div>';
+        ?>

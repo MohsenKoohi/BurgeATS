@@ -11,6 +11,10 @@ $lang['post']="Posts";
 $lang['log']="Logs";
 $lang['constant']="Constant Values";
 
+$lang['file']="Files";
+$lang['category']="Categories";
+$lang['contact_us']="Contact us";
+
 $lang['customer']="Customers";
 $lang['task']="Tasks";
 $lang['task_exec']="Tasks Execution";

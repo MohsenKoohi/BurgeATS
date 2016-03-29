@@ -1,7 +1,7 @@
 <?php 
 
 $lang['posts']="پست‌ها";
-$lang['add_post']="ثبت پست جدید";
+$lang['add_post']="پست جدید";
 $lang['no_title']="بدون عنوان";
 
 $lang['post_details']="مشخصات پست";
@@ -9,11 +9,16 @@ $lang['not_found']="پست موردنظر پیدا نشد.";
 $lang['allow_comment']="امکان ثبت دیدگاه";
 $lang['active']="فعال";
 $lang['creator_user']="ایجاد کننده";
+$lang['date']="تاریخ";
 $lang['title']="عنوان";
 $lang['content']="متن";
 $lang['meta_keywords']="کلمات کلیدی SEO";
 $lang['meta_description']="توضیح SEO";
+$lang['categories']="دسته‌ها";
 $lang['changes_saved_successfully']="تغییرات با موفقیت ثبت شد.";
+$lang['root']="ریشه";
+$lang['image']="تصویر";
+$lang['delete_image']="حذف تصویر";
 
 $lang['delete_post']="حذف";
 $lang['are_you_sure_to_delete_this_post']="آیا از حذف این پست مطمئن هستید؟";

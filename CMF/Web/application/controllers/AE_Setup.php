@@ -16,7 +16,7 @@ class AE_Setup extends CI_Controller {
 
 	function check_directories_permission()
 	{
-		$dirs=array(LOG_DIR, CAPTCHA_DIR);
+		$dirs=array(LOG_DIR, CAPTCHA_DIR, UPLOAD_DIR,CATEGORY_CACHE_DIR);
 		$result=TRUE;
 
 		foreach($dirs as $dir)
@@ -83,11 +83,17 @@ class AE_Setup extends CI_Controller {
 
 		$this->module_manager_model->install_module("hit_counter");
 
-		$this->module_manager_model->install_module("post_manager");
-
 		$this->module_manager_model->install_module("log_manager");
 
 		$this->module_manager_model->install_module("constant_manager");
+
+		$this->module_manager_model->install_module("post_manager");
+
+		$this->module_manager_model->install_module("file_manager");
+
+		$this->module_manager_model->install_module("category_manager");
+
+		$this->module_manager_model->install_module("contact_us_manager");
 
 		$this->module_manager_model->install_module("customer_manager");
 

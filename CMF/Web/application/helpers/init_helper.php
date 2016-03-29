@@ -16,8 +16,10 @@ function &get_links($just_common=FALSE)
 			,'home_surl'			=> HOME_SURL_LANG
 
 			,'images_url'			=>	IMAGES_URL
+			,'no_image_url'		=> IMAGES_URL."/no-image.png"
 			,'styles_url'			=> STYLES_URL
 			,'scripts_url'			=> SCRIPTS_URL
+			,'upload_url'			=> UPLOAD_URL
 		);
 
 		$LINKS=array_merge($LINKS_COMMON, array(
@@ -35,8 +37,21 @@ function &get_links($just_common=FALSE)
 			,'admin_log'				=> ADMIN_SURL_LANG."/log"
 			,'admin_constant'			=> ADMIN_SURL_LANG."/constant"
 			
-			,'admin_post'						=> ADMIN_SURL_LANG."/post"
-			,'admin_post_details_format'	=> ADMIN_SURL_LANG."/post/post_id"
+			,'admin_post'									=> ADMIN_SURL_LANG."/post"
+			,'admin_post_details_format'				=> ADMIN_SURL_LANG."/post/post_id"
+			,'customer_post_details_format'			=> HOME_URL_LANG."/post-post_id/post_name"
+
+			,'admin_file'									=> ADMIN_SURL_LANG."/file"
+			,'admin_file_inline'							=> ADMIN_SURL_LANG."/file/inline"
+			
+			,'admin_category'								=> ADMIN_SURL_LANG."/category"
+			,'admin_category_details_format'			=> ADMIN_SURL_LANG."/category/category_id"
+			,'customer_category_details_format'		=> HOME_URL_LANG."/category-category_id/category_name/category_page"
+
+			,'admin_contact_us'									=> ADMIN_SURL_LANG."/contact_us"
+			,'admin_contact_us_send_new'						=> ADMIN_SURL_LANG."/contact_us/send_new"
+			,'admin_contact_us_message_details_format'	=> ADMIN_SURL_LANG."/contact_us/message_id"
+			,'customer_contact_us'								=> HOME_URL_LANG."/contact_us"
 
 			,'admin_customer'						=> ADMIN_SURL_LANG."/customer"
 			,'admin_customer_details_format'	=> ADMIN_SURL_LANG."/customer/details/customer_id/task_id"
@@ -53,7 +68,6 @@ function &get_links($just_common=FALSE)
 			,'customer_login'					=>HOME_URL_LANG."/login"
 			,'customer_logout'				=>HOME_URL_LANG."/logout"
 			,'customer_dashboard'			=>HOME_URL_LANG."/dashboard"
-
 		));
 	}
 
@@ -127,6 +141,46 @@ function get_admin_post_details_link($post_id,$do_not_set_lang=FALSE)
 	return str_replace("post_id",$post_id,get_link("admin_post_details_format",$do_not_set_lang));	
 }
 
+function get_customer_post_details_link($post_id,$post_name,$do_not_set_lang=FALSE)
+{
+	$post_name=linkenize($post_name);
+	return str_replace(
+		array("post_id","post_name")
+		,array($post_id,$post_name)
+		,get_link("customer_post_details_format",$do_not_set_lang)
+	);	
+}
+
+function get_admin_category_details_link($category_id,$do_not_set_lang=FALSE)
+{
+	return str_replace("category_id",$category_id,get_link("admin_category_details_format",$do_not_set_lang));	
+}
+
+function get_customer_category_details_link($category_id,$category_name,$page=1,$do_not_set_lang=FALSE)
+{
+	$search=array("category_id","category_name");
+	$replace=array($category_id,$category_name);
+	if($page==1)
+	{
+		$search[]="/category_page";
+		$replace[]="";
+	}
+	else
+	{
+		$search[]="category_page";
+		$replace[]=$page;	
+	}
+
+	$ret=str_replace($search,$replace,get_link("customer_category_details_format",$do_not_set_lang));	
+
+	return $ret;
+}
+
+function get_admin_contact_us_message_details_link($message_id, $do_not_set_lang=FALSE)
+{
+	return str_replace("message_id",$message_id,get_link("admin_contact_us_message_details_format",$do_not_set_lang));	
+}
+
 
 //we have created an initialization for data array sent to parser
 //so if we wanted to add an index, we can do it without changing all controller. 
@@ -189,6 +243,29 @@ function get_lang_pages($pattern)
 	}
 
 	return $ret;
+}
+
+function linkenize($name){
+  $pattern_page = explode(' ',"+ , ' \" & ! ? : ; # ~ = / $ £ ^ ( ) _ < > ؟ » « ) ( ْ ٌ ٍ ً ُ ِ َ ّ ] [ } { ؛ ٔ ٓ ، × ٪ ﷼ ٫ ÷ |");
+  $name=str_replace($pattern_page,'', $name);
+  $name=trim(preg_replace('/[\s-]+/', '-',$name));
+  $link=str_replace(" ","-",$name);
+ 
+  return $link;
+}
+
+function get_current_time()
+{
+	$tf=DATE_FUNCTION;
+	$time=$tf("Y/m/d H:i:s");
+	return $time;
+}
+
+function get_current_date()
+{
+	$tf=DATE_FUNCTION;
+	$time=$tf("Y/m/d");
+	return $time;
 }
 
 function get_template_dir($lang)
@@ -649,12 +726,21 @@ function delete_prefix_of_indexes($props,$prefix)
 	return $new_props;
 }
 
+function current_url_with_queries()
+{
+	$url = current_url();
+	if($_SERVER['QUERY_STRING'])
+		$url.= '?'.$_SERVER['QUERY_STRING'];
+	return $url;
+}
+
 function burge_cmf_watermark(
 	$image_path
 	,$watermark_ratio=0
 	,$watermark_path=NULL
 	,$ver_align="top"
 	,$hor_aling="right"
+	,$quality="100%"
 )
 {
 	$CI=&get_instance();
@@ -710,7 +796,7 @@ function burge_cmf_watermark(
 
 	$config['source_image']=$image_path;
 	$config['wm_type']='overlay';
-	$config['quality']="100%";
+	$config['quality']=$quality;
 	$config['wm_vrt_alignment']=$ver_align;
 	$config['wm_hor_alignment']=$hor_aling;
 	$config['wm_overlay_path']=$watermark_path;
@@ -725,7 +811,7 @@ function burge_cmf_watermark(
 	return $result;
 }
 
-function burge_cmf_send_mail($receiver,$subject,$content)
+function burge_cmf_send_mail($receiver,$subject,$message)
 {
 	$CI=&get_instance();
 	$CI->load->library("email");
@@ -738,29 +824,11 @@ function burge_cmf_send_mail($receiver,$subject,$content)
 		"mailtype"=>"html"
 		));
 	
-	$CI->email->from('from@email.com', 'Your Name');
+	$CI->email->from('your@email.com', 'Your Name');
 	$CI->email->to($receiver);
 	$CI->email->bcc('bcc@email.com');
 	$CI->email->subject($subject);
-	$CI->email->message('
-		<!DOCTYPE html>
-		<html dir="rtl" lang="fa">
-		<head>
-			<meta charset="UTF-8" />
-		</head>
-		<body style="direction:rtl;font-family:b koodak, koodak,b mitra, mitra, tahoma;">
-			<div style=";height:150px;display:block;text-align:center;direction:rtl;">
-				 <a title="" alt="" href="'.HOME_URL.'"><img src="'.IMAGES_URL.'/logo-text-fa.png"  style="height:130px" ></a>
-			 <a title="" alt="" href="'.HOME_URL.'"><img src="'.IMAGES_URL.'/logo-notext.png"  style="height:130px"></a>		    
-			</div>
-
-			<div class="main" style="direction:rtl;font-size:1.3em;direction:rtl;font-family:b koodak, koodak, b mitra, mitra, tahoma;text-align:justify;line-height:1.8em;background:white;min-height:200px">'
-			.$content.'
-			</div>		 
-			<br>
-			<div style="direction:rtl;text-align:center;font-family:b koodak, koodak, b mitra, mitra, tahoma;display:block;font-size:1em;color:darkgreen;">Your<br><span style="width:50px;display:inline-block"></span>Slogan</div> 
-		</body>
-		</html>');
+	$CI->email->message($message);
 
 	$CI->email->send();
 

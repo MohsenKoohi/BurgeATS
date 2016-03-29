@@ -2,9 +2,9 @@
 <html dir="rtl" lang="fa">
 <head>
 	<meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=yes">
 	<meta name="description" content="{header_description}"/>
 	<meta name="keywords" content="{header_keywords}"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=yes">
 	<title>{header_title}</title>
   <link rel="canonical" href="{header_canonical_url}"/>
 	<link rel="shortcut icon" href="{images_url}/favicon.png"/> 
@@ -12,7 +12,7 @@
   <link rel="stylesheet" type="text/css" href="{styles_url}/jquery-ui.min.css" />
   <link rel="stylesheet" type="text/css" href="{styles_url}/colorbox.css" />
   <link rel="stylesheet" type="text/css" href="{styles_url}/skeleton.css" />  
-  <link rel="stylesheet" type="text/css" href="{styles_url}/admin/style-common.css" />
+  <link rel="stylesheet" type="text/css" href="{styles_url}/admin.css" />
   <link rel="stylesheet" type="text/css" href="{styles_url}/admin/style-rtl.css" />  
   
   <!--[if ! lte IE 8]>-->
@@ -49,10 +49,17 @@
             <a class="lang"></a>
             <ul>
               <?php foreach($lang_pages as $lang => $spec ) { ?>
-                <li><a <?php if($spec['selected']) echo "class='selected'";?>
+                <li>
+                  <a
+                    <?php
+                      $class="lang-".$spec['lang_abbr'];
+                      if($spec['selected'])
+                        $class.=" selected";
+                      echo "class='$class'";
+                    ?>  
                     href="<?php echo $spec['link']; ?>">
                       <?php echo $lang;?>
-                    </a>
+                  </a>
                 </li>
               <?php } ?>
             </ul>
@@ -63,10 +70,6 @@
 
   </div>
   <div class="content">
-    <?php if(isset($message) && strlen($message)>0)
-      echo '<div class="message">'.$message.'</div>';
-    ?>
-
     <div>
       <?php if(isset($user_logged_in) && $user_logged_in) { ?>
         <div class="side-menu">
@@ -79,11 +82,16 @@
               <div></div>
             </div>
           </div>
-           <ul>
+           <ul class="side-menu-ul">
             <?php 
               if(isset($side_menu_modules))
                 foreach ($side_menu_modules as $mod) 
-                  echo "<li><a href='".$mod['link']."'>".$mod['name']."</a></li>";
+                  echo "<li><a href='".$mod['link']."'>".$mod['name']."</a></li>\n";
             ?>
           </ul>
         </div><?php } ?>
+
+      <div class="message-main">
+        <?php if(isset($message) && strlen($message)>0)
+          echo '<div class="message">'.$message.'</div>';
+        ?>

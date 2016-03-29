@@ -12,8 +12,7 @@
   <link rel="stylesheet" type="text/css" href="{styles_url}/jquery-ui.min.css" />
   <link rel="stylesheet" type="text/css" href="{styles_url}/colorbox.css" />
   <link rel="stylesheet" type="text/css" href="{styles_url}/skeleton.css" />  
-  <link rel="stylesheet" type="text/css" href="{styles_url}/admin/style-common.css" />
-  <link rel="stylesheet" type="text/css" href="{styles_url}/admin/style-ltr.css" />  
+  <link rel="stylesheet" type="text/css" href="{styles_url}/admin.css" />
   
   <!--[if ! lte IE 8]>-->
     <script src="{scripts_url}/jquery-2.1.3.min.js"></script>
@@ -49,10 +48,17 @@
             <a class="lang"></a>
             <ul>
               <?php foreach($lang_pages as $lang => $spec ) { ?>
-                <li><a <?php if($spec['selected']) echo "class='selected'";?>
+                <li>
+                  <a
+                    <?php
+                      $class="lang-".$spec['lang_abbr'];
+                      if($spec['selected'])
+                        $class.=" selected";
+                      echo "class='$class'";
+                    ?>  
                     href="<?php echo $spec['link']; ?>">
                       <?php echo $lang;?>
-                    </a>
+                  </a>
                 </li>
               <?php } ?>
             </ul>
@@ -63,10 +69,6 @@
 
   </div>
   <div class="content">
-    <?php if(isset($message) && strlen($message)>0)
-      echo '<div class="message">'.$message.'</div>';
-    ?>
-
     <div>
       <?php if(isset($user_logged_in) && $user_logged_in) { ?>
         <div class="side-menu">
@@ -79,11 +81,16 @@
               <div></div>
             </div>
           </div>
-          <ul>
+           <ul class="side-menu-ul">
             <?php 
               if(isset($side_menu_modules))
                 foreach ($side_menu_modules as $mod) 
-                  echo "<li><a href='".$mod['link']."'>".$mod['name']."</a></li>";
+                  echo "<li><a href='".$mod['link']."'>".$mod['name']."</a></li>\n";
             ?>
           </ul>
         </div><?php } ?>
+
+      <div class="message-main">
+        <?php if(isset($message) && strlen($message)>0)
+          echo '<div class="message">'.$message.'</div>';
+        ?>

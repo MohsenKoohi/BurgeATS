@@ -47,6 +47,27 @@ class Log_manager_model extends CI_Model
 		,"POST_ADD"					=>161
 		,"POST_CHANGE"				=>162
 		,"POST_DELETE"				=>163
+		
+		,"FILE_DIR_CREATE"		=>201
+		,"FILE_DIR_DELETE"		=>202
+		,"FILE_DIR_COPY"			=>203
+		,"FILE_DIR_MOVE"			=>204
+		,"FILE_DIR_RENAME"		=>205
+		,"FILE_DIR_DOWNLOAD"		=>206		
+		,"FILE_FILE_UPLOAD"		=>207
+		,"FILE_FILE_DELETE"		=>208
+		,"FILE_FILE_COPY"			=>209
+		,"FILE_FILE_MOVE"			=>210
+		,"FILE_FILE_RENAME"		=>211
+
+		,"CATEGORY_CREATE"		=>241
+		,"CATEGORY_DELETE"		=>242
+		,"CATEGORY_CHANGE"		=>243	
+
+		,"CONTACT_US_ADD"				=>271
+		,"CONTACT_US_REPLY"			=>272
+		,"CONTACT_US_DELETE"			=>273
+		,"CONTACT_US_NEW_MESSAGE"	=>274
 
 		,"CUSTOMER_ADD"						=>1001
 		,"CUSTOMER_INFO_CHANGE"				=>1002
@@ -108,15 +129,27 @@ class Log_manager_model extends CI_Model
 		return;
    }
 
-   public function get_today_logs($start,$len)
+   public function get_event_types()
    {
-   	return $this->get_logs_of_a_day($this->today_year,$this->today_month,$this->today_day,$start,$len);
+   	return $this->event_types;
    }
 
-   public function get_logs_of_a_day($y,$m,$d,$start,$len)
+   public function get_today_logs()
    {
-   	$file_path=$this->get_log_file_path($y,$m,$d);
+   	return $this->get_logs(array(
+   		"year"=>$this->today_year
+   		,"month"=>$this->today_month
+   		,"day"=>$this->today_day
+   	));
+   }
+
+   public function get_logs($filters)
+   {
+   	$file_path=$this->get_log_file_path($filters['year'],$filters['month'],$filters['day']);
    	$result=array();
+
+   	if(isset($filters['visitor_id']))
+   		$visitor_id_pattern="/.*".str_replace(" ", ".*", $filters['visitor_id']).".*/i";
    	
    	if(file_exists($file_path))
    	{
@@ -125,9 +158,24 @@ class Log_manager_model extends CI_Model
    		$res=json_decode("[".$content."]");
 
    		$count=0;
-   		for($i=sizeof($res)-1-$start;($i>=0) && ($count<$len);$i--,$count++)
-   			$result[]=$res[$i];
+   		
+   		for($i=sizeof($res)-1;$i>=0;$i--)
+   		{
+   			if(isset($filters['event']))
+   				if($res[$i]->event_name != $filters['event'])
+   					continue;
+
+   			if(isset($visitor_id_pattern))
+   				if(!preg_match($visitor_id_pattern, $res[$i]->visitor_id))
+   					continue;
+
+   			$result[$count++]=$res[$i];
+   		}
+
+   		$result['total']=$count;
    	}
+   	else
+   		$result['total']=0;
 
    	return $result;
    }
@@ -180,14 +228,21 @@ class Log_manager_model extends CI_Model
 		return;
 	}
 
-	public function get_dashbord_info()
+	public function get_dashboard_info()
 	{
 		$CI=& get_instance();
 		$lang=$CI->language->get();
 		$CI->lang->load('ae_log',$lang);		
 		
 		$data=array();
-		$data['logs']=$this->get_today_logs(2,8);
+		$data['logs']=$this->get_today_logs();
+
+		$total=$data['logs']['total'];
+		if($total)
+		{			
+			$data['logs']['start']=1;
+			$data['logs']['end']=min(9,$data['logs']['total']);
+		}
 		
 		$CI->load->library('parser');
 		$ret=$CI->parser->parse($CI->get_admin_view_file("log_dashboard"),$data,TRUE);

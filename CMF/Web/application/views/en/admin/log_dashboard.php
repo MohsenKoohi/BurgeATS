@@ -1,8 +1,10 @@
 <ul class="dash-ul eng ltr" style="padding:10px">
 	<?php 
-		foreach($logs as $log)
+		for($i=$logs['start']; $i<$logs['end'];$i++)
 		{
-			echo "<li class='eng ltr'>";
+			$log=$logs[$i];
+
+			echo "<li class='en ltr'>";
 			$j=0;
 			foreach ($log as $key => $value)
 			{

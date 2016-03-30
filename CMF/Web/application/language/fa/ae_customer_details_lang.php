@@ -85,3 +85,12 @@ $lang['reciever']="گیرنده";
 $lang['sender']="فرستنده";
 $lang['login']="ورود به سیستم";
 $lang['customer_email_has_not_been_specified']="پست الکترونیک مشتری مشخص نشده است.";
+
+$lang['registeration_email_subject']="اطلاعات حساب کاربری";
+$lang['registeration_email_content']='ثبت نام شما با موفقیت انجام شد.<br>
+			هم اکنون با پست الکترونیک و رمز زیر می توانید از محیط کاربری استفاده کنید:<br>
+			پست الکترونیک: <span style="font-family:arial;">$email</span><br>
+			رمز: <span style="font-family:arial;">$pass</span><br>
+			در صورت بروز هر مشکل با همین پست الکترونیک تماس بگیرید.<br>
+			با استفاده از  <a style="color:#0870E3" href="$link">حساب کاربری</a> می توانید به 
+			صفحه خود دسترسی پیدا کنید.<br>';

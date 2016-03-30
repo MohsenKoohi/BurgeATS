@@ -828,18 +828,26 @@ class Customer_manager_model extends CI_Model
 		return md5(md5($pass).$salt);
 	}
 
-	private function send_registeration_mail($email,$pass)
+	public function send_registeration_mail($email,$pass)
 	{
-		$content='
-			شما با موفقیت ثبت نام نمودید.<br>
-			هم اکنون با پست الکترونیک و رمز زیر می توانید از محیط کاربری استفاده کنید:<br>
-			پست الکترونیک: <span style="font-family:arial;">'.$email.'</span><br>
-			رمز: <span style="font-family:arial;">'.$pass.'</span><br>
-			در صورت بروز هر مشکل با همین پست الکترونیک تماس بگیرید.<br>
-			با استفاده از  <a style="color:#0870E3" href="'.HOME_URL."/حساب-کاربری".'">حساب کاربری</a> می توانید به 
-			صفحه خود دسترسی پیدا کنید.<br>';
+		$this->lang->load('email_lang',$this->selected_lang);		
+		$this->lang->load('ae_customer_details_lang',$this->selected_lang);		
 
-		burge_cmf_send_mail($email,'سیستم پیگیری امور برگه | اطلاعات حساب کاربری',$content);
+		$subject=$this->lang->line("registeration_email_subject");
+		$subject=$subject.$this->lang->line("header_separator").$this->lang->line("main_name");
+		$content=str_replace(
+			array('$email','$pass','$link')
+			,array($email,$pass,get_link("customer_login")),
+			$this->lang->line("registeration_email_content")
+		);
+		
+		$message=str_replace(
+			array('$content','$slogan','$response_to'),
+			array($content,$this->lang->line("slogan"),"")
+			,$this->lang->line("email_template")
+		);
+
+		burge_cmf_send_mail($email,$subject,$message);
 
 		return;
 	}

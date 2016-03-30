@@ -11,7 +11,6 @@ class AE_Customer extends Burge_CMF_Controller {
 
 	public function index()
 	{
-
 		$this->lang->load('ae_customer',$this->selected_lang);
 		
 		if($this->input->post())

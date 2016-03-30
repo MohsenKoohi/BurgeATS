@@ -85,3 +85,11 @@ $lang['reciever']="Reciever";
 $lang['sender']="Sender";
 $lang['login']="Login as Customer";
 $lang['customer_email_has_not_been_specified']="Customer's email has not been specified.";
+
+$lang['registeration_email_subject']="Account Info";
+$lang['registeration_email_content']='Your registeration completed successfully.<br>
+			Now, you can enter your account using this email and password:<br>
+			email: <span style="font-family:arial;">$email</span><br>
+			password: <span style="font-family:arial;">$pass</span><br>
+			Please reply to this email, if you have any problem.<br>
+			Using <a style="color:#0870E3" href="$link">this link</a>, you can enter your account.<br>';

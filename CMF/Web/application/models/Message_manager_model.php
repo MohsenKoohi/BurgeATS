@@ -24,7 +24,7 @@ class Message_manager_model extends CI_Model
 				,`message_subject` VARCHAR(200)
 				,`message_body` TEXT
 				,`message_verifier_id` INT DEFAULT 0
-				,`message_replied` TINYINT DEFAULT 0
+				,`message_reply_id` BIGINT DEFAULT 0
 				,PRIMARY KEY (message_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
@@ -34,7 +34,7 @@ class Message_manager_model extends CI_Model
 			"CREATE TABLE IF NOT EXISTS $module_table (
 				`mu_user_id` INT NOT NULL
 				,`mu_verifier` TINYINT NOT NULL DEFAULT 0 
-				,`mu_message_admin` TINYINT NOT NULL DEFAULT 0
+				,`mu_supervisor` TINYINT NOT NULL DEFAULT 0
 				,PRIMARY KEY (mu_user_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);

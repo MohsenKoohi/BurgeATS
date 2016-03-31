@@ -6,9 +6,10 @@ function insert_Iran_provinces_and_cities_to_db()
 	$table=$CI->db->dbprefix("province"); 
 	$CI->db->query("
 		CREATE TABLE IF NOT EXISTS `$table` (
-		  `province_id` int(11) NOT NULL DEFAULT '0',
-		  `province_lang` char(2) NOT NULL DEFAULT '',
-		  `province_name` varchar(100) NOT NULL
+			`province_id` int(11) NOT NULL
+			,`province_lang` char(2) NOT NULL
+			,`province_name` varchar(100) NOT NULL
+			,PRIMARY KEY (`province_id`, `province_lang`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	");
 
@@ -81,10 +82,11 @@ function insert_Iran_provinces_and_cities_to_db()
 	$table=$CI->db->dbprefix("city"); 
 	$CI->db->query("
 		CREATE TABLE IF NOT EXISTS `$table` (
-		  `city_id` int(11) NOT NULL DEFAULT '0',
-		  `city_province_id` int(11) DEFAULT NULL,
-		  `city_lang` char(2) NOT NULL DEFAULT '',
-		  `city_name` varchar(255) DEFAULT NULL
+		  `city_id` int(11) NOT NULL
+		  ,`city_province_id` int(11) 
+		  ,`city_lang` char(2) NOT NULL
+		  ,`city_name` varchar(255) DEFAULT NULL
+		  ,PRIMARY KEY (`city_id`, `city_lang`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	");
 

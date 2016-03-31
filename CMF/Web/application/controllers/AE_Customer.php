@@ -9,8 +9,67 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->load->model("customer_manager_model");
 	}
 
+	private function  update_customers_provinces_and_cities()
+	{
+		$this->db
+			->set("province_name","چهارمحال بختیاری")
+			->where("province_id",9)
+			->where("province_lang","fa")
+			->update("province");
+
+		$table=$this->db->dbprefix("customer"); 
+		$this->db->query("UPDATE $table set customer_address = CONCAT(customer_city,'-',customer_address)");
+
+		$res=$this->db
+			->select("customer_id,customer_province,customer_city,province_id")
+			->from("customer")
+			->join("province","customer_province = province_name","left")
+			->where("province_lang","fa")
+			->get()
+			->result_array();
+
+		$this->db
+			->set("province_name","چهارمحال و بختیاری")
+			->where("province_id",9)
+			->where("province_lang","fa")
+			->update("province");
+
+		$b=array();
+		foreach($res as $r)
+			$b[]=array(
+				"customer_id"=>$r['customer_id']
+				,"customer_province"=>$r['province_id']
+			);
+
+		$this->db->update_batch("customer",$b,"customer_id");
+
+		$table=$this->db->dbprefix("customer"); 
+		$this->db->query("ALTER TABLE $table MODIFY customer_province INT NOT NULL");
+
+		$res=$this->db
+			->select("customer_id,customer_province,customer_city,city_id")
+			->from("customer")
+			->join("city","customer_city = city_name","left")
+			->where("city_lang","fa")
+			->get()
+			->result_array();
+
+		$b=array();
+		foreach($res as $r)
+			$b[]=array(
+				"customer_id"=>$r['customer_id']
+				,"customer_city"=>$r['city_id']
+			);
+
+		$this->db->update_batch("customer",$b,"customer_id");
+
+		$table=$this->db->dbprefix("customer"); 
+		$this->db->query("ALTER TABLE $table MODIFY customer_city INT NOT NULL");
+	}
 	public function index()
 	{
+		//$this->update_customers_provinces_and_cities();
+
 		$this->lang->load('ae_customer',$this->selected_lang);
 		
 		if($this->input->post())
@@ -23,8 +82,8 @@ class AE_Customer extends Burge_CMF_Controller {
 		
 		$this->set_data_customers();
 		$this->data['raw_page_url']=get_link("admin_customer");
-		$this->data['provinces']=$this->customer_manager_model->get_provinces();
-		$this->data['cities']=$this->customer_manager_model->get_cities();
+		$this->data['provinces']=$this->customer_manager_model->get_provinces($this->selected_lang);
+		$this->data['cities']=$this->customer_manager_model->get_cities($this->selected_lang);
 		
 		$page_raw_lang_url=get_link("admin_customer",TRUE);
 		$this->data['lang_pages']=get_lang_pages($page_raw_lang_url);
@@ -51,7 +110,6 @@ class AE_Customer extends Burge_CMF_Controller {
 			if($this->input->get($pfname))
 				$filter[$pfname]=$this->input->get($pfname);	
 
-		
 		$total=$this->customer_manager_model->get_total_customers($filter);
 		$this->data['customers_total']=$total;
 		$this->data['customers_total_pages']=ceil($total/$items_per_page);
@@ -174,8 +232,8 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->data['lang_pages']=get_lang_pages(get_admin_customer_details_link($customer_id,$task_id,NULL,TRUE));
 
 		$this->data['customer_types']=$this->customer_manager_model->get_customer_types();		
-		$this->data['provinces']=$this->customer_manager_model->get_provinces();
-		$this->data['cities']=$this->customer_manager_model->get_cities();
+		$this->data['provinces']=$this->customer_manager_model->get_provinces($this->selected_lang);
+		$this->data['cities']=$this->customer_manager_model->get_cities($this->selected_lang);
 
 		$this->data['header_title']=$this->lang->line("customer_details");
 		if($this->data['customer_info'])

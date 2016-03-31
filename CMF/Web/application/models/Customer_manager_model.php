@@ -71,8 +71,8 @@ class Customer_manager_model extends CI_Model
 				,`customer_salt` char(32) DEFAULT NULL
 				,`customer_name` varchar(255) DEFAULT NULL
 				,`customer_code` char(10) DEFAULT NULL
-				,`customer_province` varchar(255) DEFAULT NULL
-				,`customer_city` varchar(255) DEFAULT NULL
+				,`customer_province` int DEFAULT 0
+				,`customer_city` int DEFAULT 0
 				,`customer_address` varchar(1000) DEFAULT NULL
 				,`customer_phone` varchar(32) DEFAULT NULL 
 				,`customer_mobile` varchar(32) DEFAULT NULL 
@@ -556,19 +556,27 @@ class Customer_manager_model extends CI_Model
 		return $path2;
 	}
 
-	public function get_provinces()
+	public function get_provinces($lang_id)
 	{
 		$this->db->select("*");
 		$this->db->from("province");
+		if($lang_id)
+			$this->db->where("province_lang",$lang_id);
 		$this->db->order_by("province_name ASC");
 		$query=$this->db->get();
+
 		return $query->result_array();
 	}
 
-	public function get_cities()
+	public function get_cities_with_names($lang_id)
 	{
 		$this->db->from("city");
 		$this->db->join("province","city_province_id = province_id","left");
+		if($lang_id)
+			$this->db
+				->where("city_lang",$lang_id)
+				->where("province_lang",$lang_id);
+
 		$this->db->order_by("province_id asc, city_id asc");
 		$query=$this->db->get();	
 
@@ -579,10 +587,14 @@ class Customer_manager_model extends CI_Model
 		return $ret;		
 	}
 
-	public function get_cities_with_ids()
+	public function get_cities($lang_id)
 	{
 		$this->db->from("city");
 		$this->db->join("province","city_province_id = province_id","left");
+		if($lang_id)
+			$this->db
+				->where("city_lang",$lang_id)
+				->where("province_lang",$lang_id);
 		$this->db->order_by("province_id asc, city_id asc");
 		$query=$this->db->get();	
 

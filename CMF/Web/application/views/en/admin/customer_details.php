@@ -608,7 +608,7 @@
 										<select name="customer_province" class="full-width" onchange="setCities($(this).val());">
 											<?php 
 												foreach($provinces as $pv)
-													echo "<option value='".$pv['province_name']."'>".$pv['province_name']."</option>";
+													echo "<option value='".$pv['province_id']."'>".$pv['province_name']."</option>";
 											?>
 										</select>
 									</div>
@@ -649,12 +649,13 @@
 							<script type="text/javascript">
 								var cities=JSON.parse('<?php echo json_encode($cities);?>');
 
-								function setCities(province)
+								function setCities(province_id)
 								{
 									var html='';//<option value="">--- انتخاب نمایید ---</option>';
-									var provinceCities=cities[province];
+									var provinceCities=cities[province_id];
 									for(var i in provinceCities)
-										html+='<option value="'+provinceCities[i]+'">'+provinceCities[i]+'</option>';
+										if(provinceCities.hasOwnProperty(i))
+											html+='<option value="'+i+'">'+provinceCities[i]+'</option>';
 									$("select[name=customer_city]").html(html);
 								}
 

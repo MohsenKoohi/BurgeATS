@@ -10,4 +10,6 @@ $lang['header_meta_description']="BurgeATS, Customer Relationship Management Sys
 
 $lang['read_more']="بیشتر بخوانید";
 $lang['page']="صفحه";
+
 $lang['contact_us']="تماس با ما";
+$lang['dashboard']="حساب کاربری";

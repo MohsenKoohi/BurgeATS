@@ -136,9 +136,9 @@
               echo "</li>\n";
             }
           ?>
-          <li><a href='<?php echo get_link("customer_contact_us");?>'>{contact_us_text}</a>
-          <li><a href="<?php echo get_link("customer_login");?>">Login</a></li>
-          <li><a href="<?php echo get_link("customer_logout");?>">Logout</a></li>
+          <li><a href="<?php echo get_link("customer_dashboard");?>">{dashboard_text}</a></li>
+          <li><a href='<?php echo get_link("customer_contact_us");?>'>{contact_us_text}</a></li>
+          
         </ul>
       </div>
 

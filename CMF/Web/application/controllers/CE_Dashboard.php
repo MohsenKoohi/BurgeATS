@@ -13,7 +13,7 @@ class CE_Dashboard extends Burge_CMF_Controller {
 		$this->load->model("customer_manager_model");
 		
 		if(!$this->customer_manager_model->has_customer_logged_in())
-			return redirect(get_link("home_url"));
+			return redirect(get_link("customer_login"));
 
 		$this->lang->load('ce_dashboard',$this->language->get());
 

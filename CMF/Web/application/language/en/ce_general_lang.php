@@ -10,4 +10,6 @@ $lang['header_meta_description']="";
 
 $lang['read_more']="More";
 $lang['page']="Page";
+
 $lang['contact_us']="Contact us";
+$lang['dashboard']="Account";

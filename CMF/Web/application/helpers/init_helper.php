@@ -67,6 +67,9 @@ function &get_links($just_common=FALSE)
 
 			,'customer_dashboard'			=> HOME_URL_LANG."/dashboard"
 			,'customer_login'					=> HOME_URL_LANG."/login"
+			,'customer_login_yahoo'			=> HOME_URL_LANG."/login/yahoo"
+			,'customer_login_google'		=> HOME_URL_LANG."/login/google"
+			,'customer_login_facebook'		=> HOME_URL_LANG."/login/facebook"
 			,'customer_logout'				=> HOME_URL_LANG."/logout"
 			,'customer_signup'				=> HOME_URL_LANG."/signup"
 			,'customer_forgotten_password'=> HOME_URL_LANG."/forgotten_password"

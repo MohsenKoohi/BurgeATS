@@ -23,3 +23,7 @@ $lang['new_password_email_content']='
 
 $lang['regiestered_successfully']="شما با موفقیت ثبت نام نمودید.<br>رمز شما به پست الکترونیک شما ارسال شد.";
 $lang['repeated_email']="این پست الکترونیک قبلا ثبت شده است.<br>از قسمت ورود به حساب کاربری استفاده نمایید.";
+
+$lang['social_media_login']="ورود با شبکه های اجتماعی";
+$lang['social_login_success']='شما با پست الکترونیک $email به حساب کاربری خود وارد شدید.';
+$lang['social_login_fail']='پست الکترونیک $email ثبت نشده است.';

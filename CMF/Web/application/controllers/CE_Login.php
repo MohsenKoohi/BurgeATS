@@ -63,6 +63,10 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->data['header_meta_keywords'].=",".$this->lang->line("header_meta_keywords");
 		$this->data['header_meta_robots']="noindex";
 
+		$this->data['yahoo_login_page']=get_link("customer_login_yahoo");
+		$this->data['facebook_login_page']=get_link("customer_login_facebook");
+		$this->data['google_login_page']=get_link("customer_login_google");
+
 		$this->data['header_canonical_url']=get_link("home_url");
 		
 		$this->data['captcha']=get_captcha();
@@ -207,6 +211,150 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->send_customer_output("signup");
 
 		return;				 
+	}
+
+	public function yahoo()
+	{
+		$this->load->model('login/yahoo_login_model');
+
+	 	if($this->input->get('openid_mode') === 'id_res')
+	 	{ 	
+			$this->yahoo_login_model->SetIdentity(urldecode($_GET['openid_identity']));
+			
+			$openid_validation_result = $this->yahoo_login_model->ValidateWithServer();
+			
+			if ($openid_validation_result == true)
+			{ 	
+				$email=urldecode($_GET['openid_ax_value_email']);;
+				if($this->customer_manager_model->login_openid($email,"yahoo"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$this->yahoo_login_model->SetIdentity('https://me.yahoo.com');
+		$realm_link="ENTER YOUR DOMAIN NAME REGISTERED BY YAHOO HERE, for example http://www.burge.ir";
+		$return_link=get_link("customer_login_yahoo");	
+
+		$redirect_link=$this->yahoo_login_model->RedirectToYahooServer($realm_link,$return_link);
+		if(!$redirect_link)
+			$error = $this->yahoo_login_model->GetError();
+		
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Login by Yahoo';
+		$this->data['redirect_link']=$redirect_link;
+		if(!$redirect_link)
+		{
+			$this->data['redirect_error_code']=$error['code'];;
+			$this->data['redirect_error_desc']=$error['description'];
+		}
+
+		$this->data['social_network_name']="Yahoo";
+		$this->data['image_name']="login-ym.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login-social'),$this->data);
+
+		return;
+	}
+
+	public function google()
+	{
+		$this->load->model('login/google_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$email=$this->google_login_model->verifyUserAndGetEmail();
+			
+			if ($email)
+			{ 	
+				if($this->customer_manager_model->login_openid($email,"google"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$redirect_link=$this->google_login_model->getAuthenticationUrl();
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Login by Google';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Google";
+		$this->data['image_name']="login-gm.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login-social'),$this->data);
+
+
+		return;
+	}
+
+	public function facebook()
+	{
+		$this->load->model('login/facebook_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$email=$this->facebook_login_model->verifyUserAndGetEmail();
+			if ($email)
+			{ 	
+				if($this->customer_manager_model->login_openid($email,"facebook"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		if($this->input->get('error'))
+		{
+			echo "<script type='text/javascript'>window.close();</script>";
+			return;
+		}
+
+		$redirect_link=$this->facebook_login_model->getAuthenticationUrl();
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Login by Facebook';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Facebook";
+		$this->data['image_name']="login-fb.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login-social'),$this->data);
+
+		return;
 	}
 
 }

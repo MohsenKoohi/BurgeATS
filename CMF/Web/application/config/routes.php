@@ -93,6 +93,9 @@ $route[ADMIN_URL_FOLDER."/message"]								="AE_Message";
 
 $route['dashboard']				= "CE_Dashboard";
 $route['login']					= "CE_Login/login";
+$route['login/yahoo']			= "CE_Login/yahoo";
+$route['login/facebook']		= "CE_Login/facebook";
+$route['login/google']			= "CE_Login/google";
 $route['logout']					= "CE_Login/logout";
 $route['signup']					= "CE_Login/signup";
 $route['forgotten_password']	= "CE_Login/forgotten_password";

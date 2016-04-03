@@ -65,9 +65,11 @@ function &get_links($just_common=FALSE)
 			,'admin_message_access'			=> ADMIN_SURL_LANG."/message_access"
 			,'admin_message'					=> ADMIN_SURL_LANG."/message"
 
-			,'customer_login'					=>HOME_URL_LANG."/login"
-			,'customer_logout'				=>HOME_URL_LANG."/logout"
-			,'customer_dashboard'			=>HOME_URL_LANG."/dashboard"
+			,'customer_dashboard'			=> HOME_URL_LANG."/dashboard"
+			,'customer_login'					=> HOME_URL_LANG."/login"
+			,'customer_logout'				=> HOME_URL_LANG."/logout"
+			,'customer_singup'				=> HOME_URL_LANG."/signup"
+			,'customer_forgotten_password'=> HOME_URL_LANG."/forgotten_password"
 		));
 	}
 

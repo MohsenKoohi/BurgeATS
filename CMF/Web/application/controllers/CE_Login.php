@@ -8,7 +8,7 @@ class CE_Login extends Burge_CMF_Controller {
 
 	}
 
-	public function index()
+	public function login()
 	{
 		$this->load->model("customer_manager_model");
 		
@@ -66,5 +66,14 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->send_customer_output("login");
 		
 		return;	 
+	}
+
+	public function logout()
+	{
+		$this->load->model("customer_manager_model");
+		$this->customer_manager_model->set_customer_logged_out();
+		
+		redirect(get_link("home_url"));
+		return;		
 	}
 }

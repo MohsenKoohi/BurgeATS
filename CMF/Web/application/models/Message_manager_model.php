@@ -59,7 +59,7 @@ class Message_manager_model extends CI_Model
 		//return " (12) ";
 	}
 
-	public function get_dashbord_info()
+	public function get_dashboard_info()
 	{
 		return "";
 		$CI=& get_instance();

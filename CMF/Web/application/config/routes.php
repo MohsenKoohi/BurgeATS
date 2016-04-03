@@ -91,9 +91,11 @@ $route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]="AE_Task_Exec/get_file
 $route[ADMIN_URL_FOLDER."/message_access"]					="AE_Message_Access";
 $route[ADMIN_URL_FOLDER."/message"]								="AE_Message";
 
-$route['login']		=	"CE_Login";
-$route['logout']		=	"CE_Logout";
-$route['dashboard']	=	"CE_Dashboard";
+$route['dashboard']				= "CE_Dashboard";
+$route['login']					= "CE_Login/login";
+$route['logout']					= "CE_Login/logout";
+$route['signup']					= "CE_Login/register";
+$route['forgotten_password']	= "CE_Login/forgotten_password";
 
 $route['(((:any)/)*:any)']="CE_Home";
 

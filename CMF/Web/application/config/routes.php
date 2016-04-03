@@ -94,7 +94,7 @@ $route[ADMIN_URL_FOLDER."/message"]								="AE_Message";
 $route['dashboard']				= "CE_Dashboard";
 $route['login']					= "CE_Login/login";
 $route['logout']					= "CE_Login/logout";
-$route['signup']					= "CE_Login/register";
+$route['signup']					= "CE_Login/signup";
 $route['forgotten_password']	= "CE_Login/forgotten_password";
 
 $route['(((:any)/)*:any)']="CE_Home";

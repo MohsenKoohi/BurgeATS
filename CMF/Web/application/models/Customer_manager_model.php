@@ -284,6 +284,10 @@ class Customer_manager_model extends CI_Model
 	public function add_customer($props_array,$desc="",$login=FALSE)
 	{	
 		$desc=persian_normalize_word($desc);
+		
+		if(!isset($props_array['customer_type']) || !in_array($props_array['customer_type'], $this->customer_types))
+			$props_array['customer_type']=$this->customer_types[0];
+
 		$props=select_allowed_elements($props_array,$this->customer_props_can_be_written);
 		persian_normalize($props);
 
@@ -755,6 +759,7 @@ class Customer_manager_model extends CI_Model
 	{
 		$ret=FALSE;
 
+		//$pass=random_string("numeric",7);
 		$pass=random_string("alnum",7);
 		$salt=random_string("alnum",32);
 
@@ -776,6 +781,8 @@ class Customer_manager_model extends CI_Model
 			$this->add_customer_log($customer_id,'CUSTOMER_PASS_CHANGE',$props);
 			$props['customer_id']=$customer_id;
 		}
+
+		$props['result']=$ret;
 		
 		$this->log_manager_model->info("CUSTOMER_PASS_CHANGE",$props);
 

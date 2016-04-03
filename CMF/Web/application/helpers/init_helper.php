@@ -68,7 +68,7 @@ function &get_links($just_common=FALSE)
 			,'customer_dashboard'			=> HOME_URL_LANG."/dashboard"
 			,'customer_login'					=> HOME_URL_LANG."/login"
 			,'customer_logout'				=> HOME_URL_LANG."/logout"
-			,'customer_singup'				=> HOME_URL_LANG."/signup"
+			,'customer_signup'				=> HOME_URL_LANG."/signup"
 			,'customer_forgotten_password'=> HOME_URL_LANG."/forgotten_password"
 		));
 	}

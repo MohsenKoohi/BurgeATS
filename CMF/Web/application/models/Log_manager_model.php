@@ -83,6 +83,8 @@ class Log_manager_model extends CI_Model
 		,"TASK_INFO_CHANGE"		=>1102
 		,"TASK_USERS_CHANGE"		=>1103
 
+		,"MESSAGE_ACCESS_SET"		=>1131
+
 	);
 
 	public function __construct()

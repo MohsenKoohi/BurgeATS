@@ -62,8 +62,9 @@ function &get_links($just_common=FALSE)
 			,'admin_task_exec'				=> ADMIN_SURL_LANG."/task_exec"
 			,'admin_task_exec_file_format'=> ADMIN_SURL_LANG."/task_exec/get_file/customer_id/file_name"
 
-			,'admin_message'					=> ADMIN_SURL_LANG."/message"
-			,'admin_message_access'			=> ADMIN_SURL_LANG."/message_access"
+			,'admin_message'								=> ADMIN_SURL_LANG."/message"
+			,'admin_message_access'						=> ADMIN_SURL_LANG."/message_access"
+			,'admin_message_access_user_format'		=> ADMIN_SURL_LANG."/message_access/user_id"
 
 			,'customer_dashboard'			=> HOME_URL_LANG."/dashboard"
 			,'customer_login'					=> HOME_URL_LANG."/login"
@@ -82,12 +83,21 @@ function &get_links($just_common=FALSE)
 	return $LINKS;
 }
 
+function get_admin_message_access_user_link($user_id, $do_not_set_lang=FALSE)
+{
+	return str_replace(
+		array("user_id")
+		,array($user_id)
+		,get_link("admin_message_access_user_format",$do_not_set_lang)
+	);
+}
+
 function get_admin_task_exec_file($customer_id,$file_name)
 {
 	return str_replace(
 		array("customer_id","file_name")
 		,array($customer_id,$file_name)
-		, get_link("admin_task_exec_file_format")
+		,get_link("admin_task_exec_file_format")
 	);
 }
 

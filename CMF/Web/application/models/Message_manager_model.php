@@ -1,11 +1,14 @@
 <?php
 class Message_manager_model extends CI_Model
 {
+	private $message_user_table_name="message_user";
+	private $message_table_name="message";
+
 	//don't use previously used ids (indexes), just increase and use
 	private $departments=array(
-		0=>"Customers"
-		,1=>"Agents"
-		,2=>"Management"
+		0=>"customers"
+		,1=>"agents"
+		,2=>"management"
 		);
 
 	public function __construct()
@@ -17,11 +20,10 @@ class Message_manager_model extends CI_Model
 
 	public function install()
 	{
-		$module_table=$this->db->dbprefix('message'); 
+		$module_table=$this->db->dbprefix($this->message_table_name); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $module_table (
 				`message_id` BIGINT AUTO_INCREMENT NOT NULL
-				,`message_ref_id` CHAR(10)
 				,`message_parent_id` BIGINT
 				,`message_sender_type` enum('customer','user')
 				,`message_sender_id` BIGINT
@@ -36,11 +38,11 @@ class Message_manager_model extends CI_Model
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
-		$module_table=$this->db->dbprefix('message_user'); 
+		$module_table=$this->db->dbprefix($this->message_user_table_name); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $module_table (
 				`mu_user_id` INT NOT NULL
-				,`mu_department_id` INT 
+				,`mu_departments` BIGINT DEFAULT 0
 				,`mu_verifier` TINYINT NOT NULL DEFAULT 0 
 				,`mu_supervisor` TINYINT NOT NULL DEFAULT 0
 				,PRIMARY KEY (mu_user_id)	
@@ -65,6 +67,59 @@ class Message_manager_model extends CI_Model
 	public function get_sidebar_text()
 	{
 		//return " (12) ";
+	}
+
+	public function get_departments()
+	{
+		return $this->departments;
+	}
+
+	public function get_user_access($user_id)
+	{
+		$result=$this->db
+			->get_where($this->message_user_table_name,array("mu_user_id"=>$user_id))
+			->row_array();
+
+		$ret=array("verifier"=>0,"supervisor"=>0);
+		$deps=0;
+		if($result)
+		{
+			$ret['verifier']=$result['mu_verifier'];
+			$ret['supervisor']=$result['mu_supervisor'];
+			$deps=$result['mu_departments'];
+		}
+		
+		$departments=array();
+		foreach($this->departments as $dep_index=>$dep_name)
+			$departments[$dep_name]=($deps & (1<<$dep_index));
+
+		$ret['departments']=$departments;
+
+		return $ret;
+	}
+
+	public function set_user_access($user_id,$props)
+	{
+		$deps=0;
+		foreach($this->departments as $dep_index=>$dep_name)
+			if($props['departments'][$dep_name])
+				$deps+=(1<<$dep_index);
+
+		$rep=array(
+			"mu_user_id"=>$user_id
+			,"mu_verifier"=>(int)($props['verifier']==1)
+			,"mu_supervisor"=>(int)($props['supervisor']==1)
+			,"mu_departments"=>$deps
+		);
+
+		$this->db->replace($this->message_user_table_name, $rep);
+
+		foreach($this->departments as $dep_index=>$dep_name)
+			$rep['department_'.$dep_name]=(int)$props['departments'][$dep_name];
+
+		$this->log_manager_model->info("MESSAGE_ACCESS_SET",$rep);
+
+		return;
 	}
 
 	public function get_dashboard_info()

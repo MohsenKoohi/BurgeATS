@@ -1,6 +1,13 @@
 <?php
 class Message_manager_model extends CI_Model
 {
+	//don't use previously used ids (indexes), just increase and use
+	private $departments=array(
+		0=>"Customers"
+		,1=>"Agents"
+		,2=>"Management"
+		);
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -33,6 +40,7 @@ class Message_manager_model extends CI_Model
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $module_table (
 				`mu_user_id` INT NOT NULL
+				,`mu_department_id` INT 
 				,`mu_verifier` TINYINT NOT NULL DEFAULT 0 
 				,`mu_supervisor` TINYINT NOT NULL DEFAULT 0
 				,PRIMARY KEY (mu_user_id)	

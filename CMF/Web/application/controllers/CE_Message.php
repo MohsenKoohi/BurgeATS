@@ -5,6 +5,8 @@ class CE_Message extends Burge_CMF_Controller {
 	{
 		parent::__construct();
 
+		$this->load->model("customer_manager_model");
+		$this->data['customer_logged_in']=$this->customer_manager_model->has_customer_logged_in();
 		$this->lang->load('ce_message',$this->selected_lang);		
 	}
 
@@ -25,7 +27,7 @@ class CE_Message extends Burge_CMF_Controller {
 
 		$this->data['header_canonical_url']=get_link("customer_contact_us");
 
-		$this->send_customer_output("contact_us");
+		$this->send_customer_output("message_c2u");
 
 		return;
 	}

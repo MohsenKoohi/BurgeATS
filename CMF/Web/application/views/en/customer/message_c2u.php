@@ -12,46 +12,35 @@
 						<div class="twelve columns half-col-margin">
 							<a href="<?php echo get_link("customer_login")?>">{login_text}</a>
 						</div>
-						<br><br>
+						<br>
 						<div class="twelve columns half-col-margin">
 							<a href="<?php echo get_link("customer_signup")?>">{register_text}</a>
 						</div>
 					</div>
 				</div>
 			<?php } else {?>
-				<?php echo form_open(get_link("customer_contact_us"),array()); ?>
+				<?php echo form_open(get_link("customer_contact_us"),array("id"=>"contact-form","onsubmit"=>"return checkForm();")); ?>
 					<div class="row">
 						<div class="three columns">
-							<label>{name_text}</label>
+							<label>{department_text}</label>
 						</div>
-						<div class="nine columns">
-							<input name="name" type="text" class="full-width"/>
-						</div>
-					</div>
-					<div class="row">
 						<div class="three columns">
-							<label>{email_text}</label>
-						</div>
-						<div class="nine columns">
-							<input name="email" type="email" class="full-width eng ltr"/>
+							<select name="department" class="full-width">
+								<option value="">{select_text}</option>
+								<?php
+									foreach ($departments as $index => $name)
+										echo "<option value='$index'>${'department_'.$name.'_text'}</option>\n";
+								?>
+							</select>
 						</div>
 					</div>
-					<?php if(isset($department)) { ?>
-						<div class="row">
-							<div class="three columns">
-								<label>{department_text}</label>
-							</div>
-							<div class="nine columns">
-								<input name="department" class="full-width"/>
-							</div>
-						</div>
-					<?php } ?>
+					
 					<div class="row">
 						<div class="three columns">
 							<label>{subject_text}</label>
 						</div>
 						<div class="nine columns">
-							<input name="subject" class="full-width"/>
+							<input name="subject" class="full-width" value="{subject}"/>
 						</div>
 					</div>
 					<div class="row">
@@ -59,7 +48,7 @@
 							<label>{content_text}</label>
 						</div>
 						<div class="nine columns">
-							<textarea name="content" class="full-width" rows="5"></textarea>
+							<textarea name="content" class="full-width" rows="5">{content}</textarea>
 						</div>
 					</div>
 					<div class="row">
@@ -75,6 +64,30 @@
 						<input type="submit" class=" button-primary three columns" value="{submit_text}"/>
 					</div>
 				</form>
+
+				<script type="text/javascript">
+					function checkForm()
+					{
+						var form=$("#contact-form");
+						var fields=["department","captcha","content","subject"];
+						var result=true;
+						$(fields).each(function(index,value)
+						{
+							var val=$("[name='"+value+"']",form).val();
+							if(!val)
+							{
+								result=false;		
+								return false;
+							}							
+						});
+
+						if(!result)
+							alert("{fill_all_fields_text}");
+					
+						return result;
+					}
+
+				</script>
 			<?php } ?>
 		</div>
 	</div>

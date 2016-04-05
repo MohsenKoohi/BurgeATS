@@ -6,9 +6,9 @@ class Message_manager_model extends CI_Model
 
 	//don't use previously used ids (indexes), just increase and use
 	private $departments=array(
-		0=>"customers"
-		,1=>"agents"
-		,2=>"management"
+		1=>"customers"
+		,2=>"agents"
+		,3=>"management"
 		);
 
 	public function __construct()

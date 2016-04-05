@@ -76,7 +76,7 @@ $route["category-(\d+)/([^\/]*)/(\d+)"]		="CE_Category/index/$1/$2/$3";
 $route[ADMIN_URL_FOLDER."/contact_us"]				="AE_Contact_Us";
 $route[ADMIN_URL_FOLDER."/contact_us/send_new"]	="AE_Contact_Us/send_new";
 $route[ADMIN_URL_FOLDER."/contact_us/(\d+)"]		="AE_Contact_Us/details/$1";
-$route["contact_us"]										="CE_Contact_Us";
+//$route["contact_us"]										="CE_Contact_Us";
 
 $route["retry"]="retry";
 $route["watermark"]="CE_Watermark";
@@ -84,12 +84,15 @@ $route["watermark"]="CE_Watermark";
 $route[ADMIN_URL_FOLDER."/customer"]							="AE_Customer";
 $route[ADMIN_URL_FOLDER."/customer/details/(\d+)"]			="AE_Customer/customer_details/$1";
 $route[ADMIN_URL_FOLDER."/customer/details/(\d+)/(\d+)"] ="AE_Customer/customer_details/$1/$2";
+
 $route[ADMIN_URL_FOLDER."/task"]									="AE_Task";
 $route[ADMIN_URL_FOLDER."/task/details/(\d+)"]				="AE_Task/task_details/$1";
 $route[ADMIN_URL_FOLDER."/task_exec"]							="AE_Task_Exec";
 $route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]="AE_Task_Exec/get_file/$1/$2";
+
 $route[ADMIN_URL_FOLDER."/message"]								="AE_Message/index";
-$route[ADMIN_URL_FOLDER."/message_access(/(\d+))?"]			="AE_Message/access/$2";
+$route[ADMIN_URL_FOLDER."/message_access(/(\d+))?"]		="AE_Message/access/$2";
+$route["contact_us"]													="CE_Message/c2u";
 
 $route['dashboard']				= "CE_Dashboard";
 $route['login']					= "CE_Login/login";

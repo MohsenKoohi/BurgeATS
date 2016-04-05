@@ -264,7 +264,7 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->data['image_name']="login-ym.jpg";
 
 		$this->load->library('parser');
-		$this->parser->parse($this->get_customer_view_file('login-social'),$this->data);
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
 
 		return;
 	}
@@ -305,7 +305,7 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->data['image_name']="login-gm.jpg";
 
 		$this->load->library('parser');
-		$this->parser->parse($this->get_customer_view_file('login-social'),$this->data);
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
 
 
 		return;
@@ -352,7 +352,7 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->data['image_name']="login-fb.jpg";
 
 		$this->load->library('parser');
-		$this->parser->parse($this->get_customer_view_file('login-social'),$this->data);
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
 
 		return;
 	}

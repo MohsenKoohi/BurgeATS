@@ -18,6 +18,6 @@ $lang['task_status_canceled']="Canceled";
 
 $lang['customer_event_has_news']="Has News";
 $lang['customer_event_verification']="Verification";
-$lang['customer_event_has_email']="Has Email";
+$lang['customer_event_has_message']="Has Message";
 
 

@@ -159,6 +159,7 @@ class Message_manager_model extends CI_Model
 
 		$this->load->model("customer_manager_model");
 		$this->customer_manager_model->add_customer_log($props['customer_id'],'MESSAGE_SEND',$mess);
+		$this->customer_manager_model->set_customer_event($props['customer_id'],"has_message");
 
 		return $id;
 	}

@@ -5,7 +5,7 @@ class Customer_manager_model extends CI_Model
 	private $customer_event_table_name="customer_event";
 	private $customer_types=array("regular","agent");
 
-	private $event_types=array("has_news","verification","has_email");
+	private $event_types=array("has_news","verification","has_message");
 
 	private $customer_props_can_be_written=array(
 		"customer_type"
@@ -36,7 +36,7 @@ class Customer_manager_model extends CI_Model
 	private $customer_log_file_extension="txt";
 	private $customer_log_types=array(
 		"UNKOWN"									=>0
-		
+
 		,"CUSTOMER_ADD"						=>1001
 		,"CUSTOMER_INFO_CHANGE"				=>1002
 		,"CUSTOMER_TASK_EXEC"				=>1003
@@ -247,6 +247,26 @@ class Customer_manager_model extends CI_Model
 		return $result->result_array();
 	}
 
+	public function set_customer_event($customer_id,$event_name)
+	{
+		$now=get_current_time();
+
+		$ins=array(
+			"ce_customer_id"=>$customer_id
+			,"ce_event_type"=>$event_name
+			,"ce_timestamp"=>$now
+		);
+
+		$this->db->replace($this->customer_event_table_name,$ins);
+
+		unset($ins['ce_timestamp']);
+
+		$this->log_manager_model->info("CUSTOMER_SET_EVENT",$ins);
+		$this->add_customer_log($customer_id,'CUSTOMER_SET_EVENT',$ins);
+
+		return TRUE;
+	}
+
 	public function set_customer_events($customer_id,$events)
 	{
 		$this->db->from($this->customer_event_table_name);
@@ -255,8 +275,7 @@ class Customer_manager_model extends CI_Model
 
 		if($events)
 		{
-			$df=DATE_FUNCTION;
-			$now=$df("Y-m-d H:i:s");
+			$now=get_current_time();
 
 			$ins=array();
 			foreach($events as $ev)

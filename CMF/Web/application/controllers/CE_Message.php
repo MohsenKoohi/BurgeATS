@@ -43,8 +43,6 @@ class CE_Message extends Burge_CMF_Controller {
 
 	private function add_new_c2u_message()
 	{
-		$result=FALSE;
-
 		if($this->data['customer_logged_in'])
 		{
 			if(verify_captcha($this->input->post("captcha")))
@@ -53,6 +51,7 @@ class CE_Message extends Burge_CMF_Controller {
 				$props=array();
 				foreach($fields as $field)
 					$props[$field]=$this->input->post($field);
+				
 				if($props['subject']  && $props['department'] && $props['content'] )
 				{
 					persian_normalize($props);
@@ -64,7 +63,7 @@ class CE_Message extends Burge_CMF_Controller {
 
 					set_message($this->lang->line("message_sent_successfully"));
 
-					$result=TRUE;
+					redirect(get_link("customer_messages"));
 				}
 				else
 					set_message($this->lang->line("fill_all_fields"));
@@ -75,13 +74,10 @@ class CE_Message extends Burge_CMF_Controller {
 		else
 			set_message($this->lang->line("to_send_message_you_should_login"));
 
-		if(!$result)
-		{
-			$this->session->set_flashdata("message_c2u_subject",$this->input->post("subject"));
-			$this->session->set_flashdata("message_c2u_content",$this->input->post("content"));
-		}
+		$this->session->set_flashdata("message_c2u_subject",$this->input->post("subject"));
+		$this->session->set_flashdata("message_c2u_content",$this->input->post("content"));
 
-		redirect(get_link("customer_messages"));
+		redirect(get_link("customer_contact_us"));
 
 		return;
 	}

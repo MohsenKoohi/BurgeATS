@@ -152,6 +152,14 @@ class Message_manager_model extends CI_Model
 
 		$id=$this->add_message($mess);
 
+		$mess['message_type']="c2u";
+		$mess['message_id']=$id;
+		$mess['departement_name']=$this->get_departments()[$props['department']];
+		$this->log_manager_model->info("MESSAGE_SEND",$mess);
+
+		$this->load->model("customer_manager_model");
+		$this->customer_manager_model->add_customer_log($props['customer_id'],'MESSAGE_SEND',$mess);
+
 		return $id;
 	}
 

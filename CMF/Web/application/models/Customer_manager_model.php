@@ -36,6 +36,7 @@ class Customer_manager_model extends CI_Model
 	private $customer_log_file_extension="txt";
 	private $customer_log_types=array(
 		"UNKOWN"									=>0
+		
 		,"CUSTOMER_ADD"						=>1001
 		,"CUSTOMER_INFO_CHANGE"				=>1002
 		,"CUSTOMER_TASK_EXEC"				=>1003
@@ -45,6 +46,8 @@ class Customer_manager_model extends CI_Model
 		,"CUSTOMER_PASS_CHANGE"				=>1007
 		,"CUSTOMER_SET_EVENT"				=>1008
 		,"CUSTOMER_UNSET_EVENT"				=>1009
+
+		,"MESSAGE_SEND"						=>1132
 	);
 	
 	public function __construct()

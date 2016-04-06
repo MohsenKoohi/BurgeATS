@@ -10,6 +10,11 @@ class CE_Message extends Burge_CMF_Controller {
 		$this->lang->load('ce_message',$this->selected_lang);		
 	}
 
+	public function messages()
+	{
+		echo get_message();
+	}
+
 	public function c2u()
 	{	
 		if($this->input->post())
@@ -76,7 +81,7 @@ class CE_Message extends Burge_CMF_Controller {
 			$this->session->set_flashdata("message_c2u_content",$this->input->post("content"));
 		}
 
-		//redirect(get_link("customer_contact_us"));
+		redirect(get_link("customer_messages"));
 
 		return;
 	}

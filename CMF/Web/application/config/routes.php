@@ -81,14 +81,14 @@ $route[ADMIN_URL_FOLDER."/contact_us/(\d+)"]		="AE_Contact_Us/details/$1";
 $route["retry"]="retry";
 $route["watermark"]="CE_Watermark";
 
-$route[ADMIN_URL_FOLDER."/customer"]							="AE_Customer";
-$route[ADMIN_URL_FOLDER."/customer/details/(\d+)"]			="AE_Customer/customer_details/$1";
-$route[ADMIN_URL_FOLDER."/customer/details/(\d+)/(\d+)"] ="AE_Customer/customer_details/$1/$2";
+$route[ADMIN_URL_FOLDER."/customer"]							= "AE_Customer";
+$route[ADMIN_URL_FOLDER."/customer/details/(\d+)"]			= "AE_Customer/customer_details/$1";
+$route[ADMIN_URL_FOLDER."/customer/details/(\d+)/(\d+)"] = "AE_Customer/customer_details/$1/$2";
 
-$route[ADMIN_URL_FOLDER."/task"]									="AE_Task";
-$route[ADMIN_URL_FOLDER."/task/details/(\d+)"]				="AE_Task/task_details/$1";
-$route[ADMIN_URL_FOLDER."/task_exec"]							="AE_Task_Exec";
-$route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]="AE_Task_Exec/get_file/$1/$2";
+$route[ADMIN_URL_FOLDER."/task"]									= "AE_Task";
+$route[ADMIN_URL_FOLDER."/task/details/(\d+)"]				= "AE_Task/task_details/$1";
+$route[ADMIN_URL_FOLDER."/task_exec"]							= "AE_Task_Exec";
+$route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]= "AE_Task_Exec/get_file/$1/$2";
 
 $route['dashboard']				= "CE_Dashboard";
 $route['login']					= "CE_Login/login";
@@ -99,10 +99,10 @@ $route['logout']					= "CE_Login/logout";
 $route['signup']					= "CE_Login/signup";
 $route['forgotten_password']	= "CE_Login/forgotten_password";
 
-$route[ADMIN_URL_FOLDER."/message"]								="AE_Message/index";
-$route[ADMIN_URL_FOLDER."/message_access(/(\d+))?"]		="AE_Message/access/$2";
-$route["contact_us"]													="CE_Message/c2u";
-$route['message']														= "CE_Message/index";
+$route[ADMIN_URL_FOLDER."/message"]								= "AE_Message/index";
+$route[ADMIN_URL_FOLDER."/message_access(/(\d+))?"]		= "AE_Message/access/$2";
+$route["contact_us"]													= "CE_Message/c2u";
+$route['messages']													= "CE_Message/messages";
 
 $route['(((:any)/)*:any)']="CE_Home/redirect";
 

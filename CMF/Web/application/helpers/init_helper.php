@@ -62,11 +62,6 @@ function &get_links($just_common=FALSE)
 			,'admin_task_exec'				=> ADMIN_SURL_LANG."/task_exec"
 			,'admin_task_exec_file_format'=> ADMIN_SURL_LANG."/task_exec/get_file/customer_id/file_name"
 
-			,'admin_message'								=> ADMIN_SURL_LANG."/message"
-			,'admin_message_access'						=> ADMIN_SURL_LANG."/message_access"
-			,'admin_message_access_user_format'		=> ADMIN_SURL_LANG."/message_access/user_id"
-			,'customer_message_c2u'						=> HOME_URL_LANG."/contact_us"
-
 			,'customer_dashboard'				=> HOME_URL_LANG."/dashboard"
 			,'customer_login'						=> HOME_URL_LANG."/login"
 			,'customer_login_yahoo'				=> HOME_URL_LANG."/login/yahoo"
@@ -75,6 +70,13 @@ function &get_links($just_common=FALSE)
 			,'customer_logout'					=> HOME_URL_LANG."/logout"
 			,'customer_signup'					=> HOME_URL_LANG."/signup"
 			,'customer_forgotten_password'	=> HOME_URL_LANG."/forgotten_password"
+
+			,'admin_message'								=> ADMIN_SURL_LANG."/message"
+			,'admin_message_access'						=> ADMIN_SURL_LANG."/message_access"
+			,'admin_message_access_user_format'		=> ADMIN_SURL_LANG."/message_access/user_id"
+			,'customer_messages'							=> HOME_URL_LANG."/messages"
+			,'customer_message_c2u'						=> HOME_URL_LANG."/contact_us"
+
 		));
 	}
 

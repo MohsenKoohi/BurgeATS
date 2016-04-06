@@ -28,10 +28,10 @@ class Message_manager_model extends CI_Model
 				,`message_sender_type` enum('customer','user')
 				,`message_sender_id` BIGINT
 				,`message_time_stamp` DATETIME
-				,`message_receiver_type` enum('customer','user')
+				,`message_receiver_type` enum('customer','department','user')
 				,`message_receiver_id` BIGINT
 				,`message_subject` VARCHAR(200)
-				,`message_body` TEXT
+				,`message_content` TEXT
 				,`message_verifier_id` INT DEFAULT 0
 				,`message_reply_id` BIGINT DEFAULT 0
 				,PRIMARY KEY (message_id)	
@@ -64,6 +64,23 @@ class Message_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_dashboard_info()
+	{
+		return "";
+		$CI=& get_instance();
+		$lang=$CI->language->get();
+		$CI->lang->load('ae_module',$lang);		
+		
+		$data=array();
+		$data['modules']=$this->get_all_modules_info($lang);
+		$data['total_text']=$CI->lang->line("total");
+		
+		$CI->load->library('parser');
+		$ret=$CI->parser->parse($CI->get_admin_view_file("module_dashboard"),$data,TRUE);
+		
+		return $ret;		
+	}
+	
 	public function get_sidebar_text()
 	{
 		//return " (12) ";
@@ -122,20 +139,43 @@ class Message_manager_model extends CI_Model
 		return;
 	}
 
-	public function get_dashboard_info()
+	public function send_c2u_message(&$props)
 	{
-		return "";
-		$CI=& get_instance();
-		$lang=$CI->language->get();
-		$CI->lang->load('ae_module',$lang);		
-		
-		$data=array();
-		$data['modules']=$this->get_all_modules_info($lang);
-		$data['total_text']=$CI->lang->line("total");
-		
-		$CI->load->library('parser');
-		$ret=$CI->parser->parse($CI->get_admin_view_file("module_dashboard"),$data,TRUE);
-		
-		return $ret;		
+		$mess=array(
+			"message_sender_type"		=>"customer"
+			,"message_sender_id"			=>$props['customer_id']
+			,"message_receiver_type"	=>"department"
+			,"message_receiver_id"		=>$props['department']
+			,"message_subject"			=>$props['subject']
+			,"message_content"			=>$props['content']
+		);
+
+		$id=$this->add_message($mess);
+
+		return $id;
+	}
+
+	private function add_message(&$props)
+	{
+		$should_set_parent_id=!isset($props['message_parent_id']);
+
+		$props['message_time_stamp']=get_current_time();
+
+		$this->db->insert($this->message_table_name,$props);
+
+		$id=$this->db->insert_id();
+
+		$this->db
+			->set("message_parent_id",$id)
+			->where("message_id",$id)
+			->update($this->message_table_name);
+
+		if(isset($props['reply_to_message_id']))
+			$this->db
+				->set("message_reply_id",$id)
+				->where("message_id",$props['reply_to_message_id'])
+				->update($this->message_table_name);
+
+		return $id;
 	}
 }

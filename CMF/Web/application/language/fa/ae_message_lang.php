@@ -22,3 +22,9 @@ $lang['department']="بخش";
 $lang['sender_department']="بخش فرستنده";
 $lang['sender_customer_name_or_id']="نام یا شناسه مشتری فرستنده";
 $lang['sender_user_name_or_id']="نام یا شناسه کاربر فرستنده";
+
+$lang['receiver_department']="بخش گیرنده";
+$lang['receiver_customer_name_or_id']="نام یا شناسه مشتری گیرنده";
+$lang['receiver_user_name_or_id']="نام یا شناسه کاربر گیرنده";
+
+$lang['search_again']="جستجو";

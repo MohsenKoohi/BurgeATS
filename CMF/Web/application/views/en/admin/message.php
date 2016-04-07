@@ -12,7 +12,7 @@
 				<div class="row">
 					<div class="three columns">
 						<label>{sender_text}</label>
-						<select class="full-width" name="sender_type" onchange="setSenders($(this).val());">
+						<select class="full-width" name="sender_type" onchange="setSender($(this).val());">
 							<option>&nbsp;</option>
 							<option value="me">{me_text}</option>
 							<?php 
@@ -52,11 +52,55 @@
 					<?php } ?>
 				</div>
 
-				
-				<div class="two columns results-search-again half-col-margin">
-					<label></label>
-					<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
+				<div class="row">
+					<div class="three columns">
+						<label>{receiver_text}</label>
+						<select class="full-width" name="receiver_type" onchange="setReceiver($(this).val());">
+							<option>&nbsp;</option>
+							<option value="me">{me_text}</option>
+							<?php 
+								if($op_access['users'])	
+									echo "<option value='user'>{user_text}</option>";
+								if($op_access['departments'])	
+									echo "<option value='department'>{department_text}</option>";
+								if($op_access['customers'])	
+									echo "<option value='customer'>{customer_text}</option>";							
+							?>
+						</select>
+					</div>
+					<? if($op_access['departments']) { ?>
+						<div class="three columns half-col-margin" id="receiver-departments">
+							<label>{receiver_department_text}</label>
+							<select name="receiver_department" class="full-width">
+								<option value="">&nbsp;</option>
+								<?php
+									foreach($op_access['departments'] as $name => $id)
+										if($id)
+											echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
+								?>
+							</select>
+						</div>
+					<?php } ?>
+					<? if($op_access['users'])	{?>
+						<div class="three columns half-col-margin" id="receiver-users">
+							<label>{receiver_user_name_or_id_text}</label>
+							<input name="receiver_user" type="text" class="full-width">
+						</div>
+					<?php } ?>
+					<? if($op_access['customers'])	{?>
+						<div class="three columns half-col-margin" id="receiver-customers">
+							<label>{receiver_customer_name_or_id_text}</label>
+							<input name="receiver_customer" type="text" class="full-width">
+						</div>
+					<?php } ?>
+
+					<div class="two columns results-search-again half-col-margin">
+						<label></label>
+						<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
+					</div>
 				</div>
+				
+				
 				
 			</div>
 
@@ -83,7 +127,7 @@
 			</div>
 
 			<script type="text/javascript">
-				function setSenders(newVal)
+				function setSender(newVal)
 				{
 					$("#sender-departments, #sender-users, #sender-customers").each(function(index,el){
 						$(el).addClass("no-display");
@@ -93,6 +137,18 @@
 						return;
 
 					$("#sender-"+newVal+"s").toggleClass("no-display");
+				}
+
+				function setReceiver(newVal)
+				{
+					$("#receiver-departments, #receiver-users, #receiver-customers").each(function(index,el){
+						$(el).addClass("no-display");
+					});
+
+					if(!newVal || newVal=="me")
+						return;
+
+					$("#receiver-"+newVal+"s").toggleClass("no-display");
 				}
 
 				var initialFilters=[];
@@ -117,7 +173,8 @@
 					for(i in initialFilters)
 						$(".filter [name='"+i+"']").val(initialFilters[i]);
 
-					setSenders($("select[name=sender_type]").val());
+					setSender($("select[name=sender_type]").val());
+					setReceiver($("select[name=receiver_type]").val());
 				});
 
 				function searchAgain()

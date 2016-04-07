@@ -12,6 +12,9 @@ class CE_Message extends Burge_CMF_Controller {
 
 	public function messages()
 	{
+		if(!$this->data['customer_logged_in'])
+			redirect(get_link("customer_login"));
+
 		echo get_message();
 	}
 

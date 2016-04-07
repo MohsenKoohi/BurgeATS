@@ -12,11 +12,13 @@ class AE_Message extends Burge_CMF_Controller {
 
 	public function index()
 	{
-		$this->data['message']=get_message();
-		$this->data['lang_pages']=get_lang_pages(get_link("admin_post",TRUE));
-		$this->data['header_title']=$this->lang->line("posts");
+		$this->data['op_access']=$this->message_manager_model->get_operations_access();
 
-		$this->send_admin_output("post");
+		$this->data['message']=get_message();
+		$this->data['lang_pages']=get_lang_pages(get_link("admin_message",TRUE));
+		$this->data['header_title']=$this->lang->line("messages");
+
+		$this->send_admin_output("message");
 
 		return;	 
 	}	

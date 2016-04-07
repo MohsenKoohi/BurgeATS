@@ -108,7 +108,10 @@ class Message_manager_model extends CI_Model
 		
 		$departments=array();
 		foreach($this->departments as $dep_index=>$dep_name)
-			$departments[$dep_name]=($deps & (1<<$dep_index));
+			if($deps & (1<<$dep_index))
+				$departments[$dep_name]=$dep_index;
+			else
+				$departments[$dep_name]=0;
 
 		$ret['departments']=$departments;
 
@@ -137,6 +140,26 @@ class Message_manager_model extends CI_Model
 		$this->log_manager_model->info("MESSAGE_ACCESS_SET",$rep);
 
 		return;
+	}
+
+	public function get_operations_access()
+	{
+		$user=$this->user_manager_model->get_user_info();
+		$user_id=$user->get_id();
+
+		$ret=array();
+		
+		$access=$this->get_user_access($user_id);
+		$ret['users']=$access['supervisor'];		
+		$ret['verifier']=$access['verifier'];
+		$ret['customers']=$this->access_manager_model->check_access("customer",$user);
+		
+		$ret['departments']=array();
+		if($ret['customers'])
+			foreach($access['departments'] as $name => $id)
+				$ret['departments'][$name]=$id;
+
+		return $ret;
 	}
 
 	public function send_c2u_message(&$props)

@@ -28,3 +28,8 @@ $CI->logger->emergency/alert/critical/error/warning/notic/info/debug($message, $
 
 # Message Manager
 Message manager is responsible for messages between users, between customers, and between users and customers.
+
+##Types of Message Users
+1) supervisor: he can see all messages to/from all users 
+2) verifier: can verify customer2customer messages for his departments
+3) user with access to customers module will have access to customer/department to customer/department messages.

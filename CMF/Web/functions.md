@@ -34,12 +34,12 @@ Message manager is responsible for messages between users, between customers, an
 2. verifier: can verify customer2customer messages for his departments
 3. user with access to customers module will have access to customer/department to customer/department messages.
 
-*message_reply_id* of a parent message will be set to NULL when the sender adds another message,
+**message_reply_id** of a parent message will be set to NULL when the sender adds another message,
 indicating the message hasn't been responded. 
 
 Note that we don't have a table for tickets and another table for messages in a ticket, instead, we
-use message_parent_id field to connect messages, and the first message is called *parent message*.
+use message_parent_id field to connect messages, and the first message is called **parent message**.
 
-*message_verifier_id* field is used to specify:
+**message_verifier_id** field is used to specify:
 1. user who has verified a customer 2 customer message
 2. user who has sent a message on behalf of a department for department 2 customer messages

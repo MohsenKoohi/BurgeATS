@@ -28,3 +28,14 @@ $lang['receiver_customer_name_or_id']="نام یا شناسه مشتری گیر�
 $lang['receiver_user_name_or_id']="نام یا شناسه کاربر گیرنده";
 
 $lang['search_again']="جستجو";
+
+$lang['response_status']="وضعیت پاسخ";
+$lang['responded']="پاسخ داده شده";
+$lang['not_responded']="بدون پاسخ";
+
+$lang['verification_status']="وضعیت تایید";
+$lang['verified']="تایید شده";
+$lang['not_verified']="تایید نشده";
+
+$lang['start_date']="از تاریخ";
+$lang['end_date']="تا تاریخ";

@@ -2,102 +2,134 @@
 	<div class="container">
 		<h1>{messages_text}</h1>
 		<div class="container separated">
-			<div class="row filter">
-				<style type="text/css">
-					.no-display
-					{
-						display: none;
-					}
-				</style>
-				<div class="row">
-					<div class="three columns">
-						<label>{sender_text}</label>
-						<select class="full-width" name="sender_type" onchange="setSender($(this).val());">
-							<option>&nbsp;</option>
-							<option value="me">{me_text}</option>
-							<?php 
-								if($op_access['users'])	
-									echo "<option value='user'>{user_text}</option>";
-								if($op_access['departments'])	
-									echo "<option value='department'>{department_text}</option>";
-								if($op_access['customers'])	
-									echo "<option value='customer'>{customer_text}</option>";							
-							?>
-						</select>
-					</div>
-					<? if($op_access['departments']) { ?>
-						<div class="three columns half-col-margin" id="sender-departments">
-							<label>{sender_department_text}</label>
-							<select name="sender_department" class="full-width">
-								<option value="">&nbsp;</option>
-								<?php
-									foreach($op_access['departments'] as $name => $id)
-										if($id)
-											echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
-								?>
-							</select>
-						</div>
-					<?php } ?>
-					<? if($op_access['users'])	{?>
-						<div class="three columns half-col-margin" id="sender-users">
-							<label>{sender_user_name_or_id_text}</label>
-							<input name="sender_user" type="text" class="full-width">
-						</div>
-					<?php } ?>
-					<? if($op_access['customers'])	{?>
-						<div class="three columns half-col-margin" id="sender-customers">
-							<label>{sender_customer_name_or_id_text}</label>
-							<input name="sender_customer" type="text" class="full-width">
-						</div>
-					<?php } ?>
+			<div class="row filter half-col-margin-children">				
+				<div class="three columns">
+					<label>{start_date_text}</label>
+					<input class="full-width ltr" name="start_date">
 				</div>
 
-				<div class="row">
+				<div class="three columns ">
+					<label>{end_date_text}</label>
+					<input class="full-width ltr" name="end_date">
+				</div>
+			
+				<div class="three columns ">
+					<label>{response_status_text}</label>
+					<select class="full-width" name="response_status">
+						<option>&nbsp;</option>
+						<option value="yes">{responded_text}</option>
+						<option value="no">{not_responded_text}</option>
+					</select>
+				</div>
+
+				<?	if($op_access['customers']) {?>
 					<div class="three columns">
-						<label>{receiver_text}</label>
-						<select class="full-width" name="receiver_type" onchange="setReceiver($(this).val());">
+						<label>{verification_status_text}</label>
+						<select class="full-width" name="response_status">
 							<option>&nbsp;</option>
-							<option value="me">{me_text}</option>
-							<?php 
-								if($op_access['users'])	
-									echo "<option value='user'>{user_text}</option>";
-								if($op_access['departments'])	
-									echo "<option value='department'>{department_text}</option>";
-								if($op_access['customers'])	
-									echo "<option value='customer'>{customer_text}</option>";							
-							?>
+							<option value="yes">{verified_text}</option>
+							<option value="no">{not_verified_text}</option>
 						</select>
 					</div>
-					<? if($op_access['departments']) { ?>
-						<div class="three columns half-col-margin" id="receiver-departments">
-							<label>{receiver_department_text}</label>
-							<select name="receiver_department" class="full-width">
-								<option value="">&nbsp;</option>
-								<?php
-									foreach($op_access['departments'] as $name => $id)
-										if($id)
-											echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
-								?>
-							</select>
-						</div>
-					<?php } ?>
-					<? if($op_access['users'])	{?>
-						<div class="three columns half-col-margin" id="receiver-users">
-							<label>{receiver_user_name_or_id_text}</label>
-							<input name="receiver_user" type="text" class="full-width">
-						</div>
-					<?php } ?>
-					<? if($op_access['customers'])	{?>
-						<div class="three columns half-col-margin" id="receiver-customers">
-							<label>{receiver_customer_name_or_id_text}</label>
-							<input name="receiver_customer" type="text" class="full-width">
-						</div>
-					<?php } ?>
+				<?php } ?>
+				
+				<div class="three columns">
+					<label>{sender_text}</label>
+					<select class="full-width" name="sender_type" onchange="setSender(this);">
+						<option>&nbsp;</option>
+						<option value="me">{me_text}</option>
+						<?php 
+							if($op_access['users'])	
+								echo "<option value='user'>{user_text}</option>";
+							if($op_access['departments'])	
+								echo "<option value='department'>{department_text}</option>";
+							if($op_access['customers'])	
+								echo "<option value='customer'>{customer_text}</option>";							
+						?>
+					</select>
 
-					<div class="two columns results-search-again half-col-margin">
-						<label></label>
-						<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
+					<div class="no-display">
+						<? if($op_access['departments']) { ?>
+							<div class="three columns" id="sender-departments">
+								<label>{sender_department_text}</label>
+								<select name="sender_department" class="full-width">
+									<option value="">&nbsp;</option>
+									<?php
+										foreach($op_access['departments'] as $name => $id)
+											if($id)
+												echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
+									?>
+								</select>
+							</div>
+						<?php } ?>
+
+						<? if($op_access['users'])	{?>
+							<div class="three columns" id="sender-users">
+								<label>{sender_user_name_or_id_text}</label>
+								<input name="sender_user" type="text" class="full-width">
+							</div>
+						<?php } ?>
+
+						<? if($op_access['customers']){?>
+							<div class="three columns" id="sender-customers">
+								<label>{sender_customer_name_or_id_text}</label>
+								<input name="sender_customer" type="text" class="full-width">
+							</div>
+						<?php } ?>
+
 					</div>
+				</div>
+				
+				<div class="three columns">
+					<label>{receiver_text}</label>
+					<select class="full-width" name="receiver_type" onchange="setReceiver(this);">
+						<option>&nbsp;</option>
+						<option value="me">{me_text}</option>
+						<?php 
+							if($op_access['users'])	
+								echo "<option value='user'>{user_text}</option>";
+							if($op_access['departments'])	
+								echo "<option value='department'>{department_text}</option>";
+							if($op_access['customers'])	
+								echo "<option value='customer'>{customer_text}</option>";							
+						?>
+					</select>
+
+					<div class="no-display">
+						<? if($op_access['departments']) { ?>
+							<div class="three columns" id="receiver-departments">
+								<label>{receiver_department_text}</label>
+								<select name="receiver_department" class="full-width">
+									<option value="">&nbsp;</option>
+									<?php
+										foreach($op_access['departments'] as $name => $id)
+											if($id)
+												echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
+									?>
+								</select>
+							</div>
+						<?php } ?>
+
+						<? if($op_access['users'])	{?>
+							<div class="three columns " id="receiver-users">
+								<label>{receiver_user_name_or_id_text}</label>
+								<input name="receiver_user" type="text" class="full-width">
+							</div>
+						<?php } ?>
+
+						<? if($op_access['customers']){?>
+							<div class="three columns " id="receiver-customers">
+								<label>{receiver_customer_name_or_id_text}</label>
+								<input name="receiver_customer" type="text" class="full-width">
+							</div>
+						<?php } ?>
+					</div>
+				</div>
+
+				<div class="two columns results-search-again ">
+					<label></label>
+					<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
+				</div>
 				</div>
 				
 				
@@ -127,29 +159,42 @@
 			</div>
 
 			<script type="text/javascript">
-				function setSender(newVal)
+				function setSender(el)
 				{
-					$("#sender-departments, #sender-users, #sender-customers").each(function(index,el){
-						$(el).addClass("no-display");
+					el=$(el);
+					par=el.parent();
+					newVal=el.val();
+					$("#sender-departments, #sender-users, #sender-customers").each(function(index,elem){
+						elem=$(elem);
+						$("input,select",elem).addClass("inactive");
+						$(".no-display",par).append(elem);
 					});
 
 					if(!newVal || newVal=="me")
 						return;
 
-					$("#sender-"+newVal+"s").toggleClass("no-display");
+					el.parent().after($("#sender-"+newVal+"s"));
+					$("input,select",$("#sender-"+newVal+"s")).removeClass("inactive");
 				}
 
-				function setReceiver(newVal)
+				function setReceiver(el)
 				{
-					$("#receiver-departments, #receiver-users, #receiver-customers").each(function(index,el){
-						$(el).addClass("no-display");
+					el=$(el);
+					par=el.parent();
+					newVal=el.val();
+					$("#receiver-departments, #receiver-users, #receiver-customers").each(function(index,elem){
+						elem=$(elem);
+						$("input,select",elem).addClass("inactive");
+						$(".no-display",par).append(elem);
 					});
 
 					if(!newVal || newVal=="me")
 						return;
 
-					$("#receiver-"+newVal+"s").toggleClass("no-display");
+					el.parent().after($("#receiver-"+newVal+"s"));
+					$("input,select",$("#receiver-"+newVal+"s")).removeClass("inactive");
 				}
+
 
 				var initialFilters=[];
 				<?php
@@ -162,7 +207,7 @@
 
 				$(function()
 				{
-					$(".filter div:not(.no-display) input, .filter div:not(.no-display) select").keypress(function(ev)
+					$(".filter div input, .filter div select").keypress(function(ev)
 					{
 						if(13 != ev.keyCode)
 							return;
@@ -173,8 +218,8 @@
 					for(i in initialFilters)
 						$(".filter [name='"+i+"']").val(initialFilters[i]);
 
-					setSender($("select[name=sender_type]").val());
-					setReceiver($("select[name=receiver_type]").val());
+					setSender($("select[name=sender_type]")[0]);
+					setReceiver($("select[name=receiver_type]")[0]);
 				});
 
 				function searchAgain()
@@ -186,7 +231,7 @@
 				{
 					var conds=[];
 
-					$(".filter div:not(.no-display) input, .filter div:not(.no-display) select").each(
+					$(".filter input:not(.inactive), .filter select:not(.inactive)").each(
 						function(index,el)
 						{
 							var el=$(el);

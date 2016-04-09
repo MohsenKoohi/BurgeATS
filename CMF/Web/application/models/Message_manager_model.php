@@ -25,7 +25,7 @@ class Message_manager_model extends CI_Model
 			"CREATE TABLE IF NOT EXISTS $module_table (
 				`message_id` BIGINT AUTO_INCREMENT NOT NULL
 				,`message_parent_id` BIGINT
-				,`message_sender_type` enum('customer','user')
+				,`message_sender_type` enum('customer','department','user')
 				,`message_sender_id` BIGINT
 				,`message_time_stamp` DATETIME
 				,`message_receiver_type` enum('customer','department','user')
@@ -162,7 +162,17 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
-	public function send_c2u_message(&$props)
+	public function get_total_messages(&$filters)
+	{
+		return 0;
+	}
+
+	public function get_messages(&$filters)
+	{
+		
+	}
+
+	public function send_c2d_message(&$props)
 	{
 		$mess=array(
 			"message_sender_type"		=>"customer"

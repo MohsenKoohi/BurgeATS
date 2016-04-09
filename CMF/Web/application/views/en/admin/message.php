@@ -25,7 +25,7 @@
 				<?	if($op_access['customers']) {?>
 					<div class="three columns">
 						<label>{verification_status_text}</label>
-						<select class="full-width" name="response_status">
+						<select class="full-width" name="verification_status">
 							<option>&nbsp;</option>
 							<option value="yes">{verified_text}</option>
 							<option value="no">{not_verified_text}</option>
@@ -198,8 +198,7 @@
 
 				var initialFilters=[];
 				<?php
-					if(0)
-					foreach($filter as $key => $val)
+					foreach($filters as $key => $val)
 						echo 'initialFilters["'.$key.'"]="'.$val.'";';
 				?>
 				

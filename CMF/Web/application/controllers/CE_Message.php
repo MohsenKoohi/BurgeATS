@@ -18,18 +18,18 @@ class CE_Message extends Burge_CMF_Controller {
 		echo get_message();
 	}
 
-	public function c2u()
+	public function c2d()
 	{	
 		if($this->input->post())
-			return $this->add_new_c2u_message();
+			return $this->add_new_c2d_message();
 
 		$this->data['message']=get_message();
 		$this->data['departments']=$this->message_manager_model->get_departments();
 		$this->data['captcha']=get_captcha();
 		$this->data['lang_pages']=get_lang_pages(get_link("customer_contact_us",TRUE));
 
-		$this->data['subject']=$this->session->flashdata("message_c2u_subject");
-		$this->data['content']=$this->session->flashdata("message_c2u_content");
+		$this->data['subject']=$this->session->flashdata("message_c2d_subject");
+		$this->data['content']=$this->session->flashdata("message_c2d_content");
 		
 		$this->data['header_meta_robots']="noindex";
 
@@ -39,12 +39,12 @@ class CE_Message extends Burge_CMF_Controller {
 
 		$this->data['header_canonical_url']=get_link("customer_contact_us");
 
-		$this->send_customer_output("message_c2u");
+		$this->send_customer_output("message_c2d");
 
 		return;
 	}
 
-	private function add_new_c2u_message()
+	private function add_new_c2d_message()
 	{
 		if($this->data['customer_logged_in'])
 		{
@@ -62,7 +62,7 @@ class CE_Message extends Burge_CMF_Controller {
 					$customer_info=$this->customer_manager_model->get_logged_customer_info();
 					$props['customer_id']=$customer_info['customer_id'];
 
-					$this->message_manager_model->send_c2u_message($props);
+					$this->message_manager_model->send_c2d_message($props);
 
 					set_message($this->lang->line("message_sent_successfully"));
 
@@ -77,8 +77,8 @@ class CE_Message extends Burge_CMF_Controller {
 		else
 			set_message($this->lang->line("to_send_message_you_should_login"));
 
-		$this->session->set_flashdata("message_c2u_subject",$this->input->post("subject"));
-		$this->session->set_flashdata("message_c2u_content",$this->input->post("content"));
+		$this->session->set_flashdata("message_c2d_subject",$this->input->post("subject"));
+		$this->session->set_flashdata("message_c2d_content",$this->input->post("content"));
 
 		redirect(get_link("customer_contact_us"));
 

@@ -75,7 +75,7 @@ function &get_links($just_common=FALSE)
 			,'admin_message_access'						=> ADMIN_SURL_LANG."/message_access"
 			,'admin_message_access_user_format'		=> ADMIN_SURL_LANG."/message_access/user_id"
 			,'customer_messages'							=> HOME_URL_LANG."/messages"
-			,'customer_message_c2u'						=> HOME_URL_LANG."/contact_us"
+			,'customer_message_c2d'						=> HOME_URL_LANG."/contact_us"
 
 		));
 	}

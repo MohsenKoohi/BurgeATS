@@ -41,5 +41,6 @@ Note that we don't have a table for tickets and another table for messages in a 
 use message_parent_id field to connect messages, and the first message is called **parent message**.
 
 **message_verifier_id** field is used to specify:
+
 1. user who has verified a customer 2 customer message
 2. user who has sent a message on behalf of a department for department 2 customer messages

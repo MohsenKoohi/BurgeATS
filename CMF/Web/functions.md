@@ -29,6 +29,12 @@ $CI->logger->emergency/alert/critical/error/warning/notic/info/debug($message, $
 # Message Manager
 Message manager is responsible for messages between users, between customers, and between users and customers.
 
+## Types of Messages
+1. C2C: customer to customer
+2. C2D: customer to department
+3. D2C: department to customer (a user sends message to a customer on behalf of its department)
+4. U2U: user to user
+
 ## Types of Message Users
 1. supervisor: he can see all messages to/from all users 
 2. verifier: can verify customer2customer messages for his departments

@@ -101,13 +101,18 @@ class AE_Message extends Burge_CMF_Controller {
 				$this->set_user_message_types($op_access,$filters);
 
 		if(($filters['sender_type']!=="department") && 
-			($filters['sender_type']!=="user")   &&
+			($filters['sender_type']!=="user") &&
+			($filters['sender_type']!=="me") &&
 			($filters['receiver_type']!=="department") && 
-			($filters['receiver_type']!=="user"))
+			($filters['receiver_type']!=="user") &&
+			($filters['receiver_type']!=="me")
+			)
 				$this->set_customer_message_types($op_access,$filters);
 		
 		if(($filters['receiver_type']!=="user") && 
-			($filters['sender_type']!=="user")   &&
+			($filters['sender_type']!=="user") &&
+			($filters['receiver_type']!=="me") && 
+			($filters['sender_type']!=="me") &&
 			!(($filters['receiver_type']==="customer") && ($filters['sender_type']==="customer"))
 			)
 				$this->set_departments_message_types($op_access,$filters);
@@ -115,7 +120,6 @@ class AE_Message extends Burge_CMF_Controller {
 		//bprint_r($op_access);
 		bprint_r($filters['message_types']);
 
-		return;
 	}
 
 	private function set_customer_message_types(&$op_access, &$filters)
@@ -177,7 +181,10 @@ class AE_Message extends Burge_CMF_Controller {
 		{	
 			//this user has no access to other users messages
 
-			if(!$filters['sender_user'] || $filters['receiver_user'])
+			if(($filters['receiver_user']) ||
+				($filters['sender_type']==="me") ||
+				(!$filters['sender_type'] && !$filters['receiver_type'])
+				)
 			{
 				$mess=array();
 				$mess['message_sender_type']="user";
@@ -187,7 +194,10 @@ class AE_Message extends Burge_CMF_Controller {
 				$filters['message_types'][]=$mess;
 			}
 
-			if($filters['sender_user'] || !$filters['receiver_user'])
+			if(($filters['sender_user']) ||
+				($filters['receiver_type']==="me") ||
+				(!$filters['sender_type'] && !$filters['receiver_type'])
+				)
 			{
 				$mess=array();
 				$mess['message_sender_type']="user";

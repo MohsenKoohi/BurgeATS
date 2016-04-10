@@ -118,8 +118,9 @@ class AE_Message extends Burge_CMF_Controller {
 				$this->set_departments_message_types($op_access,$filters);
 
 		//bprint_r($op_access);
-		bprint_r($filters['message_types']);
+		//bprint_r($filters['message_types']);
 
+		return;
 	}
 
 	private function set_customer_message_types(&$op_access, &$filters)
@@ -212,8 +213,16 @@ class AE_Message extends Burge_CMF_Controller {
 			$mess=array();
 			$mess['message_sender_type']="user";
 			$mess['message_receiver_type']="user";
-			$this->set_mess_sr_type("sender","user",$mess,$filters);
-			$this->set_mess_sr_type("receiver","user",$mess,$filters);
+			if($filters['sender_type']==="me")
+				$mess['message_sender_id']=$user_id;
+			else
+				$this->set_mess_sr_type("sender","user",$mess,$filters);
+			
+			if($filters['receiver_type']==="me")
+				$mess['message_receiver_id']=$user_id;
+			else
+				$this->set_mess_sr_type("receiver","user",$mess,$filters);
+
 			$filters['message_types'][]=$mess;
 		}
 

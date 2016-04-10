@@ -113,8 +113,9 @@ class AE_Message extends Burge_CMF_Controller {
 				$this->set_departments_message_types($op_access,$filters);
 
 		//bprint_r($op_access);
-		//bprint_r($filters['message_types']);
+		bprint_r($filters['message_types']);
 
+		return;
 	}
 
 	private function set_customer_message_types(&$op_access, &$filters)
@@ -125,8 +126,8 @@ class AE_Message extends Burge_CMF_Controller {
 		$mess=array();
 		$mess['message_sender_type']="customer";
 		$mess['message_receiver_type']="customer";
-		$this->set_mess_sd_type("sender","customer",$mess,$filters);
-		$this->set_mess_sd_type("receiver","customer",$mess,$filters);
+		$this->set_mess_sr_type("sender","customer",$mess,$filters);
+		$this->set_mess_sr_type("receiver","customer",$mess,$filters);
 
 		$filters['message_types'][]=$mess;
 
@@ -150,8 +151,8 @@ class AE_Message extends Burge_CMF_Controller {
 			$mess=array();
 			$mess['message_sender_type']="customer";
 			$mess['message_receiver_type']="departments";
-			$this->set_mess_sd_type("sender","customer",$mess,$filters);
-			$this->set_mess_sd_type("receiver","department",$mess,$filters,$user_departments);
+			$this->set_mess_sr_type("sender","customer",$mess,$filters);
+			$this->set_mess_sr_type("receiver","department",$mess,$filters,$user_departments);
 			$filters['message_types'][]=$mess;
 		}
 
@@ -160,8 +161,8 @@ class AE_Message extends Burge_CMF_Controller {
 			$mess=array();
 			$mess['message_receiver_type']="customer";
 			$mess['message_sender_type']="departments";
-			$this->set_mess_sd_type("receiver","customer",$mess,$filters);
-			$this->set_mess_sd_type("sender","department",$mess,$filters,$user_departments);
+			$this->set_mess_sr_type("receiver","customer",$mess,$filters);
+			$this->set_mess_sr_type("sender","department",$mess,$filters,$user_departments);
 			$filters['message_types'][]=$mess;
 		}
 
@@ -176,34 +177,40 @@ class AE_Message extends Burge_CMF_Controller {
 		{	
 			//this user has no access to other users messages
 
-			$mess=array();
-			$mess['message_sender_type']="user";
-			$mess['message_receiver_type']="user";
-			$mess['message_sender_id']=$user_id;
-			$this->set_mess_sd_type("receiver","user",$mess,$filters);
-			$filters['message_types'][]=$mess;
+			if(!$filters['sender_user'] || $filters['receiver_user'])
+			{
+				$mess=array();
+				$mess['message_sender_type']="user";
+				$mess['message_receiver_type']="user";
+				$mess['message_sender_id']=$user_id;
+				$this->set_mess_sr_type("receiver","user",$mess,$filters);
+				$filters['message_types'][]=$mess;
+			}
 
-			$mess=array();
-			$mess['message_sender_type']="user";
-			$mess['message_receiver_type']="user";
-			$mess['message_receiver_id']=$user_id;
-			$this->set_mess_sd_type("sender","user",$mess,$filters);
-			$filters['message_types'][]=$mess;			
+			if($filters['sender_user'] || !$filters['receiver_user'])
+			{
+				$mess=array();
+				$mess['message_sender_type']="user";
+				$mess['message_receiver_type']="user";
+				$mess['message_receiver_id']=$user_id;
+				$this->set_mess_sr_type("sender","user",$mess,$filters);
+				$filters['message_types'][]=$mess;			
+			}
 		}
 		else
 		{
 			$mess=array();
 			$mess['message_sender_type']="user";
 			$mess['message_receiver_type']="user";
-			$this->set_mess_sd_type("sender","user",$mess,$filters);
-			$this->set_mess_sd_type("receiver","user",$mess,$filters);
+			$this->set_mess_sr_type("sender","user",$mess,$filters);
+			$this->set_mess_sr_type("receiver","user",$mess,$filters);
 			$filters['message_types'][]=$mess;
 		}
 
 		return;
 	}
 
-	private function set_mess_sd_type($sr,$type,&$mess,&$filters,$departments=array())
+	private function set_mess_sr_type($sr,$type,&$mess,&$filters,$departments=array())
 	{
 		if($filters[$sr.'_'.$type])
 		{

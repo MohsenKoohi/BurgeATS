@@ -39,8 +39,7 @@
 						<option>&nbsp;</option>
 						<option value="me">{me_text}</option>
 						<?php 
-							if($op_access['users'])	
-								echo "<option value='user'>{user_text}</option>";
+							echo "<option value='user'>{user_text}</option>";
 							if($op_access['departments'])	
 								echo "<option value='department'>{department_text}</option>";
 							if($op_access['customers'])	
@@ -63,12 +62,11 @@
 							</div>
 						<?php } ?>
 
-						<? if($op_access['users'])	{?>
-							<div class="three columns" id="sender-users">
-								<label>{sender_user_name_or_id_text}</label>
-								<input name="sender_user" type="text" class="full-width">
-							</div>
-						<?php } ?>
+
+						<div class="three columns" id="sender-users">
+							<label>{sender_user_name_or_id_text}</label>
+							<input name="sender_user" type="text" class="full-width">
+						</div>
 
 						<? if($op_access['customers']){?>
 							<div class="three columns" id="sender-customers">
@@ -86,8 +84,7 @@
 						<option>&nbsp;</option>
 						<option value="me">{me_text}</option>
 						<?php 
-							if($op_access['users'])	
-								echo "<option value='user'>{user_text}</option>";
+							echo "<option value='user'>{user_text}</option>";
 							if($op_access['departments'])	
 								echo "<option value='department'>{department_text}</option>";
 							if($op_access['customers'])	
@@ -110,12 +107,10 @@
 							</div>
 						<?php } ?>
 
-						<? if($op_access['users'])	{?>
-							<div class="three columns " id="receiver-users">
-								<label>{receiver_user_name_or_id_text}</label>
-								<input name="receiver_user" type="text" class="full-width">
-							</div>
-						<?php } ?>
+						<div class="three columns " id="receiver-users">
+							<label>{receiver_user_name_or_id_text}</label>
+							<input name="receiver_user" type="text" class="full-width">
+						</div>
 
 						<? if($op_access['customers']){?>
 							<div class="three columns " id="receiver-customers">

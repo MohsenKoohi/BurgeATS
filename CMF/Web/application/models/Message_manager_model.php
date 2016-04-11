@@ -192,8 +192,6 @@ class Message_manager_model extends CI_Model
 			->join("customer as receiver_customer","message_receiver_id = receiver_customer.customer_id","left")
 			;
 
-		$this->db->order_by("message_id DESC");
-
 		$this->set_search_where_clause($filters);
 
 		$result=$this->db->get()->result_array();
@@ -203,7 +201,41 @@ class Message_manager_model extends CI_Model
 
 	private function set_search_where_clause(&$filters)
 	{
+		if(isset($filters['start_date']))
+			$this->db->where("message_timestamp >=",$filters['start_date']);
 
+		if(isset($filters['end_date']))
+			$this->db->where("message_timestamp <=",$filters['end_date']." 23:59:59");
+
+		if(isset($filters['response_status']))
+		{
+			if($filters['response_status']==="yes")
+				$this->db->where("message_reply_id !=",0);
+			else
+				$this->db->where("message_reply_id",0);
+		}
+
+		if(isset($filters['verification_status']))
+		{
+			$this->db
+				->where("message_sender_type","customer")
+				->where("message_receiver_type","customer");
+
+			if($filters['verification_status']==="yes")
+				$this->db->where("message_verifier_id !=",0);
+			else
+				$this->db->where("message_verifier_id",0);
+		}
+
+		if(isset($filters['order_by']))
+			$this->db->order_by($filter['order_by']);
+		else
+			$this->db->order_by("message_id DESC");
+
+		if(isset($filters['start']) && isset($filters['length']))
+			$this->db->limit((int)$filters['length'],(int)$filters['start']);
+
+		return;
 	}
 
 	public function send_c2d_message(&$props)

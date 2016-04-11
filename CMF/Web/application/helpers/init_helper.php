@@ -72,9 +72,11 @@ function &get_links($just_common=FALSE)
 			,'customer_forgotten_password'	=> HOME_URL_LANG."/forgotten_password"
 
 			,'admin_message'								=> ADMIN_SURL_LANG."/message"
+			,'admin_message_info_format'				=> ADMIN_SURL_LANG."/message/message_id"
 			,'admin_message_access'						=> ADMIN_SURL_LANG."/message_access"
 			,'admin_message_access_user_format'		=> ADMIN_SURL_LANG."/message_access/user_id"
-			,'customer_messages'							=> HOME_URL_LANG."/messages"
+			,'customer_message'							=> HOME_URL_LANG."/message"
+			,'customer_message_info_format'			=> HOME_URL_LANG."/message/message_id"
 			,'customer_message_c2d'						=> HOME_URL_LANG."/contact_us"
 
 		));
@@ -85,6 +87,25 @@ function &get_links($just_common=FALSE)
 	
 	return $LINKS;
 }
+
+function get_customer_message_info_link($message_id, $do_not_set_lang=FALSE)
+{
+	return str_replace(
+		array("message_id")
+		,array($message_id)
+		,get_link("customer_message_info_format",$do_not_set_lang)
+	);
+}
+
+function get_admin_message_info_link($message_id, $do_not_set_lang=FALSE)
+{
+	return str_replace(
+		array("message_id")
+		,array($message_id)
+		,get_link("admin_message_info_format",$do_not_set_lang)
+	);
+}
+
 
 function get_admin_message_access_user_link($user_id, $do_not_set_lang=FALSE)
 {

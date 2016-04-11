@@ -27,7 +27,7 @@ class Message_manager_model extends CI_Model
 				,`message_parent_id` BIGINT
 				,`message_sender_type` enum('customer','department','user')
 				,`message_sender_id` BIGINT
-				,`message_time_stamp` DATETIME
+				,`message_timestamp` DATETIME
 				,`message_receiver_type` enum('customer','department','user')
 				,`message_receiver_id` BIGINT
 				,`message_subject` VARCHAR(200)
@@ -164,12 +164,46 @@ class Message_manager_model extends CI_Model
 
 	public function get_total_messages(&$filters)
 	{
-		return 0;
+		$this->db->select("COUNT(*) as count");
+		$this->db->from($this->message_table_name);
+		$this->set_search_where_clause($filters);
+
+		$query=$this->db->get();
+
+		$row=$query->row_array();
+
+		return $row['count'];
 	}
 
 	public function get_messages(&$filters)
 	{
-		
+		$this->db
+			->select(
+				$this->message_table_name.".* 
+				, sender_user.user_code as suc, sender_user.user_name as sun
+				, sender_customer.customer_name as scn
+				, receiver_user.user_code as ruc, receiver_user.user_name as run
+				, receiver_customer.customer_name as rcn
+				")
+			->from($this->message_table_name)
+			->join("user as sender_user","message_sender_id = sender_user.user_id","left")
+			->join("customer as sender_customer","message_sender_id = sender_customer.customer_id","left")
+			->join("user as receiver_user","message_receiver_id = receiver_user.user_id","left")
+			->join("customer as receiver_customer","message_receiver_id = receiver_customer.customer_id","left")
+			;
+
+		$this->db->order_by("message_id DESC");
+
+		$this->set_search_where_clause($filters);
+
+		$result=$this->db->get()->result_array();
+
+		return $result;
+	}
+
+	private function set_search_where_clause(&$filters)
+	{
+
 	}
 
 	public function send_c2d_message(&$props)
@@ -201,7 +235,7 @@ class Message_manager_model extends CI_Model
 	{
 		$should_set_parent_id=!isset($props['message_parent_id']);
 
-		$props['message_time_stamp']=get_current_time();
+		$props['message_timestamp']=get_current_time();
 
 		$this->db->insert($this->message_table_name,$props);
 

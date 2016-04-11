@@ -16,6 +16,7 @@ class AE_Message extends Burge_CMF_Controller {
 
 		$this->set_messages();
 
+		$this->data['departments']=$this->message_manager_model->get_departments();
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_message",TRUE));
 		$this->data['header_title']=$this->lang->line("messages");
 
@@ -31,7 +32,7 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->data['raw_page_url']=get_link("admin_message");
 		
 		$this->initialize_filters($filters);
-
+		
 		$total=$this->message_manager_model->get_total_messages($filters);
 		if($total)
 		{
@@ -48,6 +49,7 @@ class AE_Message extends Burge_CMF_Controller {
 			$filters['length']=$per_page;
 			
 			$this->data['messages']=$this->message_manager_model->get_messages($filters);
+			$this->process_messages_for_view();
 			
 			$end=$start+sizeof($this->data['messages'])-1;
 
@@ -73,6 +75,11 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->data['filters']=$filters;
 
 		return;
+	}
+
+	private function process_messages_for_view()
+	{
+		//bprint_r($this->data['messages']);
 	}
 
 	private function initialize_filters(&$filters)
@@ -236,7 +243,7 @@ class AE_Message extends Burge_CMF_Controller {
 			if((int)$filters[$sr.'_'.$type])
 				$mess['message_'.$sr.'_id']=(int)$filters[$sr.'_'.$type];
 			else
-				$mess[$sr.'.'.$type.'_name']=$filters[$sr.'_'.$type];
+				$mess[$sr."_".$type.'.'.$type.'_name']=$filters[$sr.'_'.$type];
 		}
 		else
 			if($type==="department")

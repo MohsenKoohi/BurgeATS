@@ -1,5 +1,11 @@
 <div class="main">
 	<div class="container">
+		<style type="text/css">
+			a
+			{
+				color:black;
+			}
+		</style>
 		<h1>{messages_text}</h1>
 		<div class="container separated">
 			<div class="row filter half-col-margin-children">				
@@ -61,7 +67,6 @@
 								</select>
 							</div>
 						<?php } ?>
-
 
 						<div class="three columns" id="sender-users">
 							<label>{sender_user_name_or_id_text}</label>
@@ -134,16 +139,16 @@
 			<div class="row results-count" >
 				<div class="six columns">
 					<label>
-						{results_text} {logs_start} {to_text} {logs_end} - {total_results_text}: {logs_total}
+						{results_text} {messages_start} {to_text} {messages_end} - {total_results_text}: {messages_total}
 					</label>
 				</div>
 				<div class="three columns results-page-select">
 					<select class="full-width" onchange="pageChanged($(this).val());">
 						<?php 
-							for($i=1;$i<=$logs_total_pages;$i++)
+							for($i=1;$i<=$messages_total_pages;$i++)
 							{
 								$sel="";
-								if($i == $logs_current_page)
+								if($i == $messages_current_page)
 									$sel="selected";
 
 								echo "<option value='$i' $sel>$page_text $i</option>";
@@ -259,22 +264,35 @@
 		<br>
 		<div class="container">			
 			<?php 
-				if($logs['total'])
-					for($i=$logs['start'];$i<$logs['end'];$i++)
+				$i=$messages_start;
+				if($messages_total)
+					foreach($messages as $mess)
 					{ 
-						$log=$logs[$i];
 			?>
-						<div class="row even-odd-bg" style="display:flex;flex-wrap:wrap">
-							<div class="three columns">
-								<label>#<?php echo 1+$i;?></label>
+						<div class="row even-odd-bg">
+							<div class="one column counter">
+								#<?php echo $i++;?>
 							</div>
-							<?php foreach ($log as $key => $value) { 
-							?>
-								<div class="three columns lang-en">
-									<span><?php echo $key;?></span>
-									<label class="lang-en"><?php echo $value;?></label>
-								</div>
-							<?php } ?>				
+
+							<div class="two columns">
+								
+								<?php 
+									$type=$mess['message_sender_type'];
+									if($type === "department")
+										$sender=$department_text." ".${"department_".$departments[$mess['message_sender_id']]."_text"};
+									if($type === "user")
+										$sender=$user_text." ".$mess['suc']." - ".$mess['sun'];
+									if($type === "customer")
+									{
+										$link=get_admin_customer_details_link($mess['message_sender_id']);
+										$sender="<a href='$link'>"
+											.$customer_text." ".$mess['message_sender_id']." - ".$mess['scn']
+											."</a>";
+									}
+									echo "<span>".$sender."</span><div class='ltr'>".str_replace("-","/",$mess['message_timestamp'])."</div>";
+								?>
+							</div>
+							
 						</div>
 			<?php 
 					}

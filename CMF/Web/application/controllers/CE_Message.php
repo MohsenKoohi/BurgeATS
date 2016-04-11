@@ -10,7 +10,7 @@ class CE_Message extends Burge_CMF_Controller {
 		$this->lang->load('ce_message',$this->selected_lang);		
 	}
 
-	public function messages()
+	public function message()
 	{
 		if(!$this->data['customer_logged_in'])
 			redirect(get_link("customer_login"));

@@ -33,7 +33,7 @@ $lang['response_status']="وضعیت پاسخ";
 $lang['responded']="پاسخ داده شده";
 $lang['not_responded']="بدون پاسخ";
 
-$lang['verification_status']="وضعیت تایید";
+$lang['verification_status']="وضعیت تایید (مشتری به مشتری)";
 $lang['verified']="تایید شده";
 $lang['not_verified']="تایید نشده";
 

@@ -39,3 +39,22 @@ $lang['not_verified']="تایید نشده";
 
 $lang['start_date']="از تاریخ";
 $lang['end_date']="تا تاریخ";
+
+$lang['sender_from']="از";
+$lang['receiver_to']="به";
+$lang['subject']="موضوع";
+$lang['content']="متن";
+$lang['status']="وضعیت";
+$lang['verify']="تایید";
+$lang['from']="از";
+$lang['to']="تا";
+$lang['results']="نتایج";
+$lang['page']="صفحه";
+$lang['total_results']="تعداد";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";

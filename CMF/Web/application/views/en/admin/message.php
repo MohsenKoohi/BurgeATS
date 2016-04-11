@@ -5,6 +5,13 @@
 			{
 				color:black;
 			}
+
+			.even-odd-bg div.message-content
+			{
+				text-overflow: ellipsis;
+				overflow:hidden;
+				max-height: 110px;
+			}
 		</style>
 		<h1>{messages_text}</h1>
 		<div class="container separated">
@@ -268,14 +275,15 @@
 				if($messages_total)
 					foreach($messages as $mess)
 					{ 
+						$mess_link=get_admin_message_info_link($mess['message_id']);
 			?>
 						<div class="row even-odd-bg">
 							<div class="one column counter">
 								#<?php echo $i++;?>
 							</div>
 
-							<div class="two columns">
-								
+							<div class="three columns">
+								{sender_from_text}:
 								<?php 
 									$type=$mess['message_sender_type'];
 									if($type === "department")
@@ -289,10 +297,75 @@
 											.$customer_text." ".$mess['message_sender_id']." - ".$mess['scn']
 											."</a>";
 									}
-									echo "<span>".$sender."</span><div class='ltr'>".str_replace("-","/",$mess['message_timestamp'])."</div>";
+									echo "<span>".$sender."</span>";
 								?>
+								<br>
+								{receiver_to_text}:
+								<?php 
+									$type=$mess['message_receiver_type'];
+									if($type === "department")
+										$receiver=$department_text." ".${"department_".$departments[$mess['message_receiver_id']]."_text"};
+									if($type === "user")
+										$receiver=$user_text." ".$mess['ruc']." - ".$mess['run'];
+									if($type === "customer")
+									{
+										$link=get_admin_customer_details_link($mess['message_receiver_id']);
+										$receiver="<a href='$link'>"
+											.$customer_text." ".$mess['message_receiver_id']." - ".$mess['rcn']
+											."</a>";
+									}
+									echo "<span>".$receiver."</span>";
+								?>
+								<div class='ltr'>
+									<?php echo str_replace("-","/",$mess['message_timestamp']); ?>
+								</div>
 							</div>
 							
+							<div class="two columns">
+								<label>{subject_text}</label>
+								<span>
+									<a href="<?php echo $mess_link;?>">
+										<?php echo $mess['message_subject'];?>
+									</a>
+								</span>
+							</div>
+
+							<div class="four columns message-content">
+								<label>{content_text}</label>
+								<span>
+									<a href="<?php echo $mess_link;?>">
+										<?php echo $mess['message_content'];?>
+									</a>
+								</span>
+							</div>
+							<div class="two columns">
+								<label>{status_text}</label>
+								<span>
+									<?php
+										if($mess['message_reply_id'])
+											echo $responded_text;
+										else
+											echo $not_responded_text;
+										if(($mess['message_sender_type'] === "customer") && ($mess['message_receiver_type'] === "customer"))
+										{
+											echo " - ";
+											if($mess['message_verifier_id'])
+											{
+												$verify="checked";
+												echo $verified_text;
+											}
+											else
+											{
+												$verify="";
+												echo $not_verified_text;
+											}
+											$id=$mess['message_id'];
+											if($op_access['verifier'])
+												echo "<br>".$verify_text.": <span>&nbsp;</span> <input type='checkbox' ".$verify." class='graphical' onchange='verifyMessage($id,$(this).prop(\"checked\"));'>";
+										}
+									?>
+								</span>
+							</div>
 						</div>
 			<?php 
 					}
@@ -302,12 +375,18 @@
 	<script type="text/javascript">
 		$(function()
 		{
-			$(".row.even-odd-bg div label").each(
+			$(".row.even-odd-bg div.message-content a").each(
 				function(index,el)
 				{
 					$(el).prop("title",$(el).text());
 				}
 			);
 		});
+
+		function verifyMessage(mid, checked)
+		{
+			if(checked)
+				alert(mid);
+		}
 	</script>
 </div>

@@ -165,7 +165,13 @@ class Message_manager_model extends CI_Model
 	public function get_total_messages(&$filters)
 	{
 		$this->db->select("COUNT(*) as count");
-		$this->db->from($this->message_table_name);
+		$this->db->from($this->message_table_name)
+			->join("user as sender_user","message_sender_id = sender_user.user_id","left")
+			->join("customer as sender_customer","message_sender_id = sender_customer.customer_id","left")
+			->join("user as receiver_user","message_receiver_id = receiver_user.user_id","left")
+			->join("customer as receiver_customer","message_receiver_id = receiver_customer.customer_id","left")
+			;
+		
 		$this->set_search_where_clause($filters);
 
 		$query=$this->db->get();
@@ -226,6 +232,46 @@ class Message_manager_model extends CI_Model
 			else
 				$this->db->where("message_verifier_id",0);
 		}
+
+		$mess_types="0";
+		//bprint_r($filters['message_types']);
+		//exit(0);
+		foreach($filters['message_types'] as $mess)
+		{
+			$query="1";
+			foreach($mess as $field => $value)
+			{
+				$exfield=explode("_", $field);
+				$del=$exfield[sizeof($exfield)-1];
+
+				if($del==="type" || $del==="id" || $del==="code")
+					$query.=" && ( ".$field."='".$value."' )";
+
+				if($del==="in" && is_array($value))
+				{
+					unset($exfield[sizeof($exfield)-1]);
+					$field=implode("_", $exfield);
+					$value="('".implode("','", $value)."')";
+
+					$query.=" && ( ".$field." in ".$value." )";
+				}
+
+				if($del==="name")
+				{
+					$value=preg_replace("/\s+/", "%", trim($value));
+					$query.=" && ( ".$field." like '%".$value."%' )";
+				}
+
+				//echo $del."<br>";
+				
+			}
+
+			$mess_types.=" || ( ".$query." ) "; 
+		}
+		//echo $mess_types."<br>";exit();
+
+		$this->db->where($this->db->escape(" ( ".$mess_types." )"));
+		//echo $this->db->get_compiled_select();
 
 		if(isset($filters['order_by']))
 			$this->db->order_by($filter['order_by']);

@@ -116,10 +116,10 @@ class AE_Message extends Burge_CMF_Controller {
 			)
 				$this->set_customer_message_types($op_access,$filters);
 		
-		if(($filters['receiver_type']!=="user") && 
-			($filters['sender_type']!=="user") &&
-			($filters['receiver_type']!=="me") && 
+		if(($filters['sender_type']!=="user") &&			
 			($filters['sender_type']!=="me") &&
+			($filters['receiver_type']!=="user") && 
+			($filters['receiver_type']!=="me") && 
 			!(($filters['receiver_type']==="customer") && ($filters['sender_type']==="customer"))
 			)
 				$this->set_departments_message_types($op_access,$filters);
@@ -158,23 +158,24 @@ class AE_Message extends Burge_CMF_Controller {
 				$user_departments[]=$index;
 		unset($departments);
 
-		if($filters['receiver_type']!=="customer")
+		if(($filters['sender_type']!=="department") && ($filters['receiver_type']!=="customer"))
 		{
 			$mess=array();
 			$mess['message_sender_type']="customer";
-			$mess['message_receiver_type']="departments";
+			$mess['message_receiver_type']="department";
 			$this->set_mess_sr_type("sender","customer",$mess,$filters);
 			$this->set_mess_sr_type("receiver","department",$mess,$filters,$user_departments);
 			$filters['message_types'][]=$mess;
 		}
 
-		if($filters['sender_type']!=="customer")
+		if(($filters['sender_type']!=="customer") && ($filters['receiver_type']!=="department"))
 		{
 			$mess=array();
+			$mess['message_sender_type']="department";
 			$mess['message_receiver_type']="customer";
-			$mess['message_sender_type']="departments";
-			$this->set_mess_sr_type("receiver","customer",$mess,$filters);
 			$this->set_mess_sr_type("sender","department",$mess,$filters,$user_departments);
+			$this->set_mess_sr_type("receiver","customer",$mess,$filters);
+			
 			$filters['message_types'][]=$mess;
 		}
 
@@ -241,13 +242,19 @@ class AE_Message extends Burge_CMF_Controller {
 		if($filters[$sr.'_'.$type])
 		{
 			if((int)$filters[$sr.'_'.$type])
-				$mess['message_'.$sr.'_id']=(int)$filters[$sr.'_'.$type];
+			{
+				if($type==="user")
+					$mess[$sr.'_user.user_code']=(int)$filters[$sr.'_'.$type];
+				else
+					$mess['message_'.$sr.'_id']=(int)$filters[$sr.'_'.$type];
+
+			}
 			else
 				$mess[$sr."_".$type.'.'.$type.'_name']=$filters[$sr.'_'.$type];
 		}
 		else
 			if($type==="department")
-				$mess[$sr."_".$type."_in"]=$departments;
+				$mess["message_".$sr."_id_in"]=$departments;
 
 		return;
 	}

@@ -258,7 +258,10 @@
 				{
 					var ret=rawPageUrl+"?";
 					for(i in filters)
-						ret+="&"+i+"="+encodeURIComponent(filters[i].trim().replace(/\s+/g," "));
+					{
+						var val=filters[i].trim().replace(/\s+/g," ").replace(/[';"]/g,"");
+						ret+="&"+i+"="+encodeURIComponent(val);
+					}
 					return ret;
 				}
 

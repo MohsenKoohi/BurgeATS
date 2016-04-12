@@ -14,6 +14,10 @@ class AE_Message extends Burge_CMF_Controller {
 	{
 		$this->data['op_access']=$this->message_manager_model->get_operations_access();
 
+		if($this->data['op_access']['verifier'])
+			if($this->input->post("post_type")==="verify_c2c_messages")
+				return $this->verify_messages();
+
 		$this->set_messages();
 
 		$this->data['departments']=$this->message_manager_model->get_departments();
@@ -23,7 +27,17 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->send_admin_output("message");
 
 		return;	 
-	}	
+	}
+
+	private function verify_messages()
+	{
+		$v=$this->input->post("verified_messages");
+		$nv=$this->input->post("not_verified_messages");
+		echo "verified";
+		bprint_r($v);
+		echo "not_verified";
+		bprint_r($nv);
+	}
 
 	private function set_messages()
 	{

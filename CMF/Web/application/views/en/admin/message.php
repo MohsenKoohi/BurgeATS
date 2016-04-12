@@ -136,10 +136,7 @@
 				<div class="two columns results-search-again ">
 					<label></label>
 					<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
-				</div>
-				</div>
-				
-				
+				</div>				
 				
 			</div>
 
@@ -275,6 +272,7 @@
 		<div class="container">			
 			<?php 
 				$i=$messages_start;
+				$verification_status=array();
 				if($messages_total)
 					foreach($messages as $mess)
 					{ 
@@ -352,6 +350,7 @@
 										if(($mess['message_sender_type'] === "customer") && ($mess['message_receiver_type'] === "customer"))
 										{
 											echo " - ";
+											$verification_status[$mess['message_id']]=$mess['message_verifier_id'];
 											if($mess['message_verifier_id'])
 											{
 												$verify="checked";
@@ -360,6 +359,7 @@
 											else
 											{
 												$verify="";
+												$not_verified_messages[]=$mess['message_id'];
 												echo $not_verified_text;
 											}
 											$id=$mess['message_id'];
@@ -373,6 +373,50 @@
 			<?php 
 					}
 			?>
+
+			<?php 
+				if($op_access['verifier']) {
+					echo form_open(get_link("admin_message"),array("onsubmit"=>"return verifySubmit();")); 
+			?>
+					<br><br>
+					<input type="hidden" name="post_type" value="verify_c2c_messages"/>
+					<input type="hidden" name="verified_messages" value=""/>
+					<input type="hidden" name="not_verified_messages" value=""/>
+					<div class="row">
+							<div class="nine columns">&nbsp;</div>
+							<input type="submit" class=" button-primary three columns" value="{verify_text}"/>
+					</div>
+				</form>
+
+				<script type="text/javascript">
+					var verificationStatus=JSON.parse('<?php echo json_encode($verification_status);?>');
+					function verifyMessage(mid, checked)
+					{
+						verificationStatus[mid]=checked;
+					}
+
+					function verifySubmit()
+					{
+						if(!confirm("{are_you_sure_to_submit_text}"))
+							return false;
+
+						var v=[];
+						var nv=[];
+						for(i in verificationStatus)
+							if(verificationStatus[i])
+								v.push(i);
+							else
+								nv.push(i);
+
+						$("input[name='verified_messages']").val(v.join(","));
+						$("input[name='not_verified_messages']").val(nv.join(","));
+
+						return true;
+					}
+				</script>
+			<?php
+				}
+			?>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -385,11 +429,5 @@
 				}
 			);
 		});
-
-		function verifyMessage(mid, checked)
-		{
-			if(checked)
-				alert(mid);
-		}
 	</script>
 </div>

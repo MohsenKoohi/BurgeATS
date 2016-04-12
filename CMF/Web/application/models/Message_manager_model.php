@@ -258,7 +258,7 @@ class Message_manager_model extends CI_Model
 
 				if($del==="name")
 				{
-					$value=preg_replace("/\s+/", "%", trim($value));
+					$value=prune_for_like_query($value);
 					$query.=" && ( ".$field." like '%".$value."%' )";
 				}
 
@@ -270,8 +270,7 @@ class Message_manager_model extends CI_Model
 		}
 		//echo $mess_types."<br>";exit();
 
-		$this->db->where($this->db->escape(" ( ".$mess_types." )"));
-		//echo $this->db->get_compiled_select();
+		$this->db->where((" ( ".$mess_types." )"));
 
 		if(isset($filters['order_by']))
 			$this->db->order_by($filter['order_by']);

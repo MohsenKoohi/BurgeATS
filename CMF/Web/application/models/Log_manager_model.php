@@ -85,6 +85,7 @@ class Log_manager_model extends CI_Model
 
 		,"MESSAGE_ACCESS_SET"		=>1131
 		,"MESSAGE_SEND"				=>1132
+		,"MESSAGE_VERIFY"				=>1133
 
 	);
 

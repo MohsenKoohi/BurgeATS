@@ -20,6 +20,7 @@ class AE_Message extends Burge_CMF_Controller {
 
 		$this->set_messages();
 
+		$this->data['message']=get_message();
 		$this->data['departments']=$this->message_manager_model->get_departments();
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_message",TRUE));
 		$this->data['header_title']=$this->lang->line("messages");
@@ -31,12 +32,15 @@ class AE_Message extends Burge_CMF_Controller {
 
 	private function verify_messages()
 	{
-		$v=$this->input->post("verified_messages");
-		$nv=$this->input->post("not_verified_messages");
-		echo "verified";
-		bprint_r($v);
-		echo "not_verified";
-		bprint_r($nv);
+		$user_id=$this->user_manager_model->get_user_info()->get_id();
+		$v=explode(",",$this->input->post("verified_messages"));
+		$nv=explode(",",$this->input->post("not_verified_messages"));
+
+		$result=$this->message_manager_model->verify_c2c_messages($user_id,$v,$nv);
+
+		set_message($this->lang->line("verifications_saved_successfully"));
+
+		return redirect($this->input->post("redirect_link"));
 	}
 
 	private function set_messages()

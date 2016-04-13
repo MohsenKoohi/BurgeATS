@@ -257,7 +257,8 @@
 					for(i in filters)
 					{
 						var val=filters[i].trim().replace(/\s+/g," ").replace(/[';"]/g,"");
-						ret+="&"+i+"="+encodeURIComponent(val);
+						if(val)
+							ret+="&"+i+"="+encodeURIComponent(val);
 					}
 					return ret;
 				}
@@ -350,7 +351,7 @@
 										if(($mess['message_sender_type'] === "customer") && ($mess['message_receiver_type'] === "customer"))
 										{
 											echo " - ";
-											$verification_status[$mess['message_id']]=$mess['message_verifier_id'];
+											$verification_status[$mess['message_id']]=(int)$mess['message_verifier_id'];
 											if($mess['message_verifier_id'])
 											{
 												$verify="checked";
@@ -381,6 +382,7 @@
 					<br><br>
 					<input type="hidden" name="post_type" value="verify_c2c_messages"/>
 					<input type="hidden" name="verified_messages" value=""/>
+					<input type="hidden" name="redirect_link" value=""/>
 					<input type="hidden" name="not_verified_messages" value=""/>
 					<div class="row">
 							<div class="nine columns">&nbsp;</div>
@@ -410,6 +412,7 @@
 
 						$("input[name='verified_messages']").val(v.join(","));
 						$("input[name='not_verified_messages']").val(nv.join(","));
+						$("input[name='redirect_link']").val(getCustomerSearchUrl(initialFilters));
 
 						return true;
 					}

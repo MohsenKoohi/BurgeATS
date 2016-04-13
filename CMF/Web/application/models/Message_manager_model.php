@@ -308,6 +308,47 @@ class Message_manager_model extends CI_Model
 		return $id;
 	}
 
+	public function verify_c2c_messages($verifier_id,&$v,&$nv)
+	{
+		$ret=["v"=>0,"nv"=>0];
+		if($v)
+		{
+			$this->db
+				->set("message_verifier_id",$verifier_id)
+				->where("message_sender_type","customer")
+				->where("message_receiver_type","customer")
+				->where("message_verifier_id",0)
+				->where_in("message_id",$v)
+				->update($this->message_table_name);
+			
+			$ret['v']=$this->db->affected_rows();
+		}
+
+		if($nv)
+		{
+			$this->db
+				->set("message_verifier_id",0)
+				->where("message_sender_type","customer")
+				->where("message_receiver_type","customer")
+				->where("message_verifier_id !=",0)
+				->where_in("message_id",$nv)
+				->update($this->message_table_name);
+
+			$ret['nv']=$this->db->affected_rows();
+		}
+
+		$result=array(
+			"verifier_id"=>$verifier_id
+			,"requested_verified_ids"=>implode(",", $v)
+			,"verified_count"=>$ret['v']
+			,"requested_not_verified_ids"=>implode(",", $nv)
+			,"not_verified_count"=>$ret['nv']
+		);
+		$this->log_manager_model->info("MESSAGE_VERIFY",$result);
+
+		return $ret;
+	}
+
 	private function add_message(&$props)
 	{
 		$should_set_parent_id=!isset($props['message_parent_id']);

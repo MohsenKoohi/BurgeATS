@@ -162,6 +162,30 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
+	//retrieves a message details to be shown in the admin or customer envs
+	//the first parameter is message_id
+	//the second parameter is "customer" or "user"
+	//the third parameter is the ID of the first type
+	public function get_message($message_id,$viewer_type,$viewer_id)
+	{
+		if(($viewer_type !== "customer") && ($viewer_type!=="user"))
+			return NULL;
+
+		$oa=$this->message_manager_model->get_operations_access();
+
+		$ret=array();
+
+		$parent_id=$this->db
+			->select("message_parent_id")
+			->get_where($this->message_table_name,array("message_id"=>$message_id))
+			->row_array()['message_parent_id'];
+
+		if(!$parent_id)
+			return NULL;
+
+		
+	}
+
 	public function get_total_messages(&$filters)
 	{
 		$this->db->select("COUNT(*) as count");

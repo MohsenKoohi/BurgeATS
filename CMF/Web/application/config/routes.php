@@ -100,7 +100,7 @@ $route['signup']					= "CE_Login/signup";
 $route['forgotten_password']	= "CE_Login/forgotten_password";
 
 $route[ADMIN_URL_FOLDER."/message"]								= "AE_Message/index";
-$route[ADMIN_URL_FOLDER."/message/(\d+)"]						= "AE_Message/info/$1";
+$route[ADMIN_URL_FOLDER."/message/(\d+)"]						= "AE_Message/message/$1";
 $route[ADMIN_URL_FOLDER."/message_access(/(\d+))?"]		= "AE_Message/access/$2";
 $route["contact_us"]													= "CE_Message/c2d";
 $route['message']														= "CE_Message/message";

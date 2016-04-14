@@ -13,8 +13,15 @@ class AE_Message extends Burge_CMF_Controller {
 	public function message($message_id)
 	{
 		$message_id=(int)$message_id;
+		$this->data['op_access']=$this->message_manager_model->get_operations_access();
+		
 		$user_id=$this->user_manager_model->get_user_info()->get_id();
-		$info=$this->message_manager_model->get_message($message_id,"user",$user_id);	
+		$this->data['messages']=$this->message_manager_model->get_message($message_id,"user",$user_id);	
+		
+		if($this->data['messages'])
+			$message_id=$this->data['messages'][0]['message_id'];
+		$this->data['message_id']=$message_id;
+		
 		$this->data['departments']=$this->message_manager_model->get_departments();
 
 		$this->data['message']=get_message();
@@ -39,7 +46,7 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_message",TRUE));
 		$this->data['header_title']=$this->lang->line("messages");
 
-		$this->send_admin_output("message");
+		$this->send_admin_output("message_list");
 
 		return;	 
 	}

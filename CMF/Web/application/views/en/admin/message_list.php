@@ -376,7 +376,7 @@
 			?>
 
 			<?php 
-				if($op_access['verifier']) {
+				if($op_access['verifier'] && $verification_status) {
 					echo form_open(get_link("admin_message"),array("onsubmit"=>"return verifySubmit();")); 
 			?>
 					<br><br>

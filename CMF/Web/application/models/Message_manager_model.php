@@ -171,10 +171,6 @@ class Message_manager_model extends CI_Model
 		if(($viewer_type !== "customer") && ($viewer_type!=="user"))
 			return NULL;
 
-		$oa=$this->message_manager_model->get_operations_access();
-
-		$ret=array();
-
 		$parent_id=$this->db
 			->select("message_parent_id")
 			->get_where($this->message_table_name,array("message_id"=>$message_id))
@@ -183,7 +179,89 @@ class Message_manager_model extends CI_Model
 		if(!$parent_id)
 			return NULL;
 
-		
+		$messages=$this->db
+			->select(
+				$this->message_table_name.".* 
+				, sender_user.user_code as suc, sender_user.user_name as sun
+				, sender_customer.customer_name as scn
+				, receiver_user.user_code as ruc, receiver_user.user_name as run
+				, receiver_customer.customer_name as rcn
+				, verifier_user.user_code as vuc, verifier_user.user_name as vun
+				")
+			->from($this->message_table_name)
+			->join("user as sender_user","message_sender_id = sender_user.user_id","left")
+			->join("customer as sender_customer","message_sender_id = sender_customer.customer_id","left")
+			->join("user as receiver_user","message_receiver_id = receiver_user.user_id","left")
+			->join("customer as receiver_customer","message_receiver_id = receiver_customer.customer_id","left")
+			->join("user as verifier_user","message_verifier_id = verifier_user.user_id","left")
+			->where("message_parent_id",$parent_id)
+			->order_by("message_id ASC")
+			->get()
+			->result_array();
+
+		if($viewer_type === "customer")
+		{
+			foreach($messages as $index=>&$mess)
+			{
+				$st=$mess['message_sender_type'];
+				$rt=$mess['message_receiver_type'];
+				$si=$mess['message_sender_id'];
+				$ri=$mess['message_receiver_id'];
+
+				if(
+					($st==="customer" && $rt==="customer") ||
+					($st==="department" && $rt==="customer") ||
+					($st==="customer" && $rt==="department")
+					)
+				{
+					if($si!=$viewer_id || $ri!=$viewer_id)
+						unset($messages[$index]);		
+				}
+				else
+					unset($messages[$index]);
+			}
+		}
+
+		if($viewer_type === "user")
+		{
+			$has_access=FALSE;
+
+			$oa=$this->get_operations_access();
+
+			$deps=array();
+			$departments=$this->get_departments();
+			foreach($departments as $id => $name)
+				$deps[$id]=$oa['departments'][$name];
+
+			$mess=&$messages[0];
+			$st=$mess['message_sender_type'];
+			$rt=$mess['message_receiver_type'];
+			$si=$mess['message_sender_id'];
+			$ri=$mess['message_receiver_id'];
+
+			if($st==="user" && $rt==="user")
+			{
+				if($oa['users'] || ($si==$viewer_id) || ($ri==$viewer_id))
+					$has_access=TRUE;
+			}
+
+			if(($st==="customer")&&($rt==="customer"))
+				if($oa['customers'])
+					$has_access=TRUE;
+
+			if(($st==="customer")&&($rt==="department"))
+				if($deps[$ri])
+					$has_access=TRUE;
+
+			if(($st==="department")&&($rt==="customer"))
+				if($deps[$si])
+					$has_access=TRUE;
+
+			if(!$has_access)
+				$messages=NULL;
+		}
+
+		return $messages;		
 	}
 
 	public function get_total_messages(&$filters)

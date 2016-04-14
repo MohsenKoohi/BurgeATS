@@ -55,8 +55,8 @@ $lang['are_you_sure_to_submit']="آیا مطمئنید؟";
 $lang['verifications_saved_successfully']="تایید پیام‌ها با موفقیت ثبت شد.";
 
 $lang['message']="پیام";
-$lang['']="";
-$lang['']="";
+$lang['date']="تاریخ";
+$lang['number']="شماره";
 $lang['']="";
 $lang['']="";
 $lang['']="";

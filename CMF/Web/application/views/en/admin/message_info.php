@@ -1,9 +1,15 @@
 <div class="main">
 	<div class="container">
+		<style type="text/css">
+			.even-odd-bg .even-odd-bg
+			{
+				margin-bottom:-8px;
+			}
+		</style>
 		<h1>{message_text} {message_id}
 			<?php 
-			if($messages) 
-				echo $comma_text." ".$messages[0]['message_subject']
+				if($messages) 
+					echo $comma_text." ".$messages[0]['message_subject'];
 			?>
 		</h1>		
 		<?php 
@@ -120,7 +126,7 @@
 									$lang="en";
 							?>
 							<div class="ten columns lang-<?php echo $lang;?>">
-								<span style="direction:ltr;display:inline-block">
+								<span>
 									<?php echo nl2br($mess['message_content']);?>
 								</span>
 							</div>

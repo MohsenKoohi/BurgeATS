@@ -32,7 +32,7 @@ class Message_manager_model extends CI_Model
 				,`message_receiver_id` BIGINT
 				,`message_subject` VARCHAR(200)
 				,`message_content` TEXT
-				,`message_verifier_id` INT DEFAULT 0
+				,`message_verifier_id` BIGINT DEFAULT 0
 				,`message_reply_id` BIGINT DEFAULT 0
 				,PRIMARY KEY (message_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
@@ -201,6 +201,8 @@ class Message_manager_model extends CI_Model
 
 		if($viewer_type === "customer")
 		{
+			$new_messages=[];
+
 			foreach($messages as $index=>&$mess)
 			{
 				$st=$mess['message_sender_type'];
@@ -213,13 +215,11 @@ class Message_manager_model extends CI_Model
 					($st==="department" && $rt==="customer") ||
 					($st==="customer" && $rt==="department")
 					)
-				{
-					if($si!=$viewer_id || $ri!=$viewer_id)
-						unset($messages[$index]);		
-				}
-				else
-					unset($messages[$index]);
+					if(($si==$viewer_id) || ($ri==$viewer_id))
+						$new_messages[]=&$mess;
 			}
+
+			$messages=&$new_messages;
 		}
 
 		if($viewer_type === "user")

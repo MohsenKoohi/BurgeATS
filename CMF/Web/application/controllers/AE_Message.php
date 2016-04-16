@@ -16,7 +16,8 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->data['op_access']=$this->message_manager_model->get_operations_access();
 		
 		$user_id=$this->user_manager_model->get_user_info()->get_id();
-		$this->data['messages']=$this->message_manager_model->get_message($message_id,"user",$user_id);	
+		$ret=$this->message_manager_model->get_message($message_id,"user",$user_id);	
+		$this->data['messages']=&$ret['messages'];
 		
 		if($this->data['messages'])
 			$message_id=$this->data['messages'][0]['message_id'];

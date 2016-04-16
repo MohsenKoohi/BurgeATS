@@ -23,17 +23,17 @@ class Message_manager_model extends CI_Model
 		$module_table=$this->db->dbprefix($this->message_table_name); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $module_table (
-				`message_id` BIGINT AUTO_INCREMENT NOT NULL
-				,`message_parent_id` BIGINT
+				`message_id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL
+				,`message_parent_id` BIGINT UNSIGNED
 				,`message_sender_type` enum('customer','department','user')
-				,`message_sender_id` BIGINT
+				,`message_sender_id` BIGINT UNSIGNED
 				,`message_timestamp` DATETIME
 				,`message_receiver_type` enum('customer','department','user')
-				,`message_receiver_id` BIGINT
+				,`message_receiver_id` BIGINT UNSIGNED
 				,`message_subject` VARCHAR(200)
 				,`message_content` TEXT
-				,`message_verifier_id` BIGINT DEFAULT 0
-				,`message_reply_id` BIGINT DEFAULT 0
+				,`message_verifier_id` BIGINT UNSIGNED DEFAULT 0
+				,`message_reply_id` BIGINT UNSIGNED DEFAULT 0
 				,PRIMARY KEY (message_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
@@ -178,6 +178,11 @@ class Message_manager_model extends CI_Model
 
 		if(!$parent_id)
 			return NULL;
+		
+		$reply_forward=array(
+			"can_reply"=>FALSE
+			,"can_forward"=>FALSE
+		);
 
 		$messages=$this->db
 			->select(
@@ -220,11 +225,18 @@ class Message_manager_model extends CI_Model
 			}
 
 			$messages=&$new_messages;
+			if($messages)
+			{
+				$reply_forward['can_reply']=TRUE;
+				$reply_forward['can_forward']=TRUE;
+			}
 		}
 
 		if($viewer_type === "user")
 		{
 			$has_access=FALSE;
+			$can_forward=FALSE;
+			$can_reply=FALSE;
 
 			$oa=$this->get_operations_access();
 
@@ -243,6 +255,12 @@ class Message_manager_model extends CI_Model
 			{
 				if($oa['users'] || ($si==$viewer_id) || ($ri==$viewer_id))
 					$has_access=TRUE;
+
+				if(($si==$viewer_id) || ($ri==$viewer_id))
+				{
+					$can_reply=TRUE;
+					$can_forward=TRUE;
+				}
 			}
 
 			if(($st==="customer")&&($rt==="customer"))
@@ -251,17 +269,30 @@ class Message_manager_model extends CI_Model
 
 			if(($st==="customer")&&($rt==="department"))
 				if($deps[$ri])
+				{
 					$has_access=TRUE;
+					$can_reply=TRUE;
+					$can_forward=TRUE;
+				}
 
 			if(($st==="department")&&($rt==="customer"))
 				if($deps[$si])
+				{
 					$has_access=TRUE;
+					$can_reply=TRUE;
+					$can_forward=TRUE;
+				}
 
 			if(!$has_access)
 				$messages=NULL;
+			else
+			{
+				$reply_forward['can_reply']=$can_reply;
+				$reply_forward['can_forward']=$can_forward;
+			}
 		}
 
-		return $messages;		
+		return array("messages"=>&$messages,"reply_forward"=>$reply_forward);		
 	}
 
 	public function get_total_messages(&$filters)

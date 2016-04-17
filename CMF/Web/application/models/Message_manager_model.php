@@ -496,6 +496,8 @@ class Message_manager_model extends CI_Model
 	}
 
 	//$addons['reply_to_message_id'] should be set for messages that are reply to another message
+	//note that this field may be an array()
+	//because in some situations in addition to current message, the parent message should also be updated
 	//$addons['forward_of_message_id'] should be set for messages that are forward of another message
 	private function add_message(&$props,$addons=array())
 	{
@@ -530,10 +532,13 @@ class Message_manager_model extends CI_Model
 
 		if(isset($addons['reply_to_message_id']))
 		{
-			$this->db
-				->set("message_reply_id",$id)
-				->where("message_id",$addons['reply_to_message_id'])
-				->update($this->message_table_name);
+			$this->db->set("message_reply_id",$id);
+			if(is_array($addons['reply_to_message_id']))
+				$this->db->where_in("message_id",$addons['reply_to_message_id'])
+			else
+				$this->db->where("message_id",$addons['reply_to_message_id'])
+			$this->db->update($this->message_table_name);
+			
 			$props['reply_to_message_id']=$addons['reply_to_message_id'];
 		}
 

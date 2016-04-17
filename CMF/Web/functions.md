@@ -50,4 +50,4 @@ use message_parent_id field to connect messages, and the first message is called
 
 1. user who has verified a customer 2 customer message
 2. user who has sent a message on behalf of a department for department 2 customer messages
-3. message_id of which this message is a forward 
+3. message_id of a message that this message is a forward (used just for u2u messages) (Just for indicating a difference, so we can show it in the list of messages)

@@ -1,8 +1,10 @@
 <?php
 class Message_manager_model extends CI_Model
-{
-	private $message_user_table_name="message_user";
+{	
 	private $message_table_name="message";
+	private $message_user_table_name="message_user";	
+	private $message_parent_properties_table_name="message_parent_properties";
+	private $date_time_max="9999-12-31 23:59:59";
 
 	//don't use previously used ids (indexes), just increase and use
 	private $departments=array(
@@ -20,9 +22,9 @@ class Message_manager_model extends CI_Model
 
 	public function install()
 	{
-		$module_table=$this->db->dbprefix($this->message_table_name); 
+		$tbl_name=$this->db->dbprefix($this->message_table_name); 
 		$this->db->query(
-			"CREATE TABLE IF NOT EXISTS $module_table (
+			"CREATE TABLE IF NOT EXISTS $tbl_name (
 				`message_id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL
 				,`message_parent_id` BIGINT UNSIGNED
 				,`message_sender_type` enum('customer','department','user')
@@ -38,14 +40,23 @@ class Message_manager_model extends CI_Model
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
-		$module_table=$this->db->dbprefix($this->message_user_table_name); 
+		$tbl_name=$this->db->dbprefix($this->message_user_table_name); 
 		$this->db->query(
-			"CREATE TABLE IF NOT EXISTS $module_table (
+			"CREATE TABLE IF NOT EXISTS $tbl_name (
 				`mu_user_id` INT NOT NULL
 				,`mu_departments` BIGINT DEFAULT 0
 				,`mu_verifier` TINYINT NOT NULL DEFAULT 0 
 				,`mu_supervisor` TINYINT NOT NULL DEFAULT 0
 				,PRIMARY KEY (mu_user_id)	
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+		);
+
+		$tbl_name=$this->db->dbprefix($this->message_parent_properties_table_name); 
+		$this->db->query(
+			"CREATE TABLE IF NOT EXISTS $tbl_name (
+				`mpp_message_id` BIGINT UNSIGNED  NOT NULL
+				,`mpp_last_activity` DATETIME DEFAULT NULL
+				,PRIMARY KEY (mpp_message_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
@@ -299,6 +310,7 @@ class Message_manager_model extends CI_Model
 	{
 		$this->db->select("COUNT(*) as count");
 		$this->db->from($this->message_table_name)
+			->join($this->message_parent_properties_table_name,"message_id = mpp_message_id","left")
 			->join("user as sender_user","message_sender_id = sender_user.user_id","left")
 			->join("customer as sender_customer","message_sender_id = sender_customer.customer_id","left")
 			->join("user as receiver_user","message_receiver_id = receiver_user.user_id","left")
@@ -325,6 +337,7 @@ class Message_manager_model extends CI_Model
 				, receiver_customer.customer_name as rcn
 				")
 			->from($this->message_table_name)
+			->join($this->message_parent_properties_table_name,"message_id = mpp_message_id","left")
 			->join("user as sender_user","message_sender_id = sender_user.user_id","left")
 			->join("customer as sender_customer","message_sender_id = sender_customer.customer_id","left")
 			->join("user as receiver_user","message_receiver_id = receiver_user.user_id","left")
@@ -340,6 +353,7 @@ class Message_manager_model extends CI_Model
 
 	private function set_search_where_clause(&$filters)
 	{
+		$this->db->where("( (message_id = message_parent_id) || (message_verifier_id = message_parent_id))");
 		if(isset($filters['start_date']))
 			$this->db->where("message_timestamp >=",$filters['start_date']);
 
@@ -408,7 +422,7 @@ class Message_manager_model extends CI_Model
 		if(isset($filters['order_by']))
 			$this->db->order_by($filter['order_by']);
 		else
-			$this->db->order_by("message_id DESC");
+			$this->db->order_by("mpp_last_activity DESC");
 
 		if(isset($filters['start']) && isset($filters['length']))
 			$this->db->limit((int)$filters['length'],(int)$filters['start']);
@@ -432,8 +446,7 @@ class Message_manager_model extends CI_Model
 		$mess['message_type']="c2u";
 		$mess['message_id']=$id;
 		$mess['departement_name']=$this->get_departments()[$props['department']];
-		$this->log_manager_model->info("MESSAGE_SEND",$mess);
-
+	
 		$this->load->model("customer_manager_model");
 		$this->customer_manager_model->add_customer_log($props['customer_id'],'MESSAGE_SEND',$mess);
 		$this->customer_manager_model->set_customer_event($props['customer_id'],"has_message");
@@ -482,26 +495,52 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
-	private function add_message(&$props)
+	//$addons['reply_to_message_id'] should be set for messages that are reply to another message
+	//$addons['forward_of_message_id'] should be set for messages that are forward of another message
+	private function add_message(&$props,$addons=array())
 	{
-		$should_set_parent_id=!isset($props['message_parent_id']);
-
 		$props['message_timestamp']=get_current_time();
+
+		//to show the message in the list
+		if(isset($addons['forward_of_message_id']))
+			$props['message_verifier_id']=$props['message_parent_id'];
 
 		$this->db->insert($this->message_table_name,$props);
 
 		$id=$this->db->insert_id();
+		$props['message_id']=$id;
 
-		$this->db
-			->set("message_parent_id",$id)
-			->where("message_id",$id)
-			->update($this->message_table_name);
+		if(!isset($props['message_parent_id']))
+		{
+			$this->db
+				->set("message_parent_id",$id)
+				->where("message_id",$id)
+				->update($this->message_table_name);
 
-		if(isset($props['reply_to_message_id']))
+			$parent_id=$id;
+			$props['message_parent_id']=$parent_id;
+		}	
+		else
+			$parent_id=$props['message_parent_id'];
+
+		$this->db->replace($this->message_parent_properties_table_name,array(
+			"mpp_message_id"=>$parent_id,
+			"mpp_last_activity"=>$props['message_timestamp']
+			));
+
+		if(isset($addons['reply_to_message_id']))
+		{
 			$this->db
 				->set("message_reply_id",$id)
-				->where("message_id",$props['reply_to_message_id'])
+				->where("message_id",$addons['reply_to_message_id'])
 				->update($this->message_table_name);
+			$props['reply_to_message_id']=$addons['reply_to_message_id'];
+		}
+
+		if(isset($addons['forward_of_message_id']))
+			$props['forward_of_message_id']=$addons['forward_of_message_id'];
+		
+		$this->log_manager_model->info("MESSAGE_SEND",$props);
 
 		return $id;
 	}

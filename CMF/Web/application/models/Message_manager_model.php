@@ -1,9 +1,11 @@
 <?php
 class Message_manager_model extends CI_Model
 {	
-	private $message_table_name="message";
-	private $message_user_table_name="message_user";	
-	private $message_parent_properties_table_name="message_parent_properties";
+	private $message_user_access_table_name = "message_user_access";	
+	private $message_info_table_name 		 = "message_info";
+	private $message_participant_table_name = "message_participant";
+	private $message_thread_table_name		 = "message_thread";
+	
 	private $date_time_max="9999-12-31 23:59:59";
 
 	//don't use previously used ids (indexes), just increase and use
@@ -22,25 +24,7 @@ class Message_manager_model extends CI_Model
 
 	public function install()
 	{
-		$tbl_name=$this->db->dbprefix($this->message_table_name); 
-		$this->db->query(
-			"CREATE TABLE IF NOT EXISTS $tbl_name (
-				`message_id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL
-				,`message_parent_id` BIGINT UNSIGNED
-				,`message_sender_type` enum('customer','department','user')
-				,`message_sender_id` BIGINT UNSIGNED
-				,`message_timestamp` DATETIME
-				,`message_receiver_type` enum('customer','department','user')
-				,`message_receiver_id` BIGINT UNSIGNED
-				,`message_subject` VARCHAR(200)
-				,`message_content` TEXT
-				,`message_verifier_id` BIGINT UNSIGNED DEFAULT 0
-				,`message_reply_id` BIGINT UNSIGNED DEFAULT 0
-				,PRIMARY KEY (message_id)	
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
-		);
-
-		$tbl_name=$this->db->dbprefix($this->message_user_table_name); 
+		$tbl_name=$this->db->dbprefix($this->message_user_access_table_name); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $tbl_name (
 				`mu_user_id` INT NOT NULL
@@ -51,12 +35,43 @@ class Message_manager_model extends CI_Model
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
-		$tbl_name=$this->db->dbprefix($this->message_parent_properties_table_name); 
+		$tbl_name=$this->db->dbprefix($this->message_info_table_name); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $tbl_name (
-				`mpp_message_id` BIGINT UNSIGNED  NOT NULL
-				,`mpp_last_activity` DATETIME DEFAULT NULL
-				,PRIMARY KEY (mpp_message_id)	
+				`mi_message_id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL
+				,`mi_sender_type` ENUM ('customer','department','user')
+				,`mi_sender_id` BIGINT UNSIGNED
+				,`mi_receiver_type` ENUM ('customer','department','user')
+				,`mi_receiver_id` BIGINT UNSIGNED
+				,`mi_last_activity` DATETIME
+				,`mi_subject` VARCHAR(200)
+				,`mi_complete` BIT(1) DEFAULT 0
+				,`mi_active` BIT(1) DEFAULT 1
+				,PRIMARY KEY (`mi_message_id`)	
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+		);
+
+		$tbl_name=$this->db->dbprefix($this->message_participant_table_name); 
+		$this->db->query(
+			"CREATE TABLE IF NOT EXISTS $tbl_name (
+				`mp_message_id` BIGINT UNSIGNED  NOT NULL
+				,`mp_participant_type` ENUM ('customer','department','user')
+				,`mp_participant_id` BIGINT
+				,PRIMARY KEY (`mp_message_id`)	
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+		);
+
+		$tbl_name=$this->db->dbprefix($this->message_thread_table_name);
+		$this->db->query(
+			"CREATE TABLE IF NOT EXISTS $tbl_name (
+				`mt_thread_id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL
+				,`mt_message_id` BIGINT UNSIGNED  NOT NULL
+				,`mt_sender_type` ENUM ('customer','department','user')
+				,`mt_sender_id` BIGINT
+				,`mt_content` TEXT
+				,`mt_timestamp` DATETIME
+				,`mt_verifier_id` BIGINT DEFAULT 0
+				,PRIMARY KEY (`mt_thread_id`)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
@@ -105,7 +120,7 @@ class Message_manager_model extends CI_Model
 	public function get_user_access($user_id)
 	{
 		$result=$this->db
-			->get_where($this->message_user_table_name,array("mu_user_id"=>$user_id))
+			->get_where($this->message_user_access_table_name,array("mu_user_id"=>$user_id))
 			->row_array();
 
 		$ret=array("verifier"=>0,"supervisor"=>0);
@@ -143,7 +158,7 @@ class Message_manager_model extends CI_Model
 			,"mu_departments"=>$deps
 		);
 
-		$this->db->replace($this->message_user_table_name, $rep);
+		$this->db->replace($this->message_user_access_table_name, $rep);
 
 		foreach($this->departments as $dep_index=>$dep_name)
 			$rep['department_'.$dep_name]=(int)$props['departments'][$dep_name];
@@ -430,28 +445,38 @@ class Message_manager_model extends CI_Model
 		return;
 	}
 
-	public function send_c2d_message(&$props)
+	public function add_c2d_message(&$props)
 	{
 		$mess=array(
-			"message_sender_type"		=>"customer"
-			,"message_sender_id"			=>$props['customer_id']
-			,"message_receiver_type"	=>"department"
-			,"message_receiver_id"		=>$props['department']
-			,"message_subject"			=>$props['subject']
-			,"message_content"			=>$props['content']
+			"mi_sender_type"		=>"customer"
+			,"mi_sender_id"		=>$props['customer_id']
+			,"mi_receiver_type"	=>"department"
+			,"mi_receiver_id"		=>$props['department']
+			,"mi_subject"			=>$props['subject']
 		);
 
-		$id=$this->add_message($mess);
-
+		$mid=$this->add_message($mess);
 		$mess['message_type']="c2u";
-		$mess['message_id']=$id;
+		$mess['message_id']=$mid;
 		$mess['departement_name']=$this->get_departments()[$props['department']];
-	
+		
 		$this->load->model("customer_manager_model");
-		$this->customer_manager_model->add_customer_log($props['customer_id'],'MESSAGE_SEND',$mess);
 		$this->customer_manager_model->set_customer_event($props['customer_id'],"has_message");
+		$this->customer_manager_model->add_customer_log($props['customer_id'],'MESSAGE_ADD',$mess);
 
-		return $id;
+		$thr=array(
+			'mt_message_id'	=> $mid
+			,'mt_sender_type'	=> "customer"
+			,'mt_sender_id'	=> $props['customer_id']
+			,'mt_content'		=> $props['content']
+		);
+
+		$tid=$this->add_thread($thr);
+
+		$thr['mt_thread_id']=$tid;		
+		$this->customer_manager_model->add_customer_log($props['customer_id'],'MESSAGE_THREAD_ADD',$thr);
+
+		return $mid;
 	}
 
 	public function verify_c2c_messages($verifier_id,&$v,&$nv)
@@ -495,57 +520,28 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
-	//$addons['reply_to_message_id'] should be set for messages that are reply to another message
-	//note that this field may be an array()
-	//because in some situations in addition to current message, the parent message should also be updated
-	//$addons['forward_of_message_id'] should be set for messages that are forward of another message
-	private function add_message(&$props,$addons=array())
+	private function add_message(&$props)
 	{
-		$props['message_timestamp']=get_current_time();
+		$props['mi_last_activity']=get_current_time();
 
-		//to show the message in the list
-		if(isset($addons['forward_of_message_id']))
-			$props['message_verifier_id']=$props['message_parent_id'];
-
-		$this->db->insert($this->message_table_name,$props);
-
+		$this->db->insert($this->message_info_table_name,$props);
 		$id=$this->db->insert_id();
-		$props['message_id']=$id;
-
-		if(!isset($props['message_parent_id']))
-		{
-			$this->db
-				->set("message_parent_id",$id)
-				->where("message_id",$id)
-				->update($this->message_table_name);
-
-			$parent_id=$id;
-			$props['message_parent_id']=$parent_id;
-		}	
-		else
-			$parent_id=$props['message_parent_id'];
-
-		$this->db->replace($this->message_parent_properties_table_name,array(
-			"mpp_message_id"=>$parent_id,
-			"mpp_last_activity"=>$props['message_timestamp']
-			));
-
-		if(isset($addons['reply_to_message_id']))
-		{
-			$this->db->set("message_reply_id",$id);
-			if(is_array($addons['reply_to_message_id']))
-				$this->db->where_in("message_id",$addons['reply_to_message_id'])
-			else
-				$this->db->where("message_id",$addons['reply_to_message_id'])
-			$this->db->update($this->message_table_name);
-			
-			$props['reply_to_message_id']=$addons['reply_to_message_id'];
-		}
-
-		if(isset($addons['forward_of_message_id']))
-			$props['forward_of_message_id']=$addons['forward_of_message_id'];
 		
-		$this->log_manager_model->info("MESSAGE_SEND",$props);
+		$props['mi_message_id']=$id;
+		$this->log_manager_model->info("MESSAGE_ADD",$props);
+
+		return $id;
+	}
+
+	private function add_thread(&$props)
+	{
+		$props['mt_timestamp']=get_current_time();
+
+		$this->db->insert($this->message_thread_table_name,$props);
+		$id=$this->db->insert_id();
+
+		$props['mt_thread_id']=$id;
+		$this->log_manager_model->info("MESSAGE_THREAD_ADD",$props);
 
 		return $id;
 	}

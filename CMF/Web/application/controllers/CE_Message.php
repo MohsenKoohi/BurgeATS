@@ -62,7 +62,7 @@ class CE_Message extends Burge_CMF_Controller {
 					$customer_info=$this->customer_manager_model->get_logged_customer_info();
 					$props['customer_id']=$customer_info['customer_id'];
 
-					$this->message_manager_model->send_c2d_message($props);
+					$this->message_manager_model->add_c2d_message($props);
 
 					set_message($this->lang->line("message_sent_successfully"));
 

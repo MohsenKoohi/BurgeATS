@@ -84,8 +84,9 @@ class Log_manager_model extends CI_Model
 		,"TASK_USERS_CHANGE"		=>1103
 
 		,"MESSAGE_ACCESS_SET"		=>1131
-		,"MESSAGE_SEND"				=>1132
-		,"MESSAGE_VERIFY"				=>1133
+		,"MESSAGE_ADD"					=>1132
+		,"MESSAGE_THREAD_ADD"		=>1133
+		,"MESSAGE_THREAD_VERIFY"	=>1134
 
 	);
 

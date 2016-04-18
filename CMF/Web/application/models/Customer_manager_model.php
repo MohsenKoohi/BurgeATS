@@ -47,7 +47,8 @@ class Customer_manager_model extends CI_Model
 		,"CUSTOMER_SET_EVENT"				=>1008
 		,"CUSTOMER_UNSET_EVENT"				=>1009
 
-		,"MESSAGE_SEND"						=>1132
+		,"MESSAGE_ADD"							=>1132
+		,"MESSAGE_THREAD_ADD"				=>1133
 	);
 	
 	public function __construct()

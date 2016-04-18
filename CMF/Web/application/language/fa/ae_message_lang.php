@@ -29,9 +29,9 @@ $lang['receiver_user_name_or_id']="نام یا شناسه کاربر گیرند�
 
 $lang['search_again']="جستجو";
 
-$lang['response_status']="وضعیت پاسخ";
-$lang['responded']="پاسخ داده شده";
-$lang['not_responded']="بدون پاسخ";
+$lang['status']="وضعیت";
+$lang['changing']="در حال تغییر";
+$lang['complete']="کامل";
 
 $lang['verification_status']="وضعیت تایید (مشتری به مشتری)";
 $lang['verified']="تایید شده";

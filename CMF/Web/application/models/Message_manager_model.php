@@ -324,12 +324,11 @@ class Message_manager_model extends CI_Model
 	public function get_total_messages(&$filters)
 	{
 		$this->db->select("COUNT(*) as count");
-		$this->db->from($this->message_table_name)
-			->join($this->message_parent_properties_table_name,"message_id = mpp_message_id","left")
-			->join("user as sender_user","message_sender_id = sender_user.user_id","left")
-			->join("customer as sender_customer","message_sender_id = sender_customer.customer_id","left")
-			->join("user as receiver_user","message_receiver_id = receiver_user.user_id","left")
-			->join("customer as receiver_customer","message_receiver_id = receiver_customer.customer_id","left")
+		$this->db->from($this->message_info_table_name)
+			->join("user as sender_user","mi_sender_id = sender_user.user_id","left")
+			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","left")
+			->join("user as receiver_user","mi_receiver_id = receiver_user.user_id","left")
+			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","left")
 			;
 		
 		$this->set_search_where_clause($filters);
@@ -345,18 +344,17 @@ class Message_manager_model extends CI_Model
 	{
 		$this->db
 			->select(
-				$this->message_table_name.".* 
+				$this->message_info_table_name.".* 
 				, sender_user.user_code as suc, sender_user.user_name as sun
 				, sender_customer.customer_name as scn
 				, receiver_user.user_code as ruc, receiver_user.user_name as run
 				, receiver_customer.customer_name as rcn
 				")
-			->from($this->message_table_name)
-			->join($this->message_parent_properties_table_name,"message_id = mpp_message_id","left")
-			->join("user as sender_user","message_sender_id = sender_user.user_id","left")
-			->join("customer as sender_customer","message_sender_id = sender_customer.customer_id","left")
-			->join("user as receiver_user","message_receiver_id = receiver_user.user_id","left")
-			->join("customer as receiver_customer","message_receiver_id = receiver_customer.customer_id","left")
+			->from($this->message_info_table_name)
+			->join("user as sender_user","mi_sender_id = sender_user.user_id","left")
+			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","left")
+			->join("user as receiver_user","mi_receiver_id = receiver_user.user_id","left")
+			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","left")
 			;
 
 		$this->set_search_where_clause($filters);
@@ -368,28 +366,27 @@ class Message_manager_model extends CI_Model
 
 	private function set_search_where_clause(&$filters)
 	{
-		$this->db->where("( (message_id = message_parent_id) || (message_verifier_id = message_parent_id))");
 		if(isset($filters['start_date']))
-			$this->db->where("message_timestamp >=",$filters['start_date']);
+			$this->db->where("mi_last_activity >=",$filters['start_date']);
 
 		if(isset($filters['end_date']))
-			$this->db->where("message_timestamp <=",$filters['end_date']." 23:59:59");
+			$this->db->where("mi_last_activity <=",$filters['end_date']." 23:59:59");
 
-		if(isset($filters['response_status']))
+		if(isset($filters['status']))
 		{
-			if($filters['response_status']==="yes")
-				$this->db->where("message_reply_id !=",0);
+			if($filters['status']==="complete")
+				$this->db->where("mi_complete",1);
 			else
-				$this->db->where("message_reply_id",0);
+				$this->db->where("mi_complete",0);
 		}
 
-		if(isset($filters['verification_status']))
+		if(isset($filters['verified']))
 		{
 			$this->db
 				->where("message_sender_type","customer")
 				->where("message_receiver_type","customer");
 
-			if($filters['verification_status']==="yes")
+			if($filters['verified']==="yes")
 				$this->db->where("message_verifier_id !=",0);
 			else
 				$this->db->where("message_verifier_id",0);
@@ -437,7 +434,7 @@ class Message_manager_model extends CI_Model
 		if(isset($filters['order_by']))
 			$this->db->order_by($filter['order_by']);
 		else
-			$this->db->order_by("mpp_last_activity DESC");
+			$this->db->order_by("mi_last_activity DESC");
 
 		if(isset($filters['start']) && isset($filters['length']))
 			$this->db->limit((int)$filters['length'],(int)$filters['start']);

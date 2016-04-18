@@ -126,7 +126,7 @@ class AE_Message extends Burge_CMF_Controller {
 	{
 		$fields=array(
 			"start_date","end_date"
-			,"response_status","verification_status"
+			,"status","verified"
 			,"receiver_type","sender_type"
 			,"sender_department","sender_user","sender_customer"
 			,"receiver_department","receiver_user","receiver_customer"
@@ -176,8 +176,8 @@ class AE_Message extends Burge_CMF_Controller {
 			return;
 
 		$mess=array();
-		$mess['message_sender_type']="customer";
-		$mess['message_receiver_type']="customer";
+		$mess['mi_sender_type']="customer";
+		$mess['mi_receiver_type']="customer";
 		$this->set_mess_sr_type("sender","customer",$mess,$filters);
 		$this->set_mess_sr_type("receiver","customer",$mess,$filters);
 
@@ -201,8 +201,8 @@ class AE_Message extends Burge_CMF_Controller {
 		if(($filters['sender_type']!=="department") && ($filters['receiver_type']!=="customer"))
 		{
 			$mess=array();
-			$mess['message_sender_type']="customer";
-			$mess['message_receiver_type']="department";
+			$mess['mi_sender_type']="customer";
+			$mess['mi_receiver_type']="department";
 			$this->set_mess_sr_type("sender","customer",$mess,$filters);
 			$this->set_mess_sr_type("receiver","department",$mess,$filters,$user_departments);
 			$filters['message_types'][]=$mess;
@@ -211,8 +211,8 @@ class AE_Message extends Burge_CMF_Controller {
 		if(($filters['sender_type']!=="customer") && ($filters['receiver_type']!=="department"))
 		{
 			$mess=array();
-			$mess['message_sender_type']="department";
-			$mess['message_receiver_type']="customer";
+			$mess['mi_sender_type']="department";
+			$mess['mi_receiver_type']="customer";
 			$this->set_mess_sr_type("sender","department",$mess,$filters,$user_departments);
 			$this->set_mess_sr_type("receiver","customer",$mess,$filters);
 			
@@ -236,9 +236,9 @@ class AE_Message extends Burge_CMF_Controller {
 				)
 			{
 				$mess=array();
-				$mess['message_sender_type']="user";
-				$mess['message_receiver_type']="user";
-				$mess['message_sender_id']=$user_id;
+				$mess['mi_sender_type']="user";
+				$mess['mi_receiver_type']="user";
+				$mess['mi_sender_id']=$user_id;
 				$this->set_mess_sr_type("receiver","user",$mess,$filters);
 				$filters['message_types'][]=$mess;
 			}
@@ -249,9 +249,9 @@ class AE_Message extends Burge_CMF_Controller {
 				)
 			{
 				$mess=array();
-				$mess['message_sender_type']="user";
-				$mess['message_receiver_type']="user";
-				$mess['message_receiver_id']=$user_id;
+				$mess['mi_sender_type']="user";
+				$mess['mi_receiver_type']="user";
+				$mess['mi_receiver_id']=$user_id;
 				$this->set_mess_sr_type("sender","user",$mess,$filters);
 				$filters['message_types'][]=$mess;			
 			}
@@ -259,15 +259,15 @@ class AE_Message extends Burge_CMF_Controller {
 		else
 		{
 			$mess=array();
-			$mess['message_sender_type']="user";
-			$mess['message_receiver_type']="user";
+			$mess['mi_sender_type']="user";
+			$mess['mi_receiver_type']="user";
 			if($filters['sender_type']==="me")
-				$mess['message_sender_id']=$user_id;
+				$mess['mi_sender_id']=$user_id;
 			else
 				$this->set_mess_sr_type("sender","user",$mess,$filters);
 			
 			if($filters['receiver_type']==="me")
-				$mess['message_receiver_id']=$user_id;
+				$mess['mi_receiver_id']=$user_id;
 			else
 				$this->set_mess_sr_type("receiver","user",$mess,$filters);
 
@@ -286,7 +286,7 @@ class AE_Message extends Burge_CMF_Controller {
 				if($type==="user")
 					$mess[$sr.'_user.user_code']=(int)$filters[$sr.'_'.$type];
 				else
-					$mess['message_'.$sr.'_id']=(int)$filters[$sr.'_'.$type];
+					$mess['mi_'.$sr.'_id']=(int)$filters[$sr.'_'.$type];
 
 			}
 			else
@@ -294,7 +294,7 @@ class AE_Message extends Burge_CMF_Controller {
 		}
 		else
 			if($type==="department")
-				$mess["message_".$sr."_id_in"]=$departments;
+				$mess["mi_".$sr."_id_in"]=$departments;
 
 		return;
 	}

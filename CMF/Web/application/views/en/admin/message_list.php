@@ -27,20 +27,19 @@
 				</div>
 			
 				<div class="three columns ">
-					<label>{response_status_text}</label>
-					<select class="full-width" name="response_status">
+					<label>{status_text}</label>
+					<select class="full-width" name="status">
 						<option>&nbsp;</option>
-						<option value="yes">{responded_text}</option>
-						<option value="no">{not_responded_text}</option>
+						<option value="changing">{changing_text}</option>
+						<option value="complete">{complete_text}</option>
 					</select>
 				</div>
 
 				<?	if($op_access['customers']) {?>
 					<div class="three columns">
 						<label>{verification_status_text}</label>
-						<select class="full-width" name="verification_status">
+						<select class="full-width" name="verified">
 							<option>&nbsp;</option>
-							<option value="yes">{verified_text}</option>
 							<option value="no">{not_verified_text}</option>
 						</select>
 					</div>

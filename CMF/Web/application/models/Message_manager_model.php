@@ -321,7 +321,7 @@ class Message_manager_model extends CI_Model
 		return array("messages"=>&$messages,"reply_forward"=>$reply_forward);		
 	}
 
-	public function get_total_messages(&$filters)
+	public function get_total_messages($filters,$access)
 	{
 		$this->db->select("COUNT(*) as count");
 		$this->db->from($this->message_info_table_name)
@@ -330,8 +330,52 @@ class Message_manager_model extends CI_Model
 			->join("user as receiver_user","mi_receiver_id = receiver_user.user_id","left")
 			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","left")
 			;
+
+		$ttbl=$this->db->dbprefix($this->message_thread_table_name);
+		if(!isset($filerts['verified']))
+			$this->db->join(
+				"(SELECT * from $ttbl 
+						INNER JOIN (
+							SELECT max(mt_thread_id) as max FROM $ttbl 
+								GROUP BY mt_message_id
+							) AS mtb ON mtb.max = mt_thread_id
+				) as mt"
+				,"mi_message_id = mt_message_id","INNER");
+		else
+			$this->db->join(
+				"(SELECT * from $ttbl 
+						INNER JOIN (
+							SELECT max(mt_thread_id) as max FROM $ttbl 
+								WHERE mt_sender_type = 'customer'
+								GROUP BY mt_message_id 
+							) AS mtb ON mtb.max = mt_thread_id
+				) as mt"
+				,"mi_message_id = mt_message_id","INNER");
+
+		if(isset($access['type']) && ($access['type']==='user') && isset($access['id']))
+			$this->db->join(
+				$this->message_participant_table_name." as pu"
+				,"
+					 mi_message_id = pu.mp_message_id 
+					AND pu.mp_participant_type = 'user'
+					AND pu.mp_participant_id = ".$access['id']."
+				"
+				,"LEFT"
+			);
+
+		if(isset($access['department_ids']) && $access['department_ids'])
+			$this->db->join(
+				$this->message_participant_table_name." as pd"
+				,"
+					 mi_message_id = pd.mp_message_id 
+					AND pd.mp_participant_type = 'department'
+					AND pd.mp_participant_id IN (".implode(",", $access['department_ids']).")
+				"
+				,"LEFT"
+			);
+
 		
-		$this->set_search_where_clause($filters);
+		$this->set_search_where_clause($filters,$access);
 
 		$query=$this->db->get();
 
@@ -340,31 +384,74 @@ class Message_manager_model extends CI_Model
 		return $row['count'];
 	}
 
-	public function get_messages(&$filters)
+	public function get_messages(&$filters,$access)
 	{
 		$this->db
 			->select(
-				$this->message_info_table_name.".* 
+				$this->message_info_table_name.".*,mt.*,
 				, sender_user.user_code as suc, sender_user.user_name as sun
 				, sender_customer.customer_name as scn
 				, receiver_user.user_code as ruc, receiver_user.user_name as run
 				, receiver_customer.customer_name as rcn
 				")
 			->from($this->message_info_table_name)
-			->join("user as sender_user","mi_sender_id = sender_user.user_id","left")
-			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","left")
-			->join("user as receiver_user","mi_receiver_id = receiver_user.user_id","left")
-			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","left")
+			->join("user as sender_user","mi_sender_id = sender_user.user_id","LEFT")
+			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","LEFT")
+			->join("user as receiver_user","mi_receiver_id = receiver_user.user_id","LEFT")
+			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","LEFT")
 			;
 
-		$this->set_search_where_clause($filters);
+		$ttbl=$this->db->dbprefix($this->message_thread_table_name);
+		if(!isset($filerts['verified']))
+			$this->db->join(
+				"(SELECT * from $ttbl 
+						INNER JOIN (
+							SELECT max(mt_thread_id) as max FROM $ttbl 
+								GROUP BY mt_message_id
+							) AS mtb ON mtb.max = mt_thread_id
+				) as mt"
+				,"mi_message_id = mt_message_id","INNER");
+		else
+			$this->db->join(
+				"(SELECT * from $ttbl 
+						INNER JOIN (
+							SELECT max(mt_thread_id) as max FROM $ttbl 
+								WHERE mt_sender_type = 'customer'
+								GROUP BY mt_message_id 
+							) AS mtb ON mtb.max = mt_thread_id
+				) as mt"
+				,"mi_message_id = mt_message_id","INNER");
+
+		if(isset($access['type']) && ($access['type']==='user') && isset($access['id']))
+			$this->db->join(
+				$this->message_participant_table_name." as pu"
+				,"
+					 mi_message_id = pu.mp_message_id 
+					AND pu.mp_participant_type = 'user'
+					AND pu.mp_participant_id = ".$access['id']."
+				"
+				,"LEFT"
+			);
+
+		if(isset($access['department_ids']) && $access['department_ids'])
+			$this->db->join(
+				$this->message_participant_table_name." as pd"
+				,"
+					 mi_message_id = pd.mp_message_id 
+					AND pd.mp_participant_type = 'department'
+					AND pd.mp_participant_id IN (".implode(",", $access['department_ids']).")
+				"
+				,"LEFT"
+			);
+
+		$this->set_search_where_clause($filters,$access);
 
 		$result=$this->db->get()->result_array();
 
 		return $result;
 	}
 
-	private function set_search_where_clause(&$filters)
+	private function set_search_where_clause(&$filters,$access)
 	{
 		if(isset($filters['start_date']))
 			$this->db->where("mi_last_activity >=",$filters['start_date']);
@@ -383,13 +470,13 @@ class Message_manager_model extends CI_Model
 		if(isset($filters['verified']))
 		{
 			$this->db
-				->where("message_sender_type","customer")
-				->where("message_receiver_type","customer");
+				->where("mi_sender_type","customer")
+				->where("mi_receiver_type","customer");
 
 			if($filters['verified']==="yes")
-				$this->db->where("message_verifier_id !=",0);
+				$this->db->where("mt_verifier_id !=",0);
 			else
-				$this->db->where("message_verifier_id",0);
+				$this->db->where("mt_verifier_id",0);
 		}
 
 		$mess_types="0";
@@ -427,6 +514,12 @@ class Message_manager_model extends CI_Model
 
 			$mess_types.=" || ( ".$query." ) "; 
 		}
+
+		if(isset($access['type']) && ($access['type']==='user') && isset($access['id']))
+			$mess_types.=" || (!ISNULL(pu.mp_participant_id))";
+
+		if(isset($access['department_ids']) && $access['department_ids'])
+			$mess_types.=" || (!ISNULL(pd.mp_participant_id))";		
 		//echo $mess_types."<br>";exit();
 
 		$this->db->where((" ( ".$mess_types." )"));

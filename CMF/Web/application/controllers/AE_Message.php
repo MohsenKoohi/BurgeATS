@@ -67,13 +67,28 @@ class AE_Message extends Burge_CMF_Controller {
 
 	private function set_messages()
 	{
+		$op_access=$this->data['op_access'];
+		$departments=$this->message_manager_model->get_departments();
+		$user_departments=array();
+		foreach($departments as $id => $name)
+			if($op_access['departments'][$name])
+				$user_departments[]=$id;
+		unset($departments);
+
+		$access=array(
+			"type"=>"user"
+			,"id"=>$user_id=$this->user_manager_model->get_user_info()->get_id()
+			,"op_access"=>$op_access
+			,"department_ids"=>$user_departments
+		);
+
 		$filters=array();
 
 		$this->data['raw_page_url']=get_link("admin_message");
 		
-		$this->initialize_filters($filters);
+		$this->initialize_filters($filters,$access);
 		
-		$total=$this->message_manager_model->get_total_messages($filters);
+		$total=$this->message_manager_model->get_total_messages($filters,$access);
 		if($total)
 		{
 			$per_page=10;
@@ -88,7 +103,7 @@ class AE_Message extends Burge_CMF_Controller {
 			$filters['start']=$start;
 			$filters['length']=$per_page;
 			
-			$this->data['messages']=$this->message_manager_model->get_messages($filters);
+			$this->data['messages']=$this->message_manager_model->get_messages($filters,$access);
 			$this->process_messages_for_view();
 			
 			$end=$start+sizeof($this->data['messages'])-1;
@@ -122,7 +137,7 @@ class AE_Message extends Burge_CMF_Controller {
 		//bprint_r($this->data['messages']);
 	}
 
-	private function initialize_filters(&$filters)
+	private function initialize_filters(&$filters,$access)
 	{
 		$fields=array(
 			"start_date","end_date"
@@ -138,7 +153,7 @@ class AE_Message extends Burge_CMF_Controller {
 			$filters[$field]=persian_normalize($filters[$field]);		
 		}
 		
-		$op_access=$this->data['op_access'];
+		$op_access=$access['op_access'];
 		$filters['message_types']=array();
 
 		if(($filters['sender_type']!=="department") && 
@@ -193,9 +208,9 @@ class AE_Message extends Burge_CMF_Controller {
 
 		$departments=$this->message_manager_model->get_departments();
 		$user_departments=array();
-		foreach($departments as $index => $name)
+		foreach($departments as $id => $name)
 			if($op_access['departments'][$name])
-				$user_departments[]=$index;
+				$user_departments[]=$id;
 		unset($departments);
 
 		if(($filters['sender_type']!=="department") && ($filters['receiver_type']!=="customer"))

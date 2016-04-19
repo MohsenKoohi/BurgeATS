@@ -37,9 +37,10 @@
 
 				<?	if($op_access['customers']) {?>
 					<div class="three columns">
-						<label>{verification_status_text}</label>
+						<label>{verification_status_of_last_message_text}</label>
 						<select class="full-width" name="verified">
 							<option>&nbsp;</option>
+							<option value="yes">{verified_text}</option>
 							<option value="no">{not_verified_text}</option>
 						</select>
 					</div>
@@ -332,10 +333,10 @@
 							</div>
 
 							<div class="four columns message-content">
-								<label>{content_text}</label>
+								<label>{content_of_last_message_text}</label>
 								<span>
 									<a href="<?php echo $mess_link;?>">
-										<?php //echo $mess['message_content'];?>
+										<?php echo $mess['mt_content'];?>
 									</a>
 								</span>
 							</div>
@@ -350,8 +351,8 @@
 										if(($mess['mi_sender_type'] === "customer") && ($mess['mi_receiver_type'] === "customer"))
 										{
 											echo " - ";
-											$verification_status[$mess['message_id']]=(int)$mess['message_verifier_id'];
-											if($mess['message_verifier_id'])
+											$verification_status[$mess['mi_message_id']]=(int)$mess['mt_verifier_id'];
+											if($mess['mt_verifier_id'])
 											{
 												$verify="checked";
 												echo $verified_text;
@@ -359,10 +360,10 @@
 											else
 											{
 												$verify="";
-												$not_verified_messages[]=$mess['message_id'];
+												$not_verified_messages[]=$mess['mi_message_id'];
 												echo $not_verified_text;
 											}
-											$id=$mess['message_id'];
+											$id=$mess['mi_message_id'];
 											if($op_access['verifier'])
 												echo "<br>".$verify_text.": <span>&nbsp;</span> <input type='checkbox' ".$verify." class='graphical' onchange='verifyMessage($id,$(this).prop(\"checked\"));'>";
 										}

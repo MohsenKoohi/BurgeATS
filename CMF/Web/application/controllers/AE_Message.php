@@ -13,10 +13,24 @@ class AE_Message extends Burge_CMF_Controller {
 	public function message($message_id)
 	{
 		$message_id=(int)$message_id;
-		$this->data['op_access']=$this->message_manager_model->get_operations_access();
+		$op_access=$this->message_manager_model->get_operations_access();
+
+		$this->data['op_access']=$op_access;
+		$departments=$this->message_manager_model->get_departments();
+		$user_departments=array();
+		foreach($departments as $id => $name)
+			if($op_access['departments'][$name])
+				$user_departments[]=$id;
+		unset($departments);
+
+		$access=array(
+			"type"=>"user"
+			,"id"=>$this->user_manager_model->get_user_info()->get_id()
+			,"op_access"=>$op_access
+			,"department_ids"=>$user_departments
+		);
 		
-		$user_id=$this->user_manager_model->get_user_info()->get_id();
-		$ret=$this->message_manager_model->get_message($message_id,"user",$user_id);	
+		$ret=$this->message_manager_model->get_admin_message($message_id,$access);	
 		$this->data['messages']=&$ret['messages'];
 		
 		if($this->data['messages'])
@@ -77,7 +91,7 @@ class AE_Message extends Burge_CMF_Controller {
 
 		$access=array(
 			"type"=>"user"
-			,"id"=>$user_id=$this->user_manager_model->get_user_info()->get_id()
+			,"id"=>$this->user_manager_model->get_user_info()->get_id()
 			,"op_access"=>$op_access
 			,"department_ids"=>$user_departments
 		);

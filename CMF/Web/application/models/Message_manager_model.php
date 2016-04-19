@@ -57,7 +57,7 @@ class Message_manager_model extends CI_Model
 				`mp_message_id` BIGINT UNSIGNED  NOT NULL
 				,`mp_participant_type` ENUM ('customer','department','user')
 				,`mp_participant_id` BIGINT
-				,PRIMARY KEY (`mp_message_id`)	
+				,PRIMARY KEY (`mp_message_id`,`mp_participant_type`,`mp_participant_id`)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
@@ -188,28 +188,12 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
-	//retrieves a message details to be shown in the admin or customer envs
-	//the first parameter is message_id
-	//the second parameter is "customer" or "user"
-	//the third parameter is the ID of the first type
-	public function get_message($message_id,$viewer_type,$viewer_id)
+	public function get_admin_message($message_id,$access)
 	{
-		if(($viewer_type !== "customer") && ($viewer_type!=="user"))
-			return NULL;
+		$result=$this->get_user_access_to_message($message_id,$access);
 
-		$parent_id=$this->db
-			->select("message_parent_id")
-			->get_where($this->message_table_name,array("message_id"=>$message_id))
-			->row_array()['message_parent_id'];
-
-		if(!$parent_id)
-			return NULL;
-		
-		$reply_forward=array(
-			"can_reply"=>FALSE
-			,"can_forward"=>FALSE
-		);
-
+		bprint_r($result);
+		return;
 		$messages=$this->db
 			->select(
 				$this->message_table_name.".* 
@@ -230,53 +214,10 @@ class Message_manager_model extends CI_Model
 			->get()
 			->result_array();
 
-		if($viewer_type === "customer")
-		{
-			$new_messages=[];
-
-			foreach($messages as $index=>&$mess)
-			{
-				$st=$mess['message_sender_type'];
-				$rt=$mess['message_receiver_type'];
-				$si=$mess['message_sender_id'];
-				$ri=$mess['message_receiver_id'];
-
-				if(
-					($st==="customer" && $rt==="customer") ||
-					($st==="department" && $rt==="customer") ||
-					($st==="customer" && $rt==="department")
-					)
-					if(($si==$viewer_id) || ($ri==$viewer_id))
-						$new_messages[]=&$mess;
-			}
-
-			$messages=&$new_messages;
-			if($messages)
-			{
-				$reply_forward['can_reply']=TRUE;
-				$reply_forward['can_forward']=TRUE;
-			}
-		}
-
+	
 		if($viewer_type === "user")
 		{
-			$has_access=FALSE;
-			$can_forward=FALSE;
-			$can_reply=FALSE;
-
-			$oa=$this->get_operations_access();
-
-			$deps=array();
-			$departments=$this->get_departments();
-			foreach($departments as $id => $name)
-				$deps[$id]=$oa['departments'][$name];
-
-			$mess=&$messages[0];
-			$st=$mess['message_sender_type'];
-			$rt=$mess['message_receiver_type'];
-			$si=$mess['message_sender_id'];
-			$ri=$mess['message_receiver_id'];
-
+	
 			if($st==="user" && $rt==="user")
 			{
 				if($oa['users'] || ($si==$viewer_id) || ($ri==$viewer_id))
@@ -321,6 +262,82 @@ class Message_manager_model extends CI_Model
 		return array("messages"=>&$messages,"reply_forward"=>$reply_forward);		
 	}
 
+	private function get_user_access_to_message($message_id,$access)
+	{
+		if($access['type'] !=="user")
+			return NULL;
+
+		$op_access=$access['op_access'];
+		$user_id=$access['id'];
+		$user_deps=$access['department_ids'];
+		$all_departemnts=$this->get_departments();
+
+		$results=$this->db
+			->select($this->message_info_table_name.".*")
+			->from($this->message_info_table_name)
+			->select($this->message_participant_table_name.".*")
+			->join($this->message_participant_table_name,"mi_message_id = mp_message_id","LEFT")
+			->select("user.user_name, user.user_code")
+			->join("user","mp_participant_id = user_id","LEFT")
+			->where("mi_message_id",$message_id)
+			->get()
+			->result_array();
+
+		if(!$results)
+			return NULL;
+
+		$has_access=FALSE;
+
+		$st=$results[0]['mi_sender_type'];
+		$rt=$results[0]['mi_receiver_type'];
+		$si=$results[0]['mi_sender_id'];
+		$ri=$results[0]['mi_receiver_id'];
+
+		if($st==="user" && $rt==="user")
+			if($op_access['users'] || ($si==$user_id) || ($ri==$user_id))
+				$has_access=TRUE;
+
+		if(($st==="customer")&&($rt==="customer"))
+			if($op_access['customers'])
+				$has_access=TRUE;
+
+		if(($st==="customer")&&($rt==="department"))
+			if(in_array($ri,$user_deps))
+				$has_access=TRUE;
+
+		if(($st==="department")&&($rt==="customer"))
+			if(in_array($si,$user_deps))
+				$has_access=TRUE;
+		
+		$access_users=array();
+		$access_departments=array();
+		
+		foreach($results as $row)
+			if($row['mp_participant_type']==="department")
+			{
+				$dep_id=$row['mp_participant_id'];
+				$access_departments[$dep_id]=$all_departemnts[$dep_id];
+				if(!$has_access && in_array($dep_id,$user_deps))
+					$has_access=TRUE;
+			}
+			else
+			{
+				$puser_id=$row['mp_participant_id'];
+				$access_users[$puser_id]=$row['user_code']." - ".$row['user_name'];
+				if($puser_id === $user_id)
+					$has_access=TRUE;
+			}
+
+		if(!$has_access)
+			return NULL;
+		
+		return array(
+			"has_access" 	=> TRUE
+			,"departments"	=>$access_departments
+			,"users"			=>$access_users
+		);
+	}
+
 	public function get_total_messages($filters,$access)
 	{
 		$this->db->select("COUNT(*) as count");
@@ -356,7 +373,7 @@ class Message_manager_model extends CI_Model
 			$this->db->join(
 				$this->message_participant_table_name." as pu"
 				,"
-					 mi_message_id = pu.mp_message_id 
+					mi_message_id = pu.mp_message_id 
 					AND pu.mp_participant_type = 'user'
 					AND pu.mp_participant_id = ".$access['id']."
 				"
@@ -367,14 +384,13 @@ class Message_manager_model extends CI_Model
 			$this->db->join(
 				$this->message_participant_table_name." as pd"
 				,"
-					 mi_message_id = pd.mp_message_id 
+					mi_message_id = pd.mp_message_id 
 					AND pd.mp_participant_type = 'department'
 					AND pd.mp_participant_id IN (".implode(",", $access['department_ids']).")
 				"
 				,"LEFT"
 			);
 
-		
 		$this->set_search_where_clause($filters,$access);
 
 		$query=$this->db->get();
@@ -509,7 +525,6 @@ class Message_manager_model extends CI_Model
 				}
 
 				//echo $del."<br>";
-				
 			}
 
 			$mess_types.=" || ( ".$query." ) "; 

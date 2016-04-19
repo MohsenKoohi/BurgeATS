@@ -276,7 +276,7 @@
 				if($messages_total)
 					foreach($messages as $mess)
 					{ 
-						$mess_link=get_admin_message_info_link($mess['message_id']);
+						$mess_link=get_admin_message_info_link($mess['mi_message_id']);
 			?>
 						<div class="row even-odd-bg">
 							<div class="one column counter">
@@ -286,16 +286,16 @@
 							<div class="three columns">
 								{sender_from_text}:
 								<?php 
-									$type=$mess['message_sender_type'];
+									$type=$mess['mi_sender_type'];
 									if($type === "department")
-										$sender=$department_text." ".${"department_".$departments[$mess['message_sender_id']]."_text"};
+										$sender=$department_text." ".${"department_".$departments[$mess['mi_sender_id']]."_text"};
 									if($type === "user")
 										$sender=$user_text." ".$mess['suc']." - ".$mess['sun'];
 									if($type === "customer")
 									{
-										$link=get_admin_customer_details_link($mess['message_sender_id']);
+										$link=get_admin_customer_details_link($mess['mi_sender_id']);
 										$sender="<a href='$link'>"
-											.$customer_text." ".$mess['message_sender_id']." - ".$mess['scn']
+											.$customer_text." ".$mess['mi_sender_id']." - ".$mess['scn']
 											."</a>";
 									}
 									echo "<span>".$sender."</span>";
@@ -303,22 +303,22 @@
 								<br>
 								{receiver_to_text}:
 								<?php 
-									$type=$mess['message_receiver_type'];
+									$type=$mess['mi_receiver_type'];
 									if($type === "department")
-										$receiver=$department_text." ".${"department_".$departments[$mess['message_receiver_id']]."_text"};
+										$receiver=$department_text." ".${"department_".$departments[$mess['mi_receiver_id']]."_text"};
 									if($type === "user")
 										$receiver=$user_text." ".$mess['ruc']." - ".$mess['run'];
 									if($type === "customer")
 									{
-										$link=get_admin_customer_details_link($mess['message_receiver_id']);
+										$link=get_admin_customer_details_link($mess['mi_receiver_id']);
 										$receiver="<a href='$link'>"
-											.$customer_text." ".$mess['message_receiver_id']." - ".$mess['rcn']
+											.$customer_text." ".$mess['mi_receiver_id']." - ".$mess['rcn']
 											."</a>";
 									}
 									echo "<span>".$receiver."</span>";
 								?>
 								<div class='ltr'>
-									<?php echo str_replace("-","/",$mess['message_timestamp']); ?>
+									<?php echo str_replace("-","/",$mess['mi_last_activity']); ?>
 								</div>
 							</div>
 							
@@ -326,7 +326,7 @@
 								<label>{subject_text}</label>
 								<span>
 									<a href="<?php echo $mess_link;?>">
-										<?php echo $mess['message_subject'];?>
+										<?php echo $mess['mi_subject'];?>
 									</a>
 								</span>
 							</div>
@@ -335,7 +335,7 @@
 								<label>{content_text}</label>
 								<span>
 									<a href="<?php echo $mess_link;?>">
-										<?php echo $mess['message_content'];?>
+										<?php //echo $mess['message_content'];?>
 									</a>
 								</span>
 							</div>
@@ -343,11 +343,11 @@
 								<label>{status_text}</label>
 								<span>
 									<?php
-										if($mess['message_reply_id'])
-											echo $responded_text;
+										if($mess['mi_complete'])
+											echo $complete_text;
 										else
-											echo $not_responded_text;
-										if(($mess['message_sender_type'] === "customer") && ($mess['message_receiver_type'] === "customer"))
+											echo $changing_text;
+										if(($mess['mi_sender_type'] === "customer") && ($mess['mi_receiver_type'] === "customer"))
 										{
 											echo " - ";
 											$verification_status[$mess['message_id']]=(int)$mess['message_verifier_id'];

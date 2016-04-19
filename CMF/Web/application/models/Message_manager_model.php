@@ -575,12 +575,11 @@ class Message_manager_model extends CI_Model
 		if($v)
 		{
 			$this->db
-				->set("message_verifier_id",$verifier_id)
-				->where("message_sender_type","customer")
-				->where("message_receiver_type","customer")
-				->where("message_verifier_id",0)
-				->where_in("message_id",$v)
-				->update($this->message_table_name);
+				->set("mt_verifier_id",$verifier_id)
+				->where("mt_sender_type","customer")
+				->where("mt_verifier_id",0)
+				->where_in("mt_thread_id",$v)
+				->update($this->message_thread_table_name);
 			
 			$ret['v']=$this->db->affected_rows();
 		}
@@ -588,12 +587,11 @@ class Message_manager_model extends CI_Model
 		if($nv)
 		{
 			$this->db
-				->set("message_verifier_id",0)
-				->where("message_sender_type","customer")
-				->where("message_receiver_type","customer")
-				->where("message_verifier_id !=",0)
-				->where_in("message_id",$nv)
-				->update($this->message_table_name);
+				->set("mt_verifier_id",0)
+				->where("mt_sender_type","customer")
+				->where("mt_verifier_id !=",0)
+				->where_in("mt_thread_id",$nv)
+				->update($this->message_thread_table_name);
 
 			$ret['nv']=$this->db->affected_rows();
 		}

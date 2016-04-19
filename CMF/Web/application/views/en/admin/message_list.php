@@ -351,7 +351,7 @@
 										if(($mess['mi_sender_type'] === "customer") && ($mess['mi_receiver_type'] === "customer"))
 										{
 											echo " - ";
-											$verification_status[$mess['mi_message_id']]=(int)$mess['mt_verifier_id'];
+											$verification_status[$mess['mt_thread_id']]=(int)$mess['mt_verifier_id'];
 											if($mess['mt_verifier_id'])
 											{
 												$verify="checked";
@@ -363,7 +363,7 @@
 												$not_verified_messages[]=$mess['mi_message_id'];
 												echo $not_verified_text;
 											}
-											$id=$mess['mi_message_id'];
+											$id=$mess['mt_thread_id'];
 											if($op_access['verifier'])
 												echo "<br>".$verify_text.": <span>&nbsp;</span> <input type='checkbox' ".$verify." class='graphical' onchange='verifyMessage($id,$(this).prop(\"checked\"));'>";
 										}
@@ -392,9 +392,9 @@
 
 				<script type="text/javascript">
 					var verificationStatus=JSON.parse('<?php echo json_encode($verification_status);?>');
-					function verifyMessage(mid, checked)
+					function verifyMessage(tid, checked)
 					{
-						verificationStatus[mid]=checked;
+						verificationStatus[tid]=checked;
 					}
 
 					function verifySubmit()

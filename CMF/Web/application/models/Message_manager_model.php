@@ -188,89 +188,47 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
-	public function get_admin_message($message_id,$access)
+	public function get_admin_message($message_id)
 	{
-		$result=$this->get_user_access_to_message($message_id,$access);
+		$access=$this->get_user_access_to_message($message_id);
+		if(!$access)
+			return NULL;
 
-		bprint_r($result);
-		return;
 		$messages=$this->db
 			->select(
-				$this->message_table_name.".* 
+				$this->message_info_table_name.".*,".$this->message_thread_table_name.".*,
 				, sender_user.user_code as suc, sender_user.user_name as sun
 				, sender_customer.customer_name as scn
 				, receiver_user.user_code as ruc, receiver_user.user_name as run
 				, receiver_customer.customer_name as rcn
 				, verifier_user.user_code as vuc, verifier_user.user_name as vun
 				")
-			->from($this->message_table_name)
-			->join("user as sender_user","message_sender_id = sender_user.user_id","left")
-			->join("customer as sender_customer","message_sender_id = sender_customer.customer_id","left")
-			->join("user as receiver_user","message_receiver_id = receiver_user.user_id","left")
-			->join("customer as receiver_customer","message_receiver_id = receiver_customer.customer_id","left")
-			->join("user as verifier_user","message_verifier_id = verifier_user.user_id","left")
-			->where("message_parent_id",$parent_id)
-			->order_by("message_id ASC")
+			->from($this->message_info_table_name)
+			->join($this->message_thread_table_name,"mi_message_id = mt_message_id","LEFT")
+			->join("user as sender_user","mi_sender_id = sender_user.user_id","LEFT")
+			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","LEFT")
+			->join("user as receiver_user","mi_receiver_id = receiver_user.user_id","LEFT")
+			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","LEFT")
+			->join("user as verifier_user","mt_verifier_id = verifier_user.user_id","left")
+			->where("mi_message_id",$message_id)
+			->order_by("mt_thread_id ASC")
 			->get()
 			->result_array();
 
-	
-		if($viewer_type === "user")
-		{
-	
-			if($st==="user" && $rt==="user")
-			{
-				if($oa['users'] || ($si==$viewer_id) || ($ri==$viewer_id))
-					$has_access=TRUE;
-
-				if(($si==$viewer_id) || ($ri==$viewer_id))
-				{
-					$can_reply=TRUE;
-					$can_forward=TRUE;
-				}
-			}
-
-			if(($st==="customer")&&($rt==="customer"))
-				if($oa['customers'])
-					$has_access=TRUE;
-
-			if(($st==="customer")&&($rt==="department"))
-				if($deps[$ri])
-				{
-					$has_access=TRUE;
-					$can_reply=TRUE;
-					$can_forward=TRUE;
-				}
-
-			if(($st==="department")&&($rt==="customer"))
-				if($deps[$si])
-				{
-					$has_access=TRUE;
-					$can_reply=TRUE;
-					$can_forward=TRUE;
-				}
-
-			if(!$has_access)
-				$messages=NULL;
-			else
-			{
-				$reply_forward['can_reply']=$can_reply;
-				$reply_forward['can_forward']=$can_forward;
-			}
-		}
-
-		return array("messages"=>&$messages,"reply_forward"=>$reply_forward);		
+		return array("messages"=>&$messages,"access"=>&$access);		
 	}
 
-	private function get_user_access_to_message($message_id,$access)
+	private function get_user_access_to_message($message_id)
 	{
-		if($access['type'] !=="user")
-			return NULL;
+		$op_access=$this->get_operations_access();
 
-		$op_access=$access['op_access'];
-		$user_id=$access['id'];
-		$user_deps=$access['department_ids'];
 		$all_departemnts=$this->get_departments();
+		$user_deps=array();
+		foreach($all_departemnts as $id => $name)
+			if($op_access['departments'][$name])
+				$user_deps[]=$id;
+
+		$user_id=$this->user_manager_model->get_user_info()->get_id();
 
 		$results=$this->db
 			->select($this->message_info_table_name.".*")
@@ -333,8 +291,10 @@ class Message_manager_model extends CI_Model
 		
 		return array(
 			"has_access" 	=> TRUE
-			,"departments"	=>$access_departments
-			,"users"			=>$access_users
+			,"supervisor"	=> $op_access['users']
+			,"verifier"		=> $op_access['verifier']
+			,"departments"	=> $access_departments
+			,"users"			=> $access_users
 		);
 	}
 

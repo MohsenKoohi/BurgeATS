@@ -9,7 +9,7 @@
 		<h1>{message_text} {message_id}
 			<?php 
 				if($messages) 
-					echo $comma_text." ".$messages[0]['message_subject'];
+					echo $comma_text." ".$messages[0]['mi_subject'];
 			?>
 		</h1>		
 		<?php 
@@ -45,7 +45,7 @@
 								{number_text}:
 							</div>
 							<div class="ten columns">
-								<?php echo $mess['message_id']; ?>
+								<?php echo $mess['mt_thread_id']; ?>
 							</div>
 						</div>
 
@@ -55,19 +55,19 @@
 							</div>
 							<div class="ten columns">
 								<?php 
-									$type=$mess['message_sender_type'];
+									$type=$mess['mi_sender_type'];;
 									if($type === "department")
 									{
-										$sender=$department_text." ".${"department_".$departments[$mess['message_sender_id']]."_text"};
+										$sender=$department_text." ".${"department_".$departments[$mess['mi_sender_id']]."_text"};
 										$sender.=" ( ".$user_text." ".$mess['vuc']." - ".$mess['vun']." ) ";
 									}
 									if($type === "user")
 										$sender=$user_text." ".$mess['suc']." - ".$mess['sun'];
 									if($type === "customer")
 									{
-										$link=get_admin_customer_details_link($mess['message_sender_id']);
+										$link=get_admin_customer_details_link($mess['mi_sender_id']);
 										$sender="<a href='$link'>"
-											.$customer_text." ".$mess['message_sender_id']." - ".$mess['scn']
+											.$customer_text." ".$mess['mi_sender_id']." - ".$mess['scn']
 											."</a>";
 									}
 									echo $sender;
@@ -81,16 +81,16 @@
 							</div>
 							<div class="ten columns">
 								<?php 
-									$type=$mess['message_receiver_type'];
+									$type=$mess['mi_receiver_type'];
 									if($type === "department")
-										$receiver=$department_text." ".${"department_".$departments[$mess['message_receiver_id']]."_text"};
+										$receiver=$department_text." ".${"department_".$departments[$mess['mi_receiver_id']]."_text"};
 									if($type === "user")
 										$receiver=$user_text." ".$mess['ruc']." - ".$mess['run'];
 									if($type === "customer")
 									{
-										$link=get_admin_customer_details_link($mess['message_receiver_id']);
+										$link=get_admin_customer_details_link($mess['mi_receiver_id']);
 										$receiver="<a href='$link'>"
-											.$customer_text." ".$mess['message_receiver_id']." - ".$mess['rcn']
+											.$customer_text." ".$mess['mi_receiver_id']." - ".$mess['rcn']
 											."</a>";
 									}
 									echo $receiver;
@@ -103,7 +103,7 @@
 							</div>
 							<div class="ten columns">
 								<span style="direction:ltr;display:inline-block">
-									<?php echo str_replace("-","/",$mess['message_timestamp']); ?>
+									<?php echo str_replace("-","/",$mess['mt_timestamp']); ?>
 								</span>
 							</div>
 						</div>
@@ -112,7 +112,7 @@
 								{subject_text}:
 							</div>
 							<div class="ten columns">
-								<?php echo $mess['message_subject'];?>
+								<?php echo $mess['mi_subject'];?>
 							</div>
 						</div>
 						<div class="row even-odd-bg dont-magnify">
@@ -120,14 +120,14 @@
 								{content_text}:
 							</div>
 							<?php
-								if(preg_match("/[ابپتثجچحخدذرز]/",$mess['message_content']))
+								if(preg_match("/[ابپتثجچحخدذرز]/",$mess['mt_content']))
 									$lang="fa";
 								else
 									$lang="en";
 							?>
 							<div class="ten columns lang-<?php echo $lang;?>">
 								<span>
-									<?php echo nl2br($mess['message_content']);?>
+									<?php echo nl2br($mess['mt_content']);?>
 								</span>
 							</div>
 						</div>
@@ -136,16 +136,11 @@
 								{status_text}:
 							</div>
 							<div class="ten columns">
-								<?php
-									if($mess['message_reply_id'])
-										echo $responded_text;
-									else
-										echo $not_responded_text;
-									if(($mess['message_sender_type'] === "customer") && ($mess['message_receiver_type'] === "customer"))
+								<?php									
+									if(($mess['mi_sender_type'] === "customer") && ($mess['mi_receiver_type'] === "customer"))
 									{
-										echo " - ";
-										$verification_status[$mess['message_id']]=(int)$mess['message_verifier_id'];
-										if($mess['message_verifier_id'])
+										$verification_status[$mess['mt_thread_id']]=(int)$mess['mt_verifier_id'];
+										if($mess['mt_verifier_id'])
 										{
 											$verify="checked";
 											echo $verified_text." ( ".$user_text." ".$mess['vuc']." - ".$mess['vun']." )";
@@ -153,11 +148,10 @@
 										else
 										{
 											$verify="";
-											$not_verified_messages[]=$mess['message_id'];
 											echo $not_verified_text;
 										}
-										$id=$mess['message_id'];
-										if($op_access['verifier'])
+										$id=$mess['mi_message_id'];
+										if($access['verifier'])
 											echo " - ".$verify_text.": <span>&nbsp;</span> <input type='checkbox' ".$verify." class='graphical' onchange='verifyMessage($id,$(this).prop(\"checked\"));'>";
 									}
 								?>
@@ -171,7 +165,7 @@
 			?>
 
 			<?php 
-				if($op_access['verifier'] && $verification_status) {
+				if($access['verifier'] && $verification_status) {
 					echo form_open(get_link("admin_message"),array("onsubmit"=>"return verifySubmit();")); 
 			?>
 					<br><br>

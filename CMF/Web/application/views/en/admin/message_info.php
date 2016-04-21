@@ -28,7 +28,90 @@
 					</div>
 					<br><br>
 				<?php } ?>		
-				
+			
+				<div class="row">
+					<div class="two columns">
+						{sender_from_text}:
+					</div>
+					<div class="ten columns">
+						<?php 
+							$type=$messages[0]['mi_sender_type'];;
+							if($type === "department")
+							{
+								$sender=$department_text." ".${"department_".$departments[$messages[0]['mi_sender_id']]."_text"};
+								$sender.=" ( ".$user_text." ".$messages[0]['vuc']." - ".$messages[0]['vun']." ) ";
+							}
+							if($type === "user")
+								$sender=$user_text." ".$messages[0]['suc']." - ".$messages[0]['sun'];
+							if($type === "customer")
+							{
+								$link=get_admin_customer_details_link($messages[0]['mi_sender_id']);
+								$sender="<a href='$link'>"
+									.$customer_text." ".$messages[0]['mi_sender_id']." - ".$messages[0]['scn']
+									."</a>";
+							}
+							echo $sender;
+						?>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="two columns">
+						{receiver_to_text}:
+					</div>
+					<div class="ten columns">
+						<?php 
+							$type=$messages[0]['mi_receiver_type'];
+							if($type === "department")
+								$receiver=$department_text." ".${"department_".$departments[$messages[0]['mi_receiver_id']]."_text"};
+							if($type === "user")
+								$receiver=$user_text." ".$messages[0]['ruc']." - ".$messages[0]['run'];
+							if($type === "customer")
+							{
+								$link=get_admin_customer_details_link($messages[0]['mi_receiver_id']);
+								$receiver="<a href='$link'>"
+									.$customer_text." ".$messages[0]['mi_receiver_id']." - ".$messages[0]['rcn']
+									."</a>";
+							}
+							echo $receiver;
+						?>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="two columns">
+						{subject_text}:
+					</div>
+					<div class="ten columns">
+						<?php echo $messages[0]['mi_subject'];?>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="two columns">
+						{last_activity_text}:
+					</div>
+					<div class="ten columns">
+						<span style="direction:ltr;display:inline-block">
+							<?php echo str_replace("-","/",$messages[0]['mi_last_activity']); ?>
+						</span>
+					</div>
+				</div>
+						
+				<div class="row">
+					<div class="two columns">
+						{status_text}:
+					</div>
+					<div class="ten columns">
+						<?php									
+							if($messages[0]['mi_complete'])
+								echo $complete_text;
+							else
+								echo $changing_text;
+						?>
+					</div>
+				</div>			
+					
 			<?php 
 				$i=1;
 				$verification_status=array();	

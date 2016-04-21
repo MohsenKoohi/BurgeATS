@@ -194,28 +194,45 @@ class Message_manager_model extends CI_Model
 		if(!$access)
 			return NULL;
 
-		$messages=$this->db
+		$message=$this->db
 			->select(
-				$this->message_info_table_name.".*,".$this->message_thread_table_name.".*,
+				$this->message_info_table_name.".*,
 				, sender_user.user_code as suc, sender_user.user_name as sun
 				, sender_customer.customer_name as scn
 				, receiver_user.user_code as ruc, receiver_user.user_name as run
 				, receiver_customer.customer_name as rcn
-				, verifier_user.user_code as vuc, verifier_user.user_name as vun
 				")
 			->from($this->message_info_table_name)
-			->join($this->message_thread_table_name,"mi_message_id = mt_message_id","LEFT")
 			->join("user as sender_user","mi_sender_id = sender_user.user_id","LEFT")
 			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","LEFT")
 			->join("user as receiver_user","mi_receiver_id = receiver_user.user_id","LEFT")
 			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","LEFT")
+			->where("mi_message_id",$message_id)
+			->get()
+			->row_array();
+
+		$threads=$this->db
+			->select(
+				$this->message_info_table_name.".*,".$this->message_thread_table_name.".*,
+				, verifier_user.user_code as vuc, verifier_user.user_name as vun
+				, sender_user.user_code as suc, sender_user.user_name as sun
+				, sender_customer.customer_name as scn
+				")
+			->from($this->message_info_table_name)
+			->join($this->message_thread_table_name,"mi_message_id = mt_message_id","LEFT")
 			->join("user as verifier_user","mt_verifier_id = verifier_user.user_id","left")
+			->join("user as sender_user","mt_sender_id = sender_user.user_id","LEFT")
+			->join("customer as sender_customer","mt_sender_id = sender_customer.customer_id","LEFT")
 			->where("mi_message_id",$message_id)
 			->order_by("mt_thread_id ASC")
 			->get()
 			->result_array();
 
-		return array("messages"=>&$messages,"access"=>&$access);		
+		return array(
+			"message"=>&$message
+			,"threads"=>&$threads
+			,"access"=>&$access
+		);		
 	}
 
 	private function get_user_access_to_message($message_id)

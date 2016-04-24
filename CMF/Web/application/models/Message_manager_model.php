@@ -229,9 +229,9 @@ class Message_manager_model extends CI_Model
 			->result_array();
 
 		return array(
-			"message"=>&$message
-			,"threads"=>&$threads
-			,"access"=>&$access
+			"message"	=> &$message
+			,"threads"	=> &$threads
+			,"access"	=> &$access
 		);		
 	}
 
@@ -307,11 +307,11 @@ class Message_manager_model extends CI_Model
 			return NULL;
 		
 		return array(
-			"has_access" 	=> TRUE
-			,"supervisor"	=> $op_access['users']
-			,"verifier"		=> $op_access['verifier']
-			,"departments"	=> $access_departments
-			,"users"			=> $access_users
+			"has_access" 			=> TRUE
+			,"supervisor"			=> $op_access['users']
+			,"verifier"				=> $op_access['verifier']
+			,"added_departments"	=> $access_departments
+			,"added_users"			=> $access_users
 		);
 	}
 

@@ -295,7 +295,7 @@
 									if($type === "customer")
 									{
 										$link=get_admin_customer_details_link($mess['mi_sender_id']);
-										$sender="<a href='$link'>"
+										$sender="<a target='_blank' href='$link'>"
 											.$customer_text." ".$mess['mi_sender_id']." - ".$mess['scn']
 											."</a>";
 									}
@@ -312,7 +312,7 @@
 									if($type === "customer")
 									{
 										$link=get_admin_customer_details_link($mess['mi_receiver_id']);
-										$receiver="<a href='$link'>"
+										$receiver="<a target='_blank' href='$link'>"
 											.$customer_text." ".$mess['mi_receiver_id']." - ".$mess['rcn']
 											."</a>";
 									}
@@ -326,7 +326,7 @@
 							<div class="two columns">
 								<label>{subject_text}</label>
 								<span>
-									<a href="<?php echo $mess_link;?>">
+									<a target="_blank" href="<?php echo $mess_link;?>">
 										<?php echo $mess['mi_subject'];?>
 									</a>
 								</span>
@@ -335,7 +335,7 @@
 							<div class="four columns message-content">
 								<label>{content_of_last_message_text}</label>
 								<span>
-									<a href="<?php echo $mess_link;?>">
+									<a target="_blank" href="<?php echo $mess_link;?>">
 										<?php echo $mess['mt_content'];?>
 									</a>
 								</span>

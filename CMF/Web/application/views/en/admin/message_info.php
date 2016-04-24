@@ -5,6 +5,13 @@
 			{
 				margin-bottom:-8px;
 			}
+
+			.even-odd-bg.row div.content
+			{
+				padding:10px;
+				border:1px solid #ddd;
+				border-radius: 10px;
+			}
 		</style>
 		<h1>{message_text} {message_id}
 			<?php 
@@ -113,7 +120,7 @@
 						</div>
 					</div>
 				</div>			
-					
+				<div></div>
 				<?php 
 					$i=1;
 					$verification_status=array();	
@@ -121,128 +128,74 @@
 					{ 
 				?>
 					<div class="row even-odd-bg dont-magnify">
-						<div class="one columns counter">
-							#<?php echo $i++;?>
+						<div class="one columns counter" title="<?php echo $thread['mt_thread_id']; ?>">
+							# <?php echo $i++;?>
+						</div>								
+						<div class="three columns">
+							<?php 
+								$type=$thread['mt_sender_type'];;
+								if($type === "department")
+								{
+									$sender=$department_text." ".${"department_".$departments[$thread['mt_sender_id']]."_text"};
+									$sender.=" ( ".$user_text." ".$thread['vuc']." - ".$thread['vun']." ) ";
+								}
+								if($type === "user")
+									$sender=$user_text." ".$thread['suc']." - ".$thread['sun'];
+								if($type === "customer")
+								{
+									$link=get_admin_customer_details_link($thread['mt_sender_id']);
+									$sender="<a target='_blank' href='$link'>"
+										.$customer_text." ".$thread['mt_sender_id']." - ".$thread['scn']
+										."</a>";
+								}
+								echo $sender;
+							?>
 						</div>
-						<div class="eleven columns">
-							<div class="row even-odd-bg dont-magnify">
-								<div class="two columns">
-									{number_text}:
-								</div>
-								<div class="ten columns">
-									<?php echo $mess['mt_thread_id']; ?>
-								</div>
-							</div>
 
-							<div class="row even-odd-bg dont-magnify">
-								<div class="two columns">
-									{sender_from_text}:
-								</div>
-								<div class="ten columns">
-									<?php 
-										$type=$mess['mi_sender_type'];;
-										if($type === "department")
-										{
-											$sender=$department_text." ".${"department_".$departments[$mess['mi_sender_id']]."_text"};
-											$sender.=" ( ".$user_text." ".$mess['vuc']." - ".$mess['vun']." ) ";
-										}
-										if($type === "user")
-											$sender=$user_text." ".$mess['suc']." - ".$mess['sun'];
-										if($type === "customer")
-										{
-											$link=get_admin_customer_details_link($mess['mi_sender_id']);
-											$sender="<a href='$link'>"
-												.$customer_text." ".$mess['mi_sender_id']." - ".$mess['scn']
-												."</a>";
-										}
-										echo $sender;
-									?>
-								</div>
-							</div>
-
-							<div class="row even-odd-bg dont-magnify">
-								<div class="two columns">
-									{receiver_to_text}:
-								</div>
-								<div class="ten columns">
-									<?php 
-										$type=$mess['mi_receiver_type'];
-										if($type === "department")
-											$receiver=$department_text." ".${"department_".$departments[$mess['mi_receiver_id']]."_text"};
-										if($type === "user")
-											$receiver=$user_text." ".$mess['ruc']." - ".$mess['run'];
-										if($type === "customer")
-										{
-											$link=get_admin_customer_details_link($mess['mi_receiver_id']);
-											$receiver="<a href='$link'>"
-												.$customer_text." ".$mess['mi_receiver_id']." - ".$mess['rcn']
-												."</a>";
-										}
-										echo $receiver;
-									?>
-								</div>
-							</div>
-							<div class="row even-odd-bg dont-magnify">
-								<div class="two columns">
-									{date_text}:
-								</div>
-								<div class="ten columns">
-									<span style="direction:ltr;display:inline-block">
-										<?php echo str_replace("-","/",$mess['mt_timestamp']); ?>
-									</span>
-								</div>
-							</div>
-							<div class="row even-odd-bg dont-magnify">
-								<div class="two columns">
-									{subject_text}:
-								</div>
-								<div class="ten columns">
-									<?php echo $mess['mi_subject'];?>
-								</div>
-							</div>
-							<div class="row even-odd-bg dont-magnify">
-								<div class="two columns">
-									{content_text}:
-								</div>
-								<?php
-									if(preg_match("/[ابپتثجچحخدذرز]/",$mess['mt_content']))
-										$lang="fa";
-									else
-										$lang="en";
-								?>
-								<div class="ten columns lang-<?php echo $lang;?>">
-									<span>
-										<?php echo nl2br($mess['mt_content']);?>
-									</span>
-								</div>
-							</div>
-							<div class="row even-odd-bg dont-magnify">
-								<div class="two columns">
-									{status_text}:
-								</div>
-								<div class="ten columns">
-									<?php									
-										if(($mess['mi_sender_type'] === "customer") && ($mess['mi_receiver_type'] === "customer"))
-										{
-											$verification_status[$mess['mt_thread_id']]=(int)$mess['mt_verifier_id'];
-											if($mess['mt_verifier_id'])
-											{
-												$verify="checked";
-												echo $verified_text." ( ".$user_text." ".$mess['vuc']." - ".$mess['vun']." )";
-											}
-											else
-											{
-												$verify="";
-												echo $not_verified_text;
-											}
-											$id=$mess['mi_message_id'];
-											if($access['verifier'])
-												echo " - ".$verify_text.": <span>&nbsp;</span> <input type='checkbox' ".$verify." class='graphical' onchange='verifyMessage($id,$(this).prop(\"checked\"));'>";
-										}
-									?>
-								</div>
-							</div>			
+						<div class="two columns">
+							<span style="direction:ltr;display:inline-block">
+								<?php echo str_replace("-","/",$thread['mt_timestamp']); ?>
+							</span>
 						</div>
+
+						<?php									
+							if(($message_info['mi_sender_type'] === "customer") 
+								&& ($message_info['mi_receiver_type'] === "customer")
+								&& ($thread['mt_sender_type'] === "customer")
+								)
+							{
+								echo '<div class="four columns">';
+								
+								$verification_status[$thread['mt_thread_id']]=(int)$thread['mt_verifier_id'];
+								if($thread['mt_verifier_id'])
+								{
+									$verify="checked";
+									echo $verified_text." ( ".$user_text." ".$thread['vuc']." - ".$thread['vun']." )";
+								}
+								else
+								{
+									$verify="";
+									echo $not_verified_text;
+								}
+								$id=$thread['mt_thread_id'];
+								if($access['verifier'])
+									echo " - ".$verify_text.": <span>&nbsp;</span> <input type='checkbox' ".$verify." class='graphical' onchange='verifyMessage($id,$(this).prop(\"checked\"));'>";
+								
+								echo '</div>';
+							}
+						?>
+						
+						<?php
+							if(preg_match("/[ابپتثجچحخدذرز]/",$thread['mt_content']))
+								$lang="fa";
+							else
+								$lang="en";
+						?>
+						<div class="content eleven columns lang-<?php echo $lang;?>">
+							<span>
+								<?php echo nl2br($thread['mt_content']);?>
+							</span>
+						</div>			
 					</div>
 				<?php 
 						}
@@ -255,7 +208,7 @@
 					<br><br>
 					<input type="hidden" name="post_type" value="verify_c2c_messages"/>
 					<input type="hidden" name="verified_messages" value=""/>
-					<input type="hidden" name="redirect_link" value=""/>
+					<input type="hidden" name="redirect_link" value="<?php echo get_admin_message_info_link($message_id);?>"/>
 					<input type="hidden" name="not_verified_messages" value=""/>
 					<div class="row">
 							<div class="nine columns">&nbsp;</div>
@@ -265,9 +218,9 @@
 
 				<script type="text/javascript">
 					var verificationStatus=JSON.parse('<?php echo json_encode($verification_status);?>');
-					function verifyMessage(mid, checked)
+					function verifyMessage(tid, checked)
 					{
-						verificationStatus[mid]=checked;
+						verificationStatus[tid]=checked;
 					}
 
 					function verifySubmit()
@@ -289,87 +242,86 @@
 
 						return true;
 					}
+					
 				</script>
 			<?php
 				}
 			?>
-		</div>
-				
-		<div class="separated">
-			<?php echo form_open(get_admin_contact_us_message_details_link($message_id),array()); ?>
-			<input type="hidden" name="post_type" value="send_response" />			
-				<h2>{response_text}</h2>						
-				<div class="row even-odd-bg">
-					<div class="three columns">
-						<span>{language_text}</span>
-					</div>
-					<div class="three columns">
-						<select name="language" class="full-width" onchange="langChanged(this);">
-							<?php
-								foreach($all_langs as $key => $val)
-								{
-									$sel="";
-									if($key===$selected_lang)
-										$sel="selected";
+			</div>
+			<?php if(0){ ?>
+			<div class="separated">
+				<?php echo form_open(get_admin_contact_us_message_details_link($message_id),array()); ?>
+				<input type="hidden" name="post_type" value="send_response" />			
+					<h2>{response_text}</h2>						
+					<div class="row even-odd-bg">
+						<div class="three columns">
+							<span>{language_text}</span>
+						</div>
+						<div class="three columns">
+							<select name="language" class="full-width" onchange="langChanged(this);">
+								<?php
+									foreach($all_langs as $key => $val)
+									{
+										$sel="";
+										if($key===$selected_lang)
+											$sel="selected";
 
-									echo "<option $sel value='$key'>$val</option>";
-								}
-							?>
-						</select>
-						<script type="text/javascript">
-							var langSelectVal;
+										echo "<option $sel value='$key'>$val</option>";
+									}
+								?>
+							</select>
+							<script type="text/javascript">
+								var langSelectVal;
 
-							function langChanged(el)
-							{
-								if(langSelectVal)
+								function langChanged(el)
 								{
+									if(langSelectVal)
+									{
+										$("#subject-in").toggleClass(langSelectVal);
+										$("#content-ta").toggleClass(langSelectVal);
+									}
+
+									langSelectVal="lang-"+""+$(el).val();
+									
 									$("#subject-in").toggleClass(langSelectVal);
 									$("#content-ta").toggleClass(langSelectVal);
 								}
 
-								langSelectVal="lang-"+""+$(el).val();
-								
-								$("#subject-in").toggleClass(langSelectVal);
-								$("#content-ta").toggleClass(langSelectVal);
-							}
-
-							$(function()
-							{
-								$("select[name='language']").trigger("change");
-							});
-						</script>
+								$(function()
+								{
+									$("select[name='language']").trigger("change");
+								});
+							</script>
+						</div>
 					</div>
-				</div>
 
-				<div class="row even-odd-bg">
-					<div class="three columns">
-						<span>{subject_text}</span>
+					<div class="row even-odd-bg">
+						<div class="three columns">
+							<span>{subject_text}</span>
+						</div>
+						<div class="nine columns">
+							<input id="subject-in" name="subject"  class="full-width" 
+								value="<?php echo $info['cu_message_subject'];?>"
+							/>
+						</div>
 					</div>
-					<div class="nine columns">
-						<input id="subject-in" name="subject"  class="full-width" 
-							value="<?php echo $info['cu_message_subject'];?>"
-						/>
-					</div>
-				</div>
 
-				<div class="row even-odd-bg">
-					<div class="three columns">
-						<span>{response_content_text}</span>
+					<div class="row even-odd-bg">
+						<div class="three columns">
+							<span>{response_content_text}</span>
+						</div>
+						<div class="nine columns">
+							<textarea id="content-ta" name="content" class="full-width" rows="5"></textarea>
+						</div>
 					</div>
-					<div class="nine columns">
-						<textarea id="content-ta" name="content" class="full-width" rows="5"></textarea>
+					<br><br>
+					<div class="row">
+						<div class="four columns">&nbsp;</div>
+						<input type="submit" class=" button-primary four columns" value="{send_text}"/>
 					</div>
-				</div>
-				<br><br>
-				<div class="row">
-					<div class="four columns">&nbsp;</div>
-					<input type="submit" class=" button-primary four columns" value="{send_text}"/>
-				</div>
-			</form>
-		</div>
-
-
+				</form>
 			</div>
+			<?php } ?>
 		<?php 
 			}
 		?>

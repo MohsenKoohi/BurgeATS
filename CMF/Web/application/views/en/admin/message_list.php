@@ -12,6 +12,18 @@
 				overflow:hidden;
 				max-height: 110px;
 			}
+
+			.view-img
+			{
+				max-width:60px;
+				transition: max-width .5s;
+			}
+
+			.view-img:hover
+			{
+				max-width:70px;
+				transition: max-width .5s;
+			}
 		</style>
 		<h1>{messages_text}</h1>
 		<div class="container separated">
@@ -332,7 +344,7 @@
 								</span>
 							</div>
 
-							<div class="four columns message-content">
+							<div class="three columns message-content">
 								<label>{content_of_last_message_text}</label>
 								<span>
 									<a target="_blank" href="<?php echo $mess_link;?>">
@@ -369,6 +381,14 @@
 										}
 									?>
 								</span>
+							</div>
+
+							<div class="one column">
+								
+								<a target="_blank" href="<?php echo $mess_link;?>">
+									<img src="{images_url}/details.png" class="view-img" title="{view_details_text}";/>
+								</a>
+							
 							</div>
 						</div>
 			<?php 

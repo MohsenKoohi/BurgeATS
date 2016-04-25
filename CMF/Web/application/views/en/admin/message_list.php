@@ -17,6 +17,7 @@
 			{
 				max-width:60px;
 				transition: max-width .5s;
+				text-align: left;
 			}
 
 			.view-img:hover
@@ -338,20 +339,17 @@
 							<div class="two columns">
 								<label>{subject_text}</label>
 								<span>
-									<a target="_blank" href="<?php echo $mess_link;?>">
-										<?php echo $mess['mi_subject'];?>
-									</a>
+									<?php echo $mess['mi_subject'];?>
 								</span>
 							</div>
 
 							<div class="three columns message-content">
 								<label>{content_of_last_message_text}</label>
 								<span>
-									<a target="_blank" href="<?php echo $mess_link;?>">
-										<?php echo $mess['mt_content'];?>
-									</a>
+									<?php echo $mess['mt_content'];?>
 								</span>
 							</div>
+
 							<div class="two columns">
 								<label>{status_text}</label>
 								<span>
@@ -386,7 +384,7 @@
 							<div class="one column">
 								
 								<a target="_blank" href="<?php echo $mess_link;?>">
-									<img src="{images_url}/details.png" class="view-img" title="{view_details_text}";/>
+									<img src="{images_url}/details.png" class="view-img anti-float" title="{view_details_text}";/>
 								</a>
 							
 							</div>

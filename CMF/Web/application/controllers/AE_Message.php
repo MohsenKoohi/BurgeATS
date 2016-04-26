@@ -16,16 +16,23 @@ class AE_Message extends Burge_CMF_Controller {
 				
 		$ret=$this->message_manager_model->get_admin_message($message_id);	
 		
-		$this->data['access']=$ret['access'];
-		$this->data['message_info']=$ret['message'];
-		$this->data['threads']=$ret['threads'];
+		if($ret)
+		{
+			$this->data['access']=$ret['access'];
+			$this->data['message_info']=$ret['message'];
+			$this->data['threads']=$ret['threads'];
 
-		if($this->data['message_info'])
-			$message_id=$this->data['message_info']['mi_message_id'];
+			if($this->data['message_info'])
+				$message_id=$this->data['message_info']['mi_message_id'];
+			
+			$this->data['departments']=$this->message_manager_model->get_departments();
+		}
+		else
+		{
+			$this->data['message_info']=NULL;	
+		}
+
 		$this->data['message_id']=$message_id;
-		
-		$this->data['departments']=$this->message_manager_model->get_departments();
-
 		$this->data['message']=get_message();
 		$this->data['lang_pages']=get_lang_pages(get_admin_message_info_link($message_id,TRUE));
 		$this->data['header_title']=$this->lang->line("message")." ".$message_id;

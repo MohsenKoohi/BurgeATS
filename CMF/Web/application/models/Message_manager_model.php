@@ -15,6 +15,8 @@ class Message_manager_model extends CI_Model
 		,3=>"management"
 		);
 
+	private $c2c_response_department=1;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -110,6 +112,11 @@ class Message_manager_model extends CI_Model
 	public function get_sidebar_text()
 	{
 		//return " (12) ";
+	}
+
+	public function get_c2c_response_department()
+	{
+		return $this->c2c_response_department;
 	}
 
 	public function get_departments()

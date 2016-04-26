@@ -12,6 +12,12 @@
 				border:1px solid #ddd;
 				border-radius: 10px;
 			}
+
+			.response-type
+			{
+				font-size: 1.3em;
+				margin-bottom: 1.2em;
+			}
 		</style>
 		<h1>{message_text} {message_id}
 			<?php 
@@ -248,11 +254,19 @@
 				}
 			?>
 			</div>
-			<?php if(0){ ?>
+			
 			<div class="separated">
 				<?php echo form_open(get_admin_contact_us_message_details_link($message_id),array()); ?>
 				<input type="hidden" name="post_type" value="send_response" />			
-					<h2>{response_text}</h2>						
+					<div class="row response-type">
+						<div class="three columns">
+							<input type="radio" name="response_type" checked value="comment"/> {comment_text}
+						</div>
+						<div class="three columns">
+							<input type="radio" name="response_type" value="reply"/> {response_text}
+						</div>
+					</div>	
+					<br>					
 					<div class="row even-odd-bg">
 						<div class="three columns">
 							<span>{language_text}</span>
@@ -297,17 +311,6 @@
 
 					<div class="row even-odd-bg">
 						<div class="three columns">
-							<span>{subject_text}</span>
-						</div>
-						<div class="nine columns">
-							<input id="subject-in" name="subject"  class="full-width" 
-								value="<?php echo $info['cu_message_subject'];?>"
-							/>
-						</div>
-					</div>
-
-					<div class="row even-odd-bg">
-						<div class="three columns">
 							<span>{response_content_text}</span>
 						</div>
 						<div class="nine columns">
@@ -321,7 +324,7 @@
 					</div>
 				</form>
 			</div>
-			<?php } ?>
+			
 		<?php 
 			}
 		?>

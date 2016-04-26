@@ -61,10 +61,11 @@ $lang['content_of_last_message']="آخرین متن";
 $lang['time_of_last_activity']="زمان آخرین فعالیت";
 $lang['verification_status_of_last_message']="وضعیت تایید آخرین پیام (مشتری به مشتری)";
 $lang['view_details']="مشاهده جزئیات";
-$lang['']="";
-$lang['']="";
-$lang['']="";
-$lang['']="";
+
+$lang['response']="پاسخ";
+$lang['language']="زبان";
+$lang['response_content']="پاسخ";
+$lang['comment']="توضیح";
 $lang['']="";
 $lang['']="";
 $lang['']="";

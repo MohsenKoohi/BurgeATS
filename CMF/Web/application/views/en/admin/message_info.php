@@ -265,12 +265,6 @@
 						<div class="three columns">
 							<input type="radio" name="response_type" value="reply"/> {response_text}
 						</div>
-					</div>	
-					<br>					
-					<div class="row even-odd-bg">
-						<div class="three columns">
-							<span>{language_text}</span>
-						</div>
 						<div class="three columns">
 							<select name="language" class="full-width" onchange="langChanged(this);">
 								<?php
@@ -283,37 +277,33 @@
 										echo "<option $sel value='$key'>$val</option>";
 									}
 								?>
-							</select>
-							<script type="text/javascript">
-								var langSelectVal;
+								<script type="text/javascript">
+									var langSelectVal;
 
-								function langChanged(el)
-								{
-									if(langSelectVal)
+									function langChanged(el)
 									{
+										if(langSelectVal)
+										{
+											$("#subject-in").toggleClass(langSelectVal);
+											$("#content-ta").toggleClass(langSelectVal);
+										}
+
+										langSelectVal="lang-"+""+$(el).val();
+										
 										$("#subject-in").toggleClass(langSelectVal);
 										$("#content-ta").toggleClass(langSelectVal);
 									}
 
-									langSelectVal="lang-"+""+$(el).val();
-									
-									$("#subject-in").toggleClass(langSelectVal);
-									$("#content-ta").toggleClass(langSelectVal);
-								}
-
-								$(function()
-								{
-									$("select[name='language']").trigger("change");
-								});
-							</script>
+									$(function()
+									{
+										$("select[name='language']").trigger("change");
+									});
+								</script>
+							</select>
 						</div>
-					</div>
-
-					<div class="row even-odd-bg">
-						<div class="three columns">
-							<span>{response_content_text}</span>
-						</div>
-						<div class="nine columns">
+					</div>	
+					<div class="row">
+						<div class="twelve columns">
 							<textarea id="content-ta" name="content" class="full-width" rows="5"></textarea>
 						</div>
 					</div>

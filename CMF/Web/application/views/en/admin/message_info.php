@@ -15,7 +15,7 @@
 
 			.response-type
 			{
-				font-size: 1.3em;
+				//font-size: 1.3em;
 				margin-bottom: 1.2em;
 			}
 		</style>
@@ -259,13 +259,16 @@
 				<?php echo form_open(get_admin_contact_us_message_details_link($message_id),array()); ?>
 				<input type="hidden" name="post_type" value="send_response" />			
 					<div class="row response-type">
-						<div class="three columns">
-							<input type="radio" name="response_type" checked value="comment"/> {comment_text}
+						<div class="two columns">
+							<label>&nbsp;</label>
+							<div>
+								<input type="radio" name="response_type" checked value="comment"/> {comment_text}
+								<div style="width:30px;display:inline-block;"></div>
+								<input type="radio" name="response_type" value="reply"/> {response_text}
+							</div>
 						</div>
 						<div class="three columns">
-							<input type="radio" name="response_type" value="reply"/> {response_text}
-						</div>
-						<div class="three columns">
+							<label>{language_text}</label>
 							<select name="language" class="full-width" onchange="langChanged(this);">
 								<?php
 									foreach($all_langs as $key => $val)
@@ -301,6 +304,22 @@
 								</script>
 							</select>
 						</div>
+
+						<div class="three columns half-col-margin">
+							<label>{status_text}</label>
+							<select  name="status" class="full-width">
+								<option value="changing" <?php if(!$message_info['mi_complete']) echo "selected"; ?>>{changing_text}</option>
+								<option value="complete" <?php if($message_info['mi_complete']) echo "selected"; ?>>{complete_text}</option>
+							</select>
+						</div>
+
+						<?php if($access['supervisor']) { ?>
+							<div class="two columns half-col-margin">
+								<label>{active_text}</label>
+								<input type="checkbox" name="active" class="graphical"
+									<?php if($message_info['mi_active']) echo "checked"; ?> value=""/>
+							</div>
+						<?php } ?>
 					</div>	
 					<div class="row">
 						<div class="twelve columns">

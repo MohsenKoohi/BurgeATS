@@ -607,7 +607,44 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
-	private function add_message(&$props)
+	public function add_comment($message_id,$message_props,$thread_props)
+	{
+		$current_time=get_current_time();
+
+		$this->add_thread(array(
+			"mt_sender_type"=>"user"
+			,"mt_sender_id"=>$thread_props['user_id']
+			,"mt_timestamp"=>$current_time
+			,"mt_message_id"=>$message_id
+			,"mt_content"=>$thread_props['content']
+		));
+
+		$mprops=array(
+			"mi_last_activity"=>$current_time
+			,"mi_complete"=>$message_props['complete']
+		);
+		if(isset($message_props['active']))
+			$mprops['mi_active']=(int)$message_props['active'];
+
+		$this->update_message($message_id,$mprops);
+
+		return;
+	}
+
+	private function update_message($message_id, $props)
+	{
+		$this->db
+			-> set($props)
+			-> where("mi_message_id",$message_id)
+			-> update($this->message_info_table_name);
+
+		$props['mi_message_id']=$message_id;
+		$this->log_manager_model->info("MESSAGE_SET_PROPS",$props);
+		
+		return;
+	}
+
+	private function add_message($props)
 	{
 		$props['mi_last_activity']=get_current_time();
 
@@ -620,9 +657,10 @@ class Message_manager_model extends CI_Model
 		return $id;
 	}
 
-	private function add_thread(&$props)
+	private function add_thread($props)
 	{
-		$props['mt_timestamp']=get_current_time();
+		if(!isset($props['mt_timestamp']))
+			$props['mt_timestamp']=get_current_time();
 
 		$this->db->insert($this->message_thread_table_name,$props);
 		$id=$this->db->insert_id();

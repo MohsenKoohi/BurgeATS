@@ -32,12 +32,42 @@ class AE_Message extends Burge_CMF_Controller {
 			$this->data['message_info']=NULL;	
 		}
 
+		if($this->input->post("post_type") === "add_reply_comment")
+			return $this->add_reply_comment($message_id,$ret);
+
 		$this->data['message_id']=$message_id;
 		$this->data['message']=get_message();
 		$this->data['lang_pages']=get_lang_pages(get_admin_message_info_link($message_id,TRUE));
 		$this->data['header_title']=$this->lang->line("message")." ".$message_id;
 
 		$this->send_admin_output("message_info");
+	}
+
+	private function add_reply_comment($message_id,$mess)
+	{
+		if($this->input->post("response_type") === "comment")
+		{
+			$thread_props=array(
+				"content"=>$this->input->post("content")
+				,"user_id"=>$this->user_manager_model->get_user_info()->get_id()
+			);
+
+			$message_props=array(
+				"complete"=>(int)$this->input->post("complete")
+			);
+			if($mess['access']['supervisor'])
+				$message_props['active']=($this->input->post("active")==="on");
+
+			$this->message_manager_model->add_comment($message_id,$message_props,$thread_props);
+
+			set_message($this->lang->line("your_comment_added_successfully"));
+		}
+		else
+		{
+
+		}
+
+		//return redirect(get_admin_message_info_link($message_id));
 	}
 
 	public function index()

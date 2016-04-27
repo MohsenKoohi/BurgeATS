@@ -251,15 +251,15 @@
 			</div>
 			
 			<div class="separated">
-				<?php echo form_open(get_admin_contact_us_message_details_link($message_id),array()); ?>
-				<input type="hidden" name="post_type" value="send_response" />			
+				<?php echo form_open(get_admin_message_info_link($message_id),array()); ?>
+				<input type="hidden" name="post_type" value="add_reply_comment" />			
 					<div class="row response-type">
 						<div class="two columns">
 							<label>{type_text}</label>
 							<div style="font-size: 1.2em;">
-								<input type="radio" name="response_type" checked value="comment"/> {comment_text}
+								<input title="{add_comment_text}" type="radio" name="response_type" checked value="comment"/> {comment_text}
 								<div style="width:30px;display:inline-block;"></div>
-								<input type="radio" name="response_type" value="reply"/> {response_text}
+								<input title="{send_reply_text}" type="radio" name="response_type" value="reply"/> {response_text}
 							</div>
 						</div>
 						<div class="three columns">
@@ -302,17 +302,16 @@
 
 						<div class="three columns half-col-margin">
 							<label>{status_text}</label>
-							<select  name="status" class="full-width">
-								<option value="changing" <?php if(!$message_info['mi_complete']) echo "selected"; ?>>{changing_text}</option>
-								<option value="complete" <?php if($message_info['mi_complete']) echo "selected"; ?>>{complete_text}</option>
+							<select  name="complete" class="full-width">
+								<option value="0" <?php if(!$message_info['mi_complete']) echo "selected"; ?>>{changing_text}</option>
+								<option value="1" <?php if($message_info['mi_complete']) echo "selected"; ?>>{complete_text}</option>
 							</select>
 						</div>
 
 						<?php if($access['supervisor']) { ?>
 							<div class="two columns half-col-margin">
 								<label>{active_text}</label>
-								<input type="checkbox" name="active" class="graphical"
-									<?php if($message_info['mi_active']) echo "checked"; ?> value=""/>
+								<input type="checkbox" name="active" class="graphical" <?php if($message_info['mi_active']) echo "checked"; ?> />
 							</div>
 						<?php } ?>
 					</div>	

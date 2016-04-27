@@ -87,6 +87,7 @@ class Log_manager_model extends CI_Model
 		,"MESSAGE_ADD"					=>1132
 		,"MESSAGE_THREAD_ADD"		=>1133
 		,"MESSAGE_THREAD_VERIFY"	=>1134
+		,"MESSAGE_SET_PROPS"			=>1135
 
 	);
 

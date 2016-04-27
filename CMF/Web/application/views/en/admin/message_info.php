@@ -13,11 +13,6 @@
 				border-radius: 10px;
 			}
 
-			.response-type
-			{
-				//font-size: 1.3em;
-				margin-bottom: 1.2em;
-			}
 		</style>
 		<h1>{message_text} {message_id}
 			<?php 
@@ -260,8 +255,8 @@
 				<input type="hidden" name="post_type" value="send_response" />			
 					<div class="row response-type">
 						<div class="two columns">
-							<label>&nbsp;</label>
-							<div>
+							<label>{type_text}</label>
+							<div style="font-size: 1.2em;">
 								<input type="radio" name="response_type" checked value="comment"/> {comment_text}
 								<div style="width:30px;display:inline-block;"></div>
 								<input type="radio" name="response_type" value="reply"/> {response_text}
@@ -321,6 +316,7 @@
 							</div>
 						<?php } ?>
 					</div>	
+					<br><br>
 					<div class="row">
 						<div class="twelve columns">
 							<textarea id="content-ta" name="content" class="full-width" rows="5"></textarea>

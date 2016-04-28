@@ -358,7 +358,7 @@
 											echo $complete_text;
 										else
 											echo $changing_text;
-										if(($mess['mi_sender_type'] === "customer") && ($mess['mi_receiver_type'] === "customer"))
+										if(($mess['mi_sender_type'] === "customer") && ($mess['mi_receiver_type'] === "customer") && ($mess['mt_sender_type'] === "customer"))
 										{
 											echo " - ";
 											$verification_status[$mess['mt_thread_id']]=(int)$mess['mt_verifier_id'];

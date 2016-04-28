@@ -166,7 +166,7 @@
 							?>
 						</div>
 
-						<div class="two columns">
+						<div class="three columns">
 							<span style="direction:ltr;display:inline-block">
 								<?php echo str_replace("-","/",$thread['mt_timestamp']); ?>
 							</span>
@@ -178,7 +178,7 @@
 								&& ($thread['mt_sender_type'] === "customer")
 								)
 							{
-								echo '<div class="four columns">';
+								echo '<div class="five columns">';
 								
 								$verification_status[$thread['mt_thread_id']]=(int)$thread['mt_verifier_id'];
 								if($thread['mt_verifier_id'])
@@ -268,12 +268,16 @@
 				<?php echo form_open(get_admin_message_info_link($message_id),array()); ?>
 				<input type="hidden" name="post_type" value="add_reply_comment" />			
 					<div class="row response-type">
-						<div class="two columns">
+						<div class="three columns">
 							<label>{type_text}</label>
 							<div style="font-size: 1.2em;">
-								<input title="{add_comment_text}" type="radio" name="response_type" checked value="comment"/> {comment_text}
-								<div style="width:30px;display:inline-block;"></div>
-								<input title="{send_reply_text}" type="radio" name="response_type" value="reply"/> {response_text}
+								<div style="display:inline-block">
+									<input title="{add_comment_text}" type="radio" name="response_type" checked value="comment"/> {comment_text}
+								</div>
+								<div style="width:20px;display:inline-block;"></div>
+								<div style="display:inline-block">
+									<input title="{send_reply_text}" type="radio" name="response_type" value="reply"/> {response_text}
+								</div>
 							</div>
 						</div>
 						<div class="three columns">

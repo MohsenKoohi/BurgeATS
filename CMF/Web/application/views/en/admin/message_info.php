@@ -11,6 +11,8 @@
 				padding:10px;
 				border:1px solid #ddd;
 				border-radius: 10px;
+				max-height: 200px;
+				overflow: auto;
 			}
 
 		</style>
@@ -281,14 +283,10 @@
 									function langChanged(el)
 									{
 										if(langSelectVal)
-										{
-											$("#subject-in").toggleClass(langSelectVal);
 											$("#content-ta").toggleClass(langSelectVal);
-										}
 
 										langSelectVal="lang-"+""+$(el).val();
 										
-										$("#subject-in").toggleClass(langSelectVal);
 										$("#content-ta").toggleClass(langSelectVal);
 									}
 
@@ -318,7 +316,7 @@
 					<br><br>
 					<div class="row">
 						<div class="twelve columns">
-							<textarea id="content-ta" name="content" class="full-width" rows="5"></textarea>
+							<textarea id="content-ta" name="content" class="full-width" rows="7"></textarea>
 						</div>
 					</div>
 					<br><br>

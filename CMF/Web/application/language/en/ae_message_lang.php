@@ -18,6 +18,7 @@ $lang['receiver']="Receiver";
 $lang['me']="Me";
 $lang['customer']="Custoemr";
 $lang['department']="Department";
+$lang['departments']="Departments";
 
 $lang['sender_department']="Sender Department";
 $lang['sender_customer_name_or_id']="Id or Name of Sender ";

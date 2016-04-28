@@ -99,12 +99,13 @@ $route['logout']					= "CE_Login/logout";
 $route['signup']					= "CE_Login/signup";
 $route['forgotten_password']	= "CE_Login/forgotten_password";
 
-$route[ADMIN_URL_FOLDER."/message"]								= "AE_Message/index";
-$route[ADMIN_URL_FOLDER."/message/(\d+)"]						= "AE_Message/message/$1";
-$route[ADMIN_URL_FOLDER."/message_access(/(\d+))?"]		= "AE_Message/access/$2";
-$route["contact_us"]													= "CE_Message/c2d";
-$route['message']														= "CE_Message/message";
-$route['message/(\d+)']												= "CE_Message/info/$1";
+$route[ADMIN_URL_FOLDER."/message"]										= "AE_Message/index";
+$route[ADMIN_URL_FOLDER."/message/(\d+)"]								= "AE_Message/message/$1";
+$route[ADMIN_URL_FOLDER."/message_access(/(\d+))?"]				= "AE_Message/access/$2";
+$route[ADMIN_URL_FOLDER."/message/search_departments/(.*)"]		= "AE_Message/search_departments/$1";
+$route["contact_us"]															= "CE_Message/c2d";
+$route['message']																= "CE_Message/message";
+$route['message/(\d+)']														= "CE_Message/info/$1";
 
 $route['(((:any)/)*:any)']="CE_Home/redirect";
 

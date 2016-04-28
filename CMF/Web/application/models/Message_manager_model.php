@@ -124,6 +124,33 @@ class Message_manager_model extends CI_Model
 		return $this->departments;
 	}
 
+	public function set_participants($message_id,$deps,$users)
+	{
+		$this->db
+			->where("mp_message_id",$message_id)
+			->delete($this->message_participant_table_name);
+
+		$ins=array();
+		foreach($deps as $dep)
+			$ins[]=array(
+				"mp_message_id"=>$message_id
+				,"mp_participant_type"=>"department"
+				,"mp_participant_id"=>$dep
+			);
+
+		foreach($users as $user)
+			$ins[]=array(
+				"mp_message_id"=>$message_id
+				,"mp_participant_type"=>"user"
+				,"mp_participant_id"=>$user
+			);
+
+		if($ins)
+			$this->db->insert_batch($this->message_participant_table_name,$ins);
+
+		return;
+	}
+
 	public function get_user_access($user_id)
 	{
 		$result=$this->db
@@ -236,9 +263,9 @@ class Message_manager_model extends CI_Model
 			->result_array();
 
 		return array(
-			"message"	=> &$message
-			,"threads"	=> &$threads
-			,"access"	=> &$access
+			"message"	=> $message
+			,"threads"	=> $threads
+			,"access"	=> $access
 		);		
 	}
 
@@ -293,8 +320,12 @@ class Message_manager_model extends CI_Model
 		
 		$access_users=array();
 		$access_departments=array();
-		
+	
 		foreach($results as $row)
+		{
+			if(!$row['mp_participant_id'])
+				continue; 
+
 			if($row['mp_participant_type']==="department")
 			{
 				$dep_id=$row['mp_participant_id'];
@@ -302,13 +333,15 @@ class Message_manager_model extends CI_Model
 				if(!$has_access && in_array($dep_id,$user_deps))
 					$has_access=TRUE;
 			}
-			else
+			
+			if($row['mp_participant_type']==="user")
 			{
 				$puser_id=$row['mp_participant_id'];
 				$access_users[$puser_id]=$row['user_code']." - ".$row['user_name'];
 				if($puser_id === $user_id)
 					$has_access=TRUE;
 			}
+		}
 
 		if(!$has_access)
 			return NULL;

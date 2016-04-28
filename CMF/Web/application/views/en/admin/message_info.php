@@ -15,6 +15,31 @@
 				overflow: auto;
 			}
 
+			.aclist > div
+			{
+				background-color:darkblue;
+				color:white;
+				margin:5px;
+				padding:5px 10px;
+				font-weight: bold;
+				font-size: 1.2em;
+				border-radius: 5px;
+			}
+
+			.aclist > div > span
+			{
+				display:inline-block;
+				width:30px;
+				height:30px;
+				border-radius: 5px;
+				background-image:url({images_url}/remove.png);
+				background-size: 90% 90%;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: white;	
+				cursor: pointer;			
+			}
+
 		</style>
 		<h1>{message_text} {message_id}
 			<?php 
@@ -340,6 +365,131 @@
 						<div class="four columns">&nbsp;</div>
 						<input type="submit" class=" button-primary four columns" value="{send_text}"/>
 					</div>
+				</form>
+			</div>
+			<br><br>
+			<div class="separated">
+				<h2>{participants_text}</h2>
+				<?php echo form_open(get_admin_message_info_link($message_id),array("onsubmit"=>"return participantsFormSubmitted();")); ?>
+				<input type="hidden" name="post_type" value="set_participants" />			
+					
+					<div class="row even-odd-bg dont-magnify">			
+						<div class="three columns">
+							<span>{departments_text}</span>
+						</div>
+						<div class="three columns">
+							<input type="text" class="deps-autocomplete full-width"/>
+							<input type="hidden" name="departments" id="deps-main"/>
+						</div>
+						<div class="tweleve column aclist" id="deps-list">
+							<?php 
+								foreach ($access['added_departments'] as $id => $name) 
+								{
+									$dep_name=${"department_".$name."_text"};
+									echo "
+										<div class='three columns' data-id='$id'>
+											$dep_name
+											<span class='anti-float' onclick='$(this).parent().remove();'></span>
+										</div>";
+								}
+							?>
+						</div>
+
+						<script type="text/javascript">
+							$(document).ready(function()
+						   {
+						      el=$("input.deps-autocomplete");
+					      	var searchUrl="{departments_search_url}";
+						      	
+						      	
+					      	el.autocomplete({
+						         source: function(request, response)
+						         {
+						            var term=request["term"];
+						            $.get(searchUrl+"/"+encodeURIComponent(term),
+						              function(res)
+						              {
+						                var rets=[];
+						                for(var i=0;i<res.length;i++)
+						                  rets[rets.length]=
+						                    {
+						                      label:res[i].name
+						                      ,name:res[i].name
+						                      ,id:res[i].id						                      
+						                      ,value:term
+						                    };
+
+						                response(rets); 
+
+						                return;       
+						              },"json"
+						            ); 
+						          },
+						          delay:700,
+						          minLength:1,
+						          select: function(event,ui)
+						          {
+						            var item=ui.item;
+						            var id=item.id;
+						            var name=item.name;
+
+						            if(!$("div[data-id="+id+"]",$("#deps-list")).length)
+						            	$("#deps-list").append($("<div class='three columns' data-id='"+id+"'>"+name+"<span class='anti-float' onclick='$(this).parent().remove();'></span></div>"));
+						            
+						            el.val("");
+						            return false;
+						          }
+						      });
+
+						    });
+
+							function setDeps()
+							{
+								var depIds=[];
+								$("#deps-list div").each(function(index,el)
+								{
+									depIds[depIds.length]=$(el).data("id");
+								});
+								
+								$("#deps-main").val(depIds.join(","));
+							}
+
+						</script>
+					</div>
+
+					<div class="row even-odd-bg dont-magnify">			
+						<div class="three columns">
+							<span>{users_text}</span>
+						</div>
+						<div class="three columns">
+							<input type="text" class="autocomplete full-width" data-type="users"/>
+						</div>
+						<div class="tweleve column aclist" id="added-users">
+							<?php 
+								foreach ($access['added_users'] as $id => $name) 
+									echo "<div data-id='$id'>$name</div>";
+							?>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="four columns">&nbsp;</div>
+						<input type="submit" class=" button-primary four columns" value="{submit_text}"/>
+					</div>
+
+					<script type="text/javascript">
+						function participantsFormSubmitted()
+						{
+							if(!confirm("{are_you_sure_to_submit_text}"))
+								return false;
+
+							setDeps();
+
+							return true;
+						}
+					</script>
+
+					
 				</form>
 			</div>
 			

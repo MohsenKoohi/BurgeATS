@@ -10,14 +10,49 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->load->model(array("user_manager_model","message_manager_model"));
 	}
 
+	public function search_departments($name)
+	{
+		$deps=$this->message_manager_model->get_departments();
+		$results=array();
+		$name=urldecode($name);
+		$name=persian_normalize($name);
+		if(!$name)
+			$name=" ";
+		$pattern="/.*".preg_replace("/\s+/", ".", trim($name)).".*/";
+
+		foreach ($deps as $id => $name)
+		{
+			$dep_name=$this->lang->line("department_".$name);
+			if(preg_match($pattern, $dep_name))
+				$results[]=array(
+					"id"=>$id
+					,"name"=>$dep_name
+				);
+		}
+
+		$this->output->set_content_type('application/json');
+    	$this->output->set_output(json_encode($results));
+
+    	return;
+	}
+
 	public function message($message_id)
 	{
 		$message_id=(int)$message_id;
 				
-		$ret=$this->message_manager_model->get_admin_message($message_id);	
+		$ret=$this->message_manager_model->get_admin_message($message_id);
+
+		//bprint_r($ret['access']['added_departments']);
+		//bprint_r($ret['access']['added_users']);
 		
 		if($ret)
 		{
+			if($this->input->post("post_type") === "add_reply_comment")
+				return $this->add_reply_comment($message_id,$ret);
+
+			if($this->input->post("post_type") === "set_participants")
+				return $this->set_participants($message_id);
+
 			$this->data['access']=$ret['access'];
 			$this->data['message_info']=$ret['message'];
 			$this->data['threads']=$ret['threads'];
@@ -26,14 +61,13 @@ class AE_Message extends Burge_CMF_Controller {
 				$message_id=$this->data['message_info']['mi_message_id'];
 			
 			$this->data['departments']=$this->message_manager_model->get_departments();
+
+			$this->data['departments_search_url']=get_link("admin_message_search_departments");
 		}
 		else
 		{
 			$this->data['message_info']=NULL;	
 		}
-
-		if($this->input->post("post_type") === "add_reply_comment")
-			return $this->add_reply_comment($message_id,$ret);
 
 		$this->data['message_id']=$message_id;
 		$this->data['message']=get_message();
@@ -41,6 +75,20 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->data['header_title']=$this->lang->line("message")." ".$message_id;
 
 		$this->send_admin_output("message_info");
+	}
+
+	private function set_participants($message_id)
+	{
+		if($this->input->post("departments"))
+			$deps=explode(",", $this->input->post("departments"));
+		else
+			$deps=array();
+
+		$users=[];
+
+		$this->message_manager_model->set_participants($message_id,$deps,$users);
+	
+		return;
 	}
 
 	private function add_reply_comment($message_id,$mess)

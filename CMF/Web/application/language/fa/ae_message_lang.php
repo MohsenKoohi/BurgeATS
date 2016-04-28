@@ -18,6 +18,7 @@ $lang['receiver']="گیرنده";
 $lang['me']="خودم";
 $lang['customer']="مشتری";
 $lang['department']="بخش";
+$lang['departments']="بخش‌ها";
 
 $lang['sender_department']="بخش فرستنده";
 $lang['sender_customer_name_or_id']="نام یا شناسه مشتری فرستنده";
@@ -75,3 +76,19 @@ $lang['send_reply']="ارسال به پاسخ";
 $lang['your_comment_added_successfully']="توضیح شما با موفقیت ثبت شد.";
 $lang['reply_or_comment']="ارسال پاسخ / ثبت توضیح";
 $lang['your_reply_added_successfully']="پاسخ شما با موفقیت ثبت شد.";
+
+
+$lang['participants']="شرکت کنندگان";
+$lang['users']="کاربران";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";

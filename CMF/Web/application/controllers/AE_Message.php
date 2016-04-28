@@ -62,12 +62,56 @@ class AE_Message extends Burge_CMF_Controller {
 
 			set_message($this->lang->line("your_comment_added_successfully"));
 		}
-		else
+		
+		if($this->input->post("response_type") === "reply")
 		{
+			$thread_props=array(
+				"content"=>$this->input->post("content")
+			);
 
+			$user_id=$this->user_manager_model->get_user_info()->get_id();
+
+			$st=$mess['message']['mi_sender_type'];
+			$rt=$mess['message']['mi_receiver_type'];
+
+			if( (($st==="customer") && ($rt==="department")) ||
+				(($st==="department") && ($rt==="customer")) )
+			{
+				$thread_props['sender_type']="department";
+				if($st==="department")
+					$thread_props['sender_id']=$mess['message']['mi_sender_id'];
+				else
+					$thread_props['sender_id']=$mess['message']['mi_receiver_id'];
+
+				$thread_props['verifier_id']=$user_id;
+			}
+
+			if(($st==="user") && ($rt==="user"))
+			{
+				$thread_props['sender_type']="user";
+				$thread_props['sender_id']=$user_id;
+			}
+
+			if(($st==="customer") && ($rt==="customer"))
+			{
+				$thread_props['sender_type']="department";
+				$thread_props['sender_id']=$this->message_manager_model->get_c2c_response_department_id();
+				$thread_props['verifier_id']=$user_id;
+			}			
+
+			$message_props=array(
+				"complete"=>(int)$this->input->post("complete")
+			);
+
+			if($mess['access']['supervisor'])
+				$message_props['active']=($this->input->post("active")==="on");
+
+			$this->message_manager_model->add_reply($message_id,$message_props,$thread_props);
+
+			set_message($this->lang->line("your_reply_added_successfully"));
 		}
 
-		//return redirect(get_admin_message_info_link($message_id));
+		return redirect(get_admin_message_info_link($message_id));
 	}
 
 	public function index()

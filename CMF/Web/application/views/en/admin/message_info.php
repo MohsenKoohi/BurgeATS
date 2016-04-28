@@ -120,6 +120,17 @@
 								else
 									echo $changing_text;
 							?>
+
+							<?php 
+								echo " - ";
+								if($access['supervisor'])
+								{
+									if($message_info['mi_active']) 
+										echo $active_text;
+									else
+										echo $inactive_text;
+								}
+							?>
 						</div>
 					</div>
 				</div>			
@@ -253,6 +264,7 @@
 			</div>
 			
 			<div class="separated">
+				<h2>{reply_or_comment_text}</h2>
 				<?php echo form_open(get_admin_message_info_link($message_id),array()); ?>
 				<input type="hidden" name="post_type" value="add_reply_comment" />			
 					<div class="row response-type">

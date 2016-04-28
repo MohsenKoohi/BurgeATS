@@ -15,7 +15,7 @@ class Message_manager_model extends CI_Model
 		,3=>"management"
 		);
 
-	private $c2c_response_department=1;
+	private $c2c_response_department_id=1;
 
 	public function __construct()
 	{
@@ -114,9 +114,9 @@ class Message_manager_model extends CI_Model
 		//return " (12) ";
 	}
 
-	public function get_c2c_response_department()
+	public function get_c2c_response_department_id()
 	{
-		return $this->c2c_response_department;
+		return $this->c2c_response_department_id;
 	}
 
 	public function get_departments()
@@ -623,6 +623,36 @@ class Message_manager_model extends CI_Model
 			"mi_last_activity"=>$current_time
 			,"mi_complete"=>$message_props['complete']
 		);
+		if(isset($message_props['active']))
+			$mprops['mi_active']=(int)$message_props['active'];
+
+		$this->update_message($message_id,$mprops);
+
+		return;
+	}
+
+	public function add_reply($message_id,$message_props,$thread_props)
+	{
+		$current_time=get_current_time();
+
+		$tprops=array(
+			"mt_sender_type"=>$thread_props['sender_type']
+			,"mt_sender_id"=>$thread_props['sender_id']
+			,"mt_timestamp"=>$current_time
+			,"mt_message_id"=>$message_id
+			,"mt_content"=>$thread_props['content']
+		);
+
+		if(isset($thread_props['verifier_id']))
+			$tprops['mt_verifier_id']=$thread_props['verifier_id'];
+
+		$this->add_thread($tprops);
+
+		$mprops=array(
+			"mi_last_activity"=>$current_time
+			,"mi_complete"=>$message_props['complete']
+		);
+		
 		if(isset($message_props['active']))
 			$mprops['mi_active']=(int)$message_props['active'];
 

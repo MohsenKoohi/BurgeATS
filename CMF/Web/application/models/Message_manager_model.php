@@ -148,6 +148,12 @@ class Message_manager_model extends CI_Model
 		if($ins)
 			$this->db->insert_batch($this->message_participant_table_name,$ins);
 
+		$this->log_manager_model->info("MESSAGE_SET_PARTICIPANTS",array(
+			"message_id"	=> $message_id
+			,"departments"	=> implode(",",$deps)
+			,"users"			=> implode(",",$users)
+		));
+
 		return;
 	}
 

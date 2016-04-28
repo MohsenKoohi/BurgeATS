@@ -57,7 +57,7 @@ class Message_manager_model extends CI_Model
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $tbl_name (
 				`mp_message_id` BIGINT UNSIGNED  NOT NULL
-				,`mp_participant_type` ENUM ('customer','department','user')
+				,`mp_participant_type` ENUM ('department','user')
 				,`mp_participant_id` BIGINT
 				,PRIMARY KEY (`mp_message_id`,`mp_participant_type`,`mp_participant_id`)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"

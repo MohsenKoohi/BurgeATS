@@ -462,16 +462,84 @@
 							<span>{users_text}</span>
 						</div>
 						<div class="three columns">
-							<input type="text" class="autocomplete full-width" data-type="users"/>
+							<input type="text" class="users-autocomplete full-width"/>
+							<input type="hidden" name="users" id="users-main"/>
 						</div>
-						<div class="tweleve column aclist" id="added-users">
+						<div class="tweleve column aclist" id="users-list">
 							<?php 
 								foreach ($access['added_users'] as $id => $name) 
-									echo "<div data-id='$id'>$name</div>";
+								{
+									$user_name=$name;
+									echo "
+										<div class='three columns' data-id='$id'>
+											$user_name
+											<span class='anti-float' onclick='$(this).parent().remove();'></span>
+										</div>";
+								}
 							?>
 						</div>
+
+						<script type="text/javascript">
+							$(document).ready(function()
+						   {
+						      el=$("input.users-autocomplete");
+					      	var searchUrl="{users_search_url}";
+						      	
+					      	el.autocomplete({
+						         source: function(request, response)
+						         {
+						            var term=request["term"];
+						            $.get(searchUrl+"/"+encodeURIComponent(term),
+						              function(res)
+						              {
+						                var rets=[];
+						                for(var i=0;i<res.length;i++)
+						                  rets[rets.length]=
+						                    {
+						                      label:res[i].name
+						                      ,name:res[i].name
+						                      ,id:res[i].id						                      
+						                      ,value:term
+						                    };
+
+						                response(rets); 
+
+						                return;       
+						              },"json"
+						            ); 
+						          },
+						          delay:700,
+						          minLength:1,
+						          select: function(event,ui)
+						          {
+						            var item=ui.item;
+						            var id=item.id;
+						            var name=item.name;
+
+						            if(!$("div[data-id="+id+"]",$("#users-list")).length)
+						            	$("#users-list").append($("<div class='three columns' data-id='"+id+"'>"+name+"<span class='anti-float' onclick='$(this).parent().remove();'></span></div>"));
+						            
+						            el.val("");
+						            return false;
+						          }
+						      });
+
+						    });
+
+							function setUsers()
+							{
+								var userIds=[];
+								$("#users-list div").each(function(index,el)
+								{
+									userIds[userIds.length]=$(el).data("id");
+								});
+								
+								$("#users-main").val(userIds.join(","));
+							}
+
+						</script>
 					</div>
-					
+
 					<div class="row">
 						<div class="four columns">&nbsp;</div>
 						<input type="submit" class=" button-primary four columns" value="{submit_text}"/>
@@ -484,6 +552,7 @@
 								return false;
 
 							setDeps();
+							setUsers();
 
 							return true;
 						}
@@ -492,7 +561,7 @@
 					
 				</form>
 			</div>
-			
+			<br><br><br>
 		<?php 
 			}
 		?>

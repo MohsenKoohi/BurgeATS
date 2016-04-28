@@ -77,10 +77,9 @@ $lang['your_comment_added_successfully']="توضیح شما با موفقیت ث
 $lang['reply_or_comment']="ارسال پاسخ / ثبت توضیح";
 $lang['your_reply_added_successfully']="پاسخ شما با موفقیت ثبت شد.";
 
-
 $lang['participants']="شرکت کنندگان";
 $lang['users']="کاربران";
-$lang['']="";
+$lang['participants_saved_successfully']="شرکت کنندگان با موفقیت ثبت شدند.";
 $lang['']="";
 $lang['']="";
 $lang['']="";

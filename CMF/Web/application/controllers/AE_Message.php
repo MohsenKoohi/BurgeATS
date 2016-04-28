@@ -12,6 +12,8 @@ class AE_Message extends Burge_CMF_Controller {
 
 	public function search_departments($name)
 	{
+		$max_count=5;
+
 		$deps=$this->message_manager_model->get_departments();
 		$results=array();
 		$name=urldecode($name);
@@ -28,6 +30,9 @@ class AE_Message extends Burge_CMF_Controller {
 					"id"=>$id
 					,"name"=>$dep_name
 				);
+
+			if(sizeof($results)>=$max_count)
+				break;
 		}
 
 		$this->output->set_content_type('application/json');
@@ -63,6 +68,8 @@ class AE_Message extends Burge_CMF_Controller {
 			$this->data['departments']=$this->message_manager_model->get_departments();
 
 			$this->data['departments_search_url']=get_link("admin_message_search_departments");
+			$this->data['users_search_url']=get_link("admin_user_search");
+			
 		}
 		else
 		{
@@ -84,11 +91,16 @@ class AE_Message extends Burge_CMF_Controller {
 		else
 			$deps=array();
 
-		$users=[];
+		if($this->input->post("users"))
+			$users=explode(",", $this->input->post("users"));
+		else
+			$users=array();
 
 		$this->message_manager_model->set_participants($message_id,$deps,$users);
-	
-		return;
+
+		set_message($this->lang->line("participants_saved_successfully"));
+
+		return redirect(get_admin_message_info_link($message_id));
 	}
 
 	private function add_reply_comment($message_id,$mess)

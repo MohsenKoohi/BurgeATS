@@ -75,3 +75,7 @@ $lang['send_reply']="Send Reply";
 $lang['your_comment_added_successfully']="Your comment added successfully.";
 $lang['reply_or_comment']="Send Reply / Add Comment";
 $lang['your_reply_added_successfully']="Your reply added successfully.";
+
+$lang['participants']="Participants";
+$lang['users']="Users";
+$lang['participants_saved_successfully']="Participants saved successfully.";

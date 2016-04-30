@@ -358,6 +358,11 @@
 											echo $complete_text;
 										else
 											echo $changing_text;
+
+										if($op_access['users'])
+											if(!$mess['mi_active'])
+												echo " - ".$inactive_text;
+
 										if(($mess['mi_sender_type'] === "customer") && ($mess['mi_receiver_type'] === "customer") && ($mess['mt_sender_type'] === "customer"))
 										{
 											echo " - ";
@@ -373,6 +378,11 @@
 												$not_verified_messages[]=$mess['mi_message_id'];
 												echo $not_verified_text;
 											}
+
+											if($op_access['users'])
+												if(!$mess['mi_active'])
+													echo " - ".$inactive_text;
+												
 											$id=$mess['mt_thread_id'];
 											if($op_access['verifier'])
 												echo "<br>".$verify_text.": <span>&nbsp;</span> <input type='checkbox' ".$verify." class='graphical' onchange='verifyMessage($id,$(this).prop(\"checked\"));'>";

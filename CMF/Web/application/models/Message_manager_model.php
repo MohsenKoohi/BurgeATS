@@ -94,19 +94,40 @@ class Message_manager_model extends CI_Model
 
 	public function get_dashboard_info()
 	{
-		return "";
 		$CI=& get_instance();
 		$lang=$CI->language->get();
-		$CI->lang->load('ae_module',$lang);		
+		$CI->lang->load('ae_message',$lang);		
 		
 		$data=array();
-		$data['modules']=$this->get_all_modules_info($lang);
+		$res=$this->get_dashboard_totals();
+		$data['total']=$res['total'];
+		$data['complete']=$res['complete'];
 		$data['total_text']=$CI->lang->line("total");
 		
 		$CI->load->library('parser');
-		$ret=$CI->parser->parse($CI->get_admin_view_file("module_dashboard"),$data,TRUE);
+		$ret=$CI->parser->parse($CI->get_admin_view_file("message_dashboard"),$data,TRUE);
 		
 		return $ret;		
+	}
+
+	private function get_dashboard_totals()
+	{
+		$ret=array();
+
+		$ret['complete']=$this->db
+			->select("COUNT(*) as count ")
+			->from($this->message_info_table_name)
+			->where("mi_complete",1)
+			->get()
+			->row_array()['count'];
+
+		$ret['total']=$this->db
+			->select("COUNT(*) as count ")
+			->from($this->message_info_table_name)
+			->get()
+			->row_array()['count'];
+
+		return $ret;
 	}
 	
 	public function get_sidebar_text()

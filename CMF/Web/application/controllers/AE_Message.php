@@ -283,7 +283,7 @@ class AE_Message extends Burge_CMF_Controller {
 	{
 		$fields=array(
 			"start_date","end_date"
-			,"status","verified"
+			,"status","verified","active"
 			,"receiver_type","sender_type"
 			,"sender_department","sender_user","sender_customer"
 			,"receiver_department","receiver_user","receiver_customer"
@@ -296,6 +296,10 @@ class AE_Message extends Burge_CMF_Controller {
 		}
 		
 		$op_access=$access['op_access'];
+
+		if(!$op_access['users'])
+			$filters['active']="yes";
+
 		$filters['message_types']=array();
 
 		if(($filters['sender_type']!=="department") && 
@@ -337,7 +341,7 @@ class AE_Message extends Burge_CMF_Controller {
 		$mess['mi_receiver_type']="customer";
 		$this->set_mess_sr_type("sender","customer",$mess,$filters);
 		$this->set_mess_sr_type("receiver","customer",$mess,$filters);
-
+	
 		$filters['message_types'][]=$mess;
 
 		return;

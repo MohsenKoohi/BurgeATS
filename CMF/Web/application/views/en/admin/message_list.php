@@ -146,6 +146,16 @@
 					</div>
 				</div>
 
+				<?php if($op_access['users']) {?>
+					<div class="three columns">
+						<label>{active_text}</label>
+						<select class="full-width" name="active">
+							<option>&nbsp;</option>
+							<option value="yes">{active_text}</option>
+							<option value="no">{inactive_text}</option>
+						</select>
+					</div>				
+				<?php }?>
 				<div class="two columns results-search-again ">
 					<label></label>
 					<input type="button" onclick="searchAgain()" value="{search_again_text}" class="full-width button-primary" />
@@ -379,10 +389,6 @@
 												echo $not_verified_text;
 											}
 
-											if($op_access['users'])
-												if(!$mess['mi_active'])
-													echo " - ".$inactive_text;
-												
 											$id=$mess['mt_thread_id'];
 											if($op_access['verifier'])
 												echo "<br>".$verify_text.": <span>&nbsp;</span> <input type='checkbox' ".$verify." class='graphical' onchange='verifyMessage($id,$(this).prop(\"checked\"));'>";

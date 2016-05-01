@@ -539,6 +539,14 @@ class Message_manager_model extends CI_Model
 				$this->db->where("mt_verifier_id",0);
 		}
 
+		if(isset($filters['active']))
+		{
+			if($filters['active']==="yes")
+				$this->db->where("mi_active",1);
+			else
+				$this->db->where("mi_active",0);
+		}
+
 		$mess_types="0";
 		//bprint_r($filters['message_types']);
 		//exit(0);
@@ -590,6 +598,8 @@ class Message_manager_model extends CI_Model
 
 		if(isset($filters['start']) && isset($filters['length']))
 			$this->db->limit((int)$filters['length'],(int)$filters['start']);
+
+		$this->db->group_by("mi_message_id");
 
 		return;
 	}

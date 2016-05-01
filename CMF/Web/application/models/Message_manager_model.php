@@ -303,7 +303,7 @@ class Message_manager_model extends CI_Model
 		$all_departemnts=$this->get_departments();
 		$user_deps=array();
 		foreach($all_departemnts as $id => $name)
-			if($op_access['departments'][$name])
+			if(isset($op_access['departments'][$name]) && $op_access['departments'][$name])
 				$user_deps[]=$id;
 
 		$user_id=$this->user_manager_model->get_user_info()->get_id();

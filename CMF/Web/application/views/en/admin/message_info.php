@@ -14,32 +14,6 @@
 				max-height: 200px;
 				overflow: auto;
 			}
-
-			.aclist > div
-			{
-				background-color:darkblue;
-				color:white;
-				margin:5px;
-				padding:5px 10px;
-				font-weight: bold;
-				font-size: 1.2em;
-				border-radius: 5px;
-			}
-
-			.aclist > div > span
-			{
-				display:inline-block;
-				width:30px;
-				height:30px;
-				border-radius: 5px;
-				background-image:url({images_url}/remove.png);
-				background-size: 90% 90%;
-				background-repeat: no-repeat;
-				background-position: center;
-				background-color: white;	
-				cursor: pointer;			
-			}
-
 		</style>
 		<h1>{message_text} {message_id}
 			<?php 
@@ -398,7 +372,7 @@
 						<script type="text/javascript">
 							$(document).ready(function()
 						   {
-						      el=$("input.deps-autocomplete");
+						      var el=$("input.deps-autocomplete");
 					      	var searchUrl="{departments_search_url}";
 						      	
 						      	
@@ -482,7 +456,7 @@
 						<script type="text/javascript">
 							$(document).ready(function()
 						   {
-						      el=$("input.users-autocomplete");
+						      var el=$("input.users-autocomplete");
 					      	var searchUrl="{users_search_url}";
 						      	
 					      	el.autocomplete({

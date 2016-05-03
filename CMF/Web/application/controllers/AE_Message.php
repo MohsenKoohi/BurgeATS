@@ -18,6 +18,10 @@ class AE_Message extends Burge_CMF_Controller {
 			if($this->input->post("post_type")==="verify_c2c_messages")
 				return $this->verify_messages();
 
+		$this->data['receivers_ids']=array();
+		$this->data['users_search_url']=get_link("admin_user_search");
+		$this->data['customers_search_url']=get_link("admin_customer_search");
+
 		$this->data['message']=get_message();
 		$this->data['departments']=$this->message_manager_model->get_departments();
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_message_new",TRUE));

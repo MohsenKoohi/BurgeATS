@@ -9,6 +9,32 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->load->model("customer_manager_model");
 	}
 
+	public function search($name)
+	{
+		$max_count=5;
+		$name=urldecode($name);
+		$name=persian_normalize($name);
+
+		$results=$this->customer_manager_model->get_customers(array(
+			"name"=>$name
+			,"start"=>0
+			,"length"=>$max_count
+		));
+
+		$ret=array();
+
+		foreach ($results as $res)	
+			$ret[]=array(
+				"id"=>$res['customer_id']
+				,"name"=>$res['customer_name']
+			);
+
+		$this->output->set_content_type('application/json');
+    	$this->output->set_output(json_encode($ret));
+
+    	return;
+	}
+
 	private function  update_customers_provinces_and_cities()
 	{
 		$this->db

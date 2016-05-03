@@ -10,6 +10,25 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->load->model(array("user_manager_model","message_manager_model"));
 	}
 
+	public function new_message()
+	{
+		$this->data['op_access']=$this->message_manager_model->get_operations_access();
+
+		//if($this->data['op_access']['verifier'])
+			if($this->input->post("post_type")==="verify_c2c_messages")
+				return $this->verify_messages();
+
+		$this->data['message']=get_message();
+		$this->data['departments']=$this->message_manager_model->get_departments();
+		$this->data['lang_pages']=get_lang_pages(get_link("admin_message_new",TRUE));
+		$this->data['header_title']=$this->lang->line("add_new_messages");
+
+		$this->send_admin_output("message_new");
+
+		return;	 
+	}
+
+
 	public function search_departments($name)
 	{
 		$max_count=5;

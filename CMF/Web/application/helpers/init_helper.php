@@ -73,6 +73,7 @@ function &get_links($just_common=FALSE)
 			,'customer_forgotten_password'	=> HOME_URL_LANG."/forgotten_password"
 
 			,'admin_message'								=> ADMIN_SURL_LANG."/message"
+			,'admin_message_new'							=> ADMIN_SURL_LANG."/message/new"
 			,'admin_message_info_format'				=> ADMIN_SURL_LANG."/message/message_id"
 			,'admin_message_access'						=> ADMIN_SURL_LANG."/message_access"
 			,'admin_message_access_user_format'		=> ADMIN_SURL_LANG."/message_access/user_id"

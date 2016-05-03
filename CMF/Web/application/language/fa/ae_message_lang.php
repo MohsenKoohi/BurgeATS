@@ -80,8 +80,9 @@ $lang['your_reply_added_successfully']="پاسخ شما با موفقیت ثبت
 $lang['participants']="شرکت کنندگان";
 $lang['users']="کاربران";
 $lang['participants_saved_successfully']="شرکت کنندگان با موفقیت ثبت شدند.";
-$lang['']="";
-$lang['']="";
+
+$lang['add_new_message']="ارسال پیام جدید";
+$lang['receiver_type']="نوع گیرنده";
 $lang['']="";
 $lang['']="";
 $lang['']="";

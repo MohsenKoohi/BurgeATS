@@ -27,6 +27,13 @@
 			}
 		</style>
 		<h1>{messages_text}</h1>
+		<div class="row general-buttons">
+			<a href="<?php echo get_link('admin_message_new');?>">
+				<div class="two columns button button-type1 half-col-margin">
+					{add_new_message_text}
+				</div>
+			</a>
+		</div>
 		<div class="container separated">
 			<div class="row filter half-col-margin-children">				
 				<div class="three columns">

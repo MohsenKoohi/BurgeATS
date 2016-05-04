@@ -387,7 +387,7 @@ class Message_manager_model extends CI_Model
 
 	public function get_total_messages($filters,$access)
 	{
-		$this->db->select("COUNT(*) as count");
+		$this->db->select("COUNT( DISTINCT mi_message_id ) as count");
 		$this->db->from($this->message_info_table_name)
 			->join("user as sender_user","mi_sender_id = sender_user.user_id","left")
 			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","left")
@@ -438,7 +438,7 @@ class Message_manager_model extends CI_Model
 				,"LEFT"
 			);
 
-		$this->set_search_where_clause($filters,$access);
+		$this->set_search_where_clause($filters,$access,TRUE);
 
 		$query=$this->db->get();
 
@@ -514,7 +514,7 @@ class Message_manager_model extends CI_Model
 		return $result;
 	}
 
-	private function set_search_where_clause(&$filters,$access)
+	private function set_search_where_clause(&$filters,$access,$count=FALSE)
 	{
 		if(isset($filters['start_date']))
 			$this->db->where("mi_last_activity >=",$filters['start_date']);
@@ -594,15 +594,19 @@ class Message_manager_model extends CI_Model
 
 		$this->db->where((" ( ".$mess_types." )"));
 
-		if(isset($filters['order_by']))
-			$this->db->order_by($filter['order_by']);
-		else
-			$this->db->order_by("mi_last_activity DESC");
+		if(!$count)
+		{
+			if(isset($filters['order_by']))
+				$this->db->order_by($filter['order_by']);
+			else
+				$this->db->order_by("mi_last_activity DESC");
+		}
 
 		if(isset($filters['start']) && isset($filters['length']))
 			$this->db->limit((int)$filters['length'],(int)$filters['start']);
 
-		$this->db->group_by("mi_message_id");
+		if(!$count)
+			$this->db->group_by("mi_message_id");
 
 		return;
 	}

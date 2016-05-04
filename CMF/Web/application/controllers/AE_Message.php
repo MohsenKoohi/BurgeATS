@@ -81,8 +81,24 @@ class AE_Message extends Burge_CMF_Controller {
 			$this->message_manager_model->add_u2u_message($props);
 		}
 
-		$sender_type=$this->input->post("sender_type");
-		
+		$sender_department=$this->input->post("sender_department");
+		if(($rt === "customer") && $rids)
+			if($sender_department && isset($this->data['sender_departments'][$sender_department]))
+			{
+				$props=array(
+					"verifier_id"=>$this->data['sender_user_id']
+					,"sender_id"=>$sender_department
+					,"receiver_ids"=>$rids
+					,"subject"=>$subject
+					,"content"=>$content
+				);
+
+				$this->message_manager_model->add_d2c_message($props);
+			}
+
+		set_message($this->lang->line("message_added_successfully"));
+
+		return redirect(get_link("admin_message"));		
 	}
 
 

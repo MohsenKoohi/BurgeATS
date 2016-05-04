@@ -639,6 +639,50 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
+	public function add_d2c_message($props)
+	{
+		$ret=array();
+
+		foreach($props['receiver_ids'] as $rid)
+		{
+			$mess=array(
+				"mi_sender_type"		=>"department"
+				,"mi_sender_id"		=>$props['sender_id']
+				,"mi_receiver_type"	=>"customer"
+				,"mi_receiver_id"		=>$rid
+				,"mi_subject"			=>$props['subject']
+			);
+
+			$mid=$this->add_message($mess);
+
+			$mess['message_type']="d2c";
+			$mess['message_id']=$mid;
+			$mess['departement_name']=$this->get_departments()[$props['sender_id']];
+			
+			$this->load->model("customer_manager_model");
+			$this->customer_manager_model->add_customer_log($rid,'MESSAGE_ADD',$mess);
+
+			$thr=array(
+				'mt_message_id'	=> $mid
+				,'mt_sender_type'	=> "department"	
+				,'mt_sender_id'	=> $props['sender_id']
+				,'mt_verifier_id' => $props['verifier_id']
+				,'mt_content'		=> $props['content']
+			);
+
+			$tid=$this->add_thread($thr);
+
+			$thr['mt_thread_id']=$tid;
+			$thr['departement_name']=$this->get_departments()[$props['sender_id']];
+			$this->customer_manager_model->add_customer_log($rid,'MESSAGE_THREAD_ADD',$thr);
+
+			$ret[]=$mid;
+		}
+
+
+		return $ret;
+	}
+
 	public function add_c2d_message(&$props)
 	{
 		$mess=array(
@@ -650,7 +694,7 @@ class Message_manager_model extends CI_Model
 		);
 
 		$mid=$this->add_message($mess);
-		$mess['message_type']="c2u";
+		$mess['message_type']="c2d";
 		$mess['message_id']=$mid;
 		$mess['departement_name']=$this->get_departments()[$props['department']];
 		

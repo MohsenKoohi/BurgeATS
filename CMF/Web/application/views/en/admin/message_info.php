@@ -47,10 +47,7 @@
 							<?php 
 								$type=$message_info['mi_sender_type'];;
 								if($type === "department")
-								{
 									$sender=$department_text." ".${"department_".$departments[$message_info['mi_sender_id']]."_text"};
-									$sender.=" ( ".$user_text." ".$message_info['vuc']." - ".$message_info['vun']." ) ";
-								}
 								if($type === "user")
 									$sender=$user_text." ".$message_info['suc']." - ".$message_info['sun'];
 								if($type === "customer")

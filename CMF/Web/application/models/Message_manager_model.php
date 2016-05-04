@@ -607,6 +607,38 @@ class Message_manager_model extends CI_Model
 		return;
 	}
 
+	public function add_u2u_message($props)
+	{
+		$ret=array();
+
+		foreach($props['receiver_ids'] as $rid)
+		{
+			$mess=array(
+				"mi_sender_type"		=>"user"
+				,"mi_sender_id"		=>$props['sender_id']
+				,"mi_receiver_type"	=>"user"
+				,"mi_receiver_id"		=>$rid
+				,"mi_subject"			=>$props['subject']
+			);
+
+			$mid=$this->add_message($mess);
+
+			$thr=array(
+				'mt_message_id'	=> $mid
+				,'mt_sender_type'	=> "user"
+				,'mt_sender_id'	=> $props['sender_id']
+				,'mt_content'		=> $props['content']
+			);
+
+			$tid=$this->add_thread($thr);
+
+			$ret[]=$mid;
+		}
+
+
+		return $ret;
+	}
+
 	public function add_c2d_message(&$props)
 	{
 		$mess=array(

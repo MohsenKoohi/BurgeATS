@@ -15,10 +15,6 @@ class AE_Message extends Burge_CMF_Controller {
 		$op_access=$this->message_manager_model->get_operations_access();
 		$this->data['op_access']=$op_access;
 
-		//if($this->data['op_access']['verifier'])
-			if($this->input->post("post_type")==="verify_c2c_messages")
-				return $this->verify_messages();
-
 		if($op_access['customers'] && $this->input->get("customer_ids"))
 		{
 			$this->load->model("customer_manager_model");
@@ -42,12 +38,16 @@ class AE_Message extends Burge_CMF_Controller {
 
 		
 		$user_info=$this->user_manager_model->get_user_info();
+		$this->data['sender_user_id']=$user_info->get_id();
 		$this->data['sender_user_name']=$user_info->get_code()." - ".$user_info->get_name();
 
 		$this->data['sender_departments']=array();
 		foreach($op_access['departments'] as $name => $id)
 			if($id)
 				$this->data['sender_departments'][$id]=$name;
+
+		if($this->input->post("post_type")==="add_new_message")
+			return $this->add_new_message();
 
 		$this->data['users_search_url']=get_link("admin_user_search");
 		$this->data['customers_search_url']=get_link("admin_customer_search");
@@ -60,6 +60,29 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->send_admin_output("message_new");
 
 		return;	 
+	}
+
+	private function add_new_message()
+	{
+		$rt=$this->input->post("receiver_type");
+		$rids=explode(",",$this->input->post("receivers_ids"));
+		$subject=$this->input->post("subject");
+		$content=$this->input->post("content");
+
+		if(($rt === "user") && $rids)
+		{
+			$props=array(
+				"sender_id"=>$this->data['sender_user_id']
+				,"receiver_ids"=>$rids
+				,"subject"=>$subject
+				,"content"=>$content
+			);
+
+			$this->message_manager_model->add_u2u_message($props);
+		}
+
+		$sender_type=$this->input->post("sender_type");
+		
 	}
 
 

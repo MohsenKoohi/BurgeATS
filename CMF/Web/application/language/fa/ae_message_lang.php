@@ -83,10 +83,10 @@ $lang['participants_saved_successfully']="شرکت کنندگان با موفق�
 
 $lang['add_new_message']="ارسال پیام جدید";
 $lang['receiver_type']="نوع گیرنده";
-$lang['']="";
-$lang['']="";
-$lang['']="";
-$lang['']="";
+$lang['are_you_sure_to_send']="نامه ارسال شود؟";
+$lang['please_specify_the_sender_department']="لطفا فرستنده را مشخص فرمایید.";
+$lang['please_specify_the_receiver']="گیرنده پیام را مشخص فرمایید.";
+$lang['please_fill_subject_and_content']="لطفا عنوان و متن پیام رامشخص نمایید.";
 $lang['']="";
 $lang['']="";
 $lang['']="";

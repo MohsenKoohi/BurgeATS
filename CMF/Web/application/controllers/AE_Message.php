@@ -12,20 +12,50 @@ class AE_Message extends Burge_CMF_Controller {
 
 	public function new_message()
 	{
-		$this->data['op_access']=$this->message_manager_model->get_operations_access();
+		$op_access=$this->message_manager_model->get_operations_access();
+		$this->data['op_access']=$op_access;
 
 		//if($this->data['op_access']['verifier'])
 			if($this->input->post("post_type")==="verify_c2c_messages")
 				return $this->verify_messages();
 
-		$this->data['receivers_ids']=array();
+		if($op_access['customers'] && $this->input->get("customer_ids"))
+		{
+			$this->load->model("customer_manager_model");
+			$res=$this->customer_manager_model->get_customers(array(
+				"id"=>explode(",",$this->input->get("customer_ids"))
+				)
+			);
+
+			$receivers_ids=array();
+			foreach($res as $row)
+				$receivers_ids[$row['customer_id']]=$row['customer_name'];
+
+			$this->data['receiver_type']="customer";
+			$this->data['receivers_ids']=$receivers_ids;
+		}
+		else
+		{
+			$this->data['receiver_type']="";
+			$this->data['receivers_ids']=array();
+		}
+
+		
+		$user_info=$this->user_manager_model->get_user_info();
+		$this->data['sender_user_name']=$user_info->get_code()." - ".$user_info->get_name();
+
+		$this->data['sender_departments']=array();
+		foreach($op_access['departments'] as $name => $id)
+			if($id)
+				$this->data['sender_departments'][$id]=$name;
+
 		$this->data['users_search_url']=get_link("admin_user_search");
 		$this->data['customers_search_url']=get_link("admin_customer_search");
 
 		$this->data['message']=get_message();
 		$this->data['departments']=$this->message_manager_model->get_departments();
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_message_new",TRUE));
-		$this->data['header_title']=$this->lang->line("add_new_messages");
+		$this->data['header_title']=$this->lang->line("add_new_message");
 
 		$this->send_admin_output("message_new");
 

@@ -373,6 +373,9 @@ class AE_Message extends Burge_CMF_Controller {
 		//bprint_r($this->data['messages']);
 	}
 
+	//in this function we set limitations for messages based on 
+	//filters the user has choosed
+	//access for each message is considered based on $access in model 
 	private function initialize_filters(&$filters,$access)
 	{
 		$fields=array(
@@ -400,7 +403,7 @@ class AE_Message extends Burge_CMF_Controller {
 			($filters['sender_type']!=="customer")   &&
 			($filters['receiver_type']!=="department") && 
 			($filters['receiver_type']!=="customer"))
-				$this->set_user_message_types($op_access,$filters);
+				$this->set_user_message_types($filters);
 
 		if(($filters['sender_type']!=="department") && 
 			($filters['sender_type']!=="user") &&
@@ -409,7 +412,7 @@ class AE_Message extends Burge_CMF_Controller {
 			($filters['receiver_type']!=="user") &&
 			($filters['receiver_type']!=="me")
 			)
-				$this->set_customer_message_types($op_access,$filters);
+				$this->set_customer_message_types($filters);
 		
 		if(($filters['sender_type']!=="user") &&			
 			($filters['sender_type']!=="me") &&
@@ -417,7 +420,7 @@ class AE_Message extends Burge_CMF_Controller {
 			($filters['receiver_type']!=="me") && 
 			!(($filters['receiver_type']==="customer") && ($filters['sender_type']==="customer"))
 			)
-				$this->set_departments_message_types($op_access,$filters);
+				$this->set_departments_message_types($filters);
 
 		//bprint_r($op_access);
 		//bprint_r($filters['message_types']);
@@ -425,7 +428,7 @@ class AE_Message extends Burge_CMF_Controller {
 		return;
 	}
 
-	private function set_customer_message_types(&$op_access, &$filters)
+	private function set_customer_message_types(&$filters)
 	{
 		$mess=array();
 		$mess['mi_sender_type']="customer";
@@ -438,7 +441,7 @@ class AE_Message extends Burge_CMF_Controller {
 		return;
 	}
 
-	private function set_departments_message_types(&$op_access, &$filters)
+	private function set_departments_message_types(&$filters)
 	{
 		if(($filters['sender_type']!=="department") && ($filters['receiver_type']!=="customer"))
 		{
@@ -464,7 +467,7 @@ class AE_Message extends Burge_CMF_Controller {
 		return;
 	}
 
-	private function set_user_message_types(&$op_access, &$filters)
+	private function set_user_message_types(&$filters)
 	{
 		$user_id=$this->user_manager_model->get_user_info()->get_id();
 

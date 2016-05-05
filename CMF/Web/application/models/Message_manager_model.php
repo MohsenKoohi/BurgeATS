@@ -440,6 +440,8 @@ class Message_manager_model extends CI_Model
 
 		$this->set_search_where_clause($filters,$access,TRUE);
 
+		//echo $this->db->get_compiled_select();
+
 		$query=$this->db->get();
 
 		$row=$query->row_array();
@@ -585,14 +587,85 @@ class Message_manager_model extends CI_Model
 			$mess_types.=" || ( ".$query." ) "; 
 		}
 
-		if(isset($access['type']) && ($access['type']==='user') && isset($access['id']))
-			$mess_types.=" || (!ISNULL(pu.mp_participant_id))";
-
-		if(isset($access['department_ids']) && $access['department_ids'])
-			$mess_types.=" || (!ISNULL(pd.mp_participant_id))";		
+		$this->db->where((" ( ".$mess_types." )"));
 		//echo $mess_types."<br>";exit();
 
-		$this->db->where((" ( ".$mess_types." )"));
+		$access_where=" 0 ";
+		{
+			$user_id=0;
+			if(($access['type'] == "user")  && isset($access['id']))
+				$user_id=$access['id'];
+
+			$department_ids=NULL;
+			if(isset($access['department_ids']) && $access['department_ids'])
+				$department_ids="(".implode(",",$access['department_ids']).")";
+
+			//for u2u 
+			{
+				$tq = " (mi_sender_type = 'user') AND (mi_receiver_type = 'user') ";
+				$aq = " 0 ";
+				if($user_id)
+				{
+					$aq .= " || ( mi_sender_id = $user_id )";
+					$aq .= " || ( mi_receiver_id = $user_id )";
+					$aq .= " || ( !ISNULL(pu.mp_participant_id) )";
+				}
+				if($access['op_access']['users'])
+					$aq .= " || ( 1 )";
+				if($department_ids)
+					$aq .= " || ( !ISNULL(pd.mp_participant_id) )";	
+
+				$access_where .= " || ( $tq AND ( $aq ) ) ";
+			}
+
+			//for c2c
+			{
+				$tq = " (mi_sender_type = 'customer') AND (mi_receiver_type = 'customer') ";
+				$aq = " 0 ";
+				if($user_id)
+					$aq .= " || ( !ISNULL(pu.mp_participant_id) )";
+				if($access['op_access']['customers'])
+					$aq .= " || ( 1 )";
+				if($department_ids)
+					$aq .= " || ( !ISNULL(pd.mp_participant_id) )";	
+
+				$access_where .= " || ( $tq AND ( $aq ) ) ";	
+			}
+
+			//for c2d
+			{
+				$tq = " (mi_sender_type = 'customer') AND (mi_receiver_type = 'department') ";
+				$aq = " 0 ";
+				if($user_id)
+					$aq .= " || ( !ISNULL(pu.mp_participant_id) )";
+				if($department_ids)
+				{
+					$aq .= " || ( mi_receiver_id IN $department_ids )";	
+					$aq .= " || ( !ISNULL(pd.mp_participant_id) )";	
+				}
+
+				$access_where .= " || ( $tq AND ( $aq ) ) ";	
+			}
+
+			//for d2c
+			{
+				$tq = " (mi_sender_type = 'department') AND (mi_receiver_type = 'customer') ";
+				$aq = " 0 ";
+				if($user_id)
+					$aq .= " || ( !ISNULL(pu.mp_participant_id) )";
+				if($department_ids)
+				{
+					$aq .= " || ( mi_sender_id IN $department_ids )";	
+					$aq .= " || ( !ISNULL(pd.mp_participant_id) )";	
+				}
+
+				$access_where .= " || ( $tq AND ( $aq ) ) ";	
+			}
+		}
+		
+		$this->db->where((" ( ".$access_where." )"));
+		//echo $access_where;
+		//bprint_r($access);exit();	
 
 		if(!$count)
 		{

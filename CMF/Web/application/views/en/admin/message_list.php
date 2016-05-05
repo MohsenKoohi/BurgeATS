@@ -54,17 +54,15 @@
 						<option value="complete">{complete_text}</option>
 					</select>
 				</div>
-
-				<?	if($op_access['customers']) {?>
-					<div class="three columns">
-						<label>{verification_status_of_last_message_text}</label>
-						<select class="full-width" name="verified">
-							<option>&nbsp;</option>
-							<option value="yes">{verified_text}</option>
-							<option value="no">{not_verified_text}</option>
-						</select>
-					</div>
-				<?php } ?>
+				
+				<div class="three columns">
+					<label>{verification_status_of_last_message_text}</label>
+					<select class="full-width" name="verified">
+						<option>&nbsp;</option>
+						<option value="yes">{verified_text}</option>
+						<option value="no">{not_verified_text}</option>
+					</select>
+				</div>
 				
 				<div class="three columns">
 					<label>{sender_text}</label>
@@ -73,39 +71,36 @@
 						<option value="me">{me_text}</option>
 						<?php 
 							echo "<option value='user'>{user_text}</option>";
-							if($op_access['departments'])	
-								echo "<option value='department'>{department_text}</option>";
-							if($op_access['customers'])	
-								echo "<option value='customer'>{customer_text}</option>";							
+							echo "<option value='department'>{department_text}</option>";
+							echo "<option value='customer'>{customer_text}</option>";							
 						?>
 					</select>
 
 					<div class="no-display">
-						<? if($op_access['departments']) { ?>
-							<div class="three columns" id="sender-departments">
-								<label>{sender_department_text}</label>
-								<select name="sender_department" class="full-width">
-									<option value="">&nbsp;</option>
-									<?php
-										foreach($op_access['departments'] as $name => $id)
-											if($id)
-												echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
-									?>
-								</select>
-							</div>
-						<?php } ?>
-
+						
+						<div class="three columns" id="sender-departments">
+							<label>{sender_department_text}</label>
+							<select name="sender_department" class="full-width">
+								<option value="">&nbsp;</option>
+								<?php
+									foreach($departments as $id => $name)
+										if($id)
+											echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
+								?>
+							</select>
+						</div>
+					
 						<div class="three columns" id="sender-users">
 							<label>{sender_user_name_or_id_text}</label>
 							<input name="sender_user" type="text" class="full-width">
 						</div>
 
-						<? if($op_access['customers']){?>
-							<div class="three columns" id="sender-customers">
-								<label>{sender_customer_name_or_id_text}</label>
-								<input name="sender_customer" type="text" class="full-width">
-							</div>
-						<?php } ?>
+
+						<div class="three columns" id="sender-customers">
+							<label>{sender_customer_name_or_id_text}</label>
+							<input name="sender_customer" type="text" class="full-width">
+						</div>
+					
 
 					</div>
 				</div>
@@ -117,39 +112,36 @@
 						<option value="me">{me_text}</option>
 						<?php 
 							echo "<option value='user'>{user_text}</option>";
-							if($op_access['departments'])	
-								echo "<option value='department'>{department_text}</option>";
-							if($op_access['customers'])	
-								echo "<option value='customer'>{customer_text}</option>";							
+							echo "<option value='department'>{department_text}</option>";
+							echo "<option value='customer'>{customer_text}</option>";							
 						?>
 					</select>
 
 					<div class="no-display">
-						<? if($op_access['departments']) { ?>
-							<div class="three columns" id="receiver-departments">
-								<label>{receiver_department_text}</label>
-								<select name="receiver_department" class="full-width">
-									<option value="">&nbsp;</option>
-									<?php
-										foreach($op_access['departments'] as $name => $id)
-											if($id)
-												echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
-									?>
-								</select>
-							</div>
-						<?php } ?>
+						<div class="three columns" id="receiver-departments">
+							<label>{receiver_department_text}</label>
+							<select name="receiver_department" class="full-width">
+								<option value="">&nbsp;</option>
+								<?php
+									foreach($departments as $id => $name)
+										if($id)
+											echo "<option value='$id'>".${"department_".$name."_text"}."</option>\n";
+								?>
+							</select>
+						</div>
+					
 
 						<div class="three columns " id="receiver-users">
 							<label>{receiver_user_name_or_id_text}</label>
 							<input name="receiver_user" type="text" class="full-width">
 						</div>
 
-						<? if($op_access['customers']){?>
-							<div class="three columns " id="receiver-customers">
-								<label>{receiver_customer_name_or_id_text}</label>
-								<input name="receiver_customer" type="text" class="full-width">
-							</div>
-						<?php } ?>
+						
+						<div class="three columns " id="receiver-customers">
+							<label>{receiver_customer_name_or_id_text}</label>
+							<input name="receiver_customer" type="text" class="full-width">
+						</div>
+					
 					</div>
 				</div>
 

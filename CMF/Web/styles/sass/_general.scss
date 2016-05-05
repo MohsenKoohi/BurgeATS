@@ -61,12 +61,12 @@ body.ltr .anti-float
 }
 
 
-input, textarea,select
+input, textarea
 {
 	padding:4px;
 }
 
-select,input:not([type=radio])
+select, input:not([type=radio])
 {
 	height: 32px;
 }

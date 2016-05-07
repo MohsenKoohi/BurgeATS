@@ -396,15 +396,15 @@ class Message_manager_model extends CI_Model
 			;
 
 		$ttbl=$this->db->dbprefix($this->message_thread_table_name);
-		if(!isset($filerts['verified']))
-			$this->db->join(
+		if(!isset($filters['verified']))
+			/*$this->db->join(
 				"(SELECT * from $ttbl 
 						INNER JOIN (
 							SELECT max(mt_thread_id) as max FROM $ttbl 
 								GROUP BY mt_message_id
 							) AS mtb ON mtb.max = mt_thread_id
 				) as mt"
-				,"mi_message_id = mt_message_id","INNER");
+				,"mi_message_id = mt_message_id","INNER")*/;
 		else
 			$this->db->join(
 				"(SELECT * from $ttbl 
@@ -453,7 +453,7 @@ class Message_manager_model extends CI_Model
 	{
 		$this->db
 			->select(
-				$this->message_info_table_name.".*,mt.*,
+				$this->message_info_table_name.".*, mt.* , mt.mt_content as mtt_content
 				, sender_user.user_code as suc, sender_user.user_name as sun
 				, sender_customer.customer_name as scn
 				, receiver_user.user_code as ruc, receiver_user.user_name as run
@@ -467,7 +467,7 @@ class Message_manager_model extends CI_Model
 			;
 
 		$ttbl=$this->db->dbprefix($this->message_thread_table_name);
-		if(!isset($filerts['verified']))
+		if(!isset($filters['verified']))
 			$this->db->join(
 				"(SELECT * from $ttbl 
 						INNER JOIN (

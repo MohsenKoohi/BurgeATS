@@ -17,6 +17,9 @@ class CE_Dashboard extends Burge_CMF_Controller {
 
 		$this->lang->load('ce_dashboard',$this->language->get());
 
+		$info=$this->customer_manager_model->get_logged_customer_info();
+		$this->data['customer_name']=$info['customer_name'];
+
 		$this->data['message']=get_message();
 
 		$this->data['lang_pages']=get_lang_pages(get_link("customer_dashboard",TRUE));

@@ -11,6 +11,8 @@ $lang['header_meta_description']="";
 $lang['select']="Please select";
 $lang['read_more']="More";
 $lang['page']="Page";
-
 $lang['contact_us']="Contact us";
+
+//added for BurgeATS
 $lang['dashboard']="Account";
+$lang['messages']="Messages";

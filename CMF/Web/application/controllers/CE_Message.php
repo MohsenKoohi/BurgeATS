@@ -15,7 +15,18 @@ class CE_Message extends Burge_CMF_Controller {
 		if(!$this->data['customer_logged_in'])
 			redirect(get_link("customer_login"));
 
-		echo get_message();
+		$this->data['message']=get_message();
+
+		$this->data['departments']=$this->message_manager_model->get_departments();
+
+		$customer_id=$this->customer_manager_model->get_logged_customer_id();
+		$this->data['messages']=$this->message_manager_model->get_customer_messages($customer_id);
+		
+		$this->data['lang_pages']=get_lang_pages(get_link("customer_message",TRUE));
+
+		$this->data['header_title']=$this->lang->line("messages").$this->lang->line("header_separator").$this->data['header_title'];
+
+		$this->send_customer_output("message_list");	
 	}
 
 	public function c2d()

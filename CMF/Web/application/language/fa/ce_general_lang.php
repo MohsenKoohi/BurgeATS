@@ -15,3 +15,4 @@ $lang['contact_us']="تماس با ما";
 
 //added for BurgeATS
 $lang['dashboard']="حساب کاربری";
+$lang['messages']="پیام‌ها";

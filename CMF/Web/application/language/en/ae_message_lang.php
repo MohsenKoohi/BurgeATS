@@ -79,3 +79,15 @@ $lang['your_reply_added_successfully']="Your reply added successfully.";
 $lang['participants']="Participants";
 $lang['users']="Users";
 $lang['participants_saved_successfully']="Participants saved successfully.";
+
+$lang['add_new_message']="Send New Message";
+$lang['receiver_type']="Receiver Type";
+$lang['are_you_sure_to_send']="Are you sure to send this message?";
+$lang['please_specify_the_sender_department']="Please specify the sender.";
+$lang['please_specify_the_receiver']="Please specify the receiver.";
+$lang['please_fill_subject_and_content']="Please fill subject and content fields.";
+$lang['message_added_successfully']="The new message sent successfully.";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";

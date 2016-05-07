@@ -13,6 +13,7 @@
 				border-radius: 10px;
 				max-height: 200px;
 				overflow: auto;
+				min-height: 50px;
 			}
 		</style>
 		<h1>{message_text} {message_id}

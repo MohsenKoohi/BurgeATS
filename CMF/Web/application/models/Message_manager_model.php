@@ -385,6 +385,76 @@ class Message_manager_model extends CI_Model
 		);
 	}
 
+	public function get_customer_total_messages($customer_id)
+	{
+		$ttbl=$this->db->dbprefix($this->message_thread_table_name);
+		return $this->db
+			->select("COUNT(mi_message_id) as count")
+			->from($this->message_info_table_name)
+			->join(
+				"(SELECT * from $ttbl 
+						INNER JOIN (
+							SELECT max(mt_thread_id) as max FROM $ttbl 
+								WHERE (
+									(mt_sender_type != 'user') AND
+									(
+										( mt_sender_type = 'customer' AND mt_sender_id = $customer_id ) || 
+										(mt_verifier_id !=0)
+									)
+								)
+								GROUP BY mt_message_id 
+							) AS mtb ON mtb.max = mt_thread_id
+				) as mt"
+				,"mi_message_id = mt_message_id","INNER")
+			->where("
+				(
+					( mi_sender_type = 'customer' AND mi_sender_id = $customer_id ) ||
+					( mi_receiver_type = 'customer' AND mi_receiver_id = $customer_id ) 
+				)")
+			->where("mi_active",1)
+			->get()
+			->row_array()['count'];
+	}
+
+	public function get_customer_messages($customer_id,$filters)
+	{
+		$ttbl=$this->db->dbprefix($this->message_thread_table_name);
+		return $this->db
+			->select(
+				$this->message_info_table_name.".*, mt.*
+				, sender_customer.customer_name as scn
+				, receiver_customer.customer_name as rcn
+				")
+			->from($this->message_info_table_name)
+			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","LEFT")
+			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","LEFT")
+			->join(
+				"(SELECT * from $ttbl 
+						INNER JOIN (
+							SELECT max(mt_thread_id) as max FROM $ttbl 
+								WHERE (
+									(mt_sender_type != 'user') AND
+									(
+										( mt_sender_type = 'customer' AND mt_sender_id = $customer_id ) || 
+										(mt_verifier_id !=0)
+									)
+								)
+								GROUP BY mt_message_id 
+							) AS mtb ON mtb.max = mt_thread_id
+				) as mt"
+				,"mi_message_id = mt_message_id","INNER")
+			->where("
+				(
+					( mi_sender_type = 'customer' AND mi_sender_id = $customer_id ) ||
+					( mi_receiver_type = 'customer' AND mi_receiver_id = $customer_id ) 
+				)")
+			->where("mi_active",1)
+			->order_by("mi_last_activity DESC")
+			->limit((int)$filters['length'],(int)$filters['start'])
+			->get()
+			->result_array();
+	}
+
 	public function get_total_messages($filters,$access)
 	{
 		$this->db->select("COUNT( DISTINCT mi_message_id ) as count");
@@ -453,7 +523,7 @@ class Message_manager_model extends CI_Model
 	{
 		$this->db
 			->select(
-				$this->message_info_table_name.".*, mt.* , mt.mt_content as mtt_content
+				$this->message_info_table_name.".*, mt.*
 				, sender_user.user_code as suc, sender_user.user_name as sun
 				, sender_customer.customer_name as scn
 				, receiver_user.user_code as ruc, receiver_user.user_name as run

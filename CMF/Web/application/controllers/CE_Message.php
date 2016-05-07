@@ -18,15 +18,58 @@ class CE_Message extends Burge_CMF_Controller {
 		$this->data['message']=get_message();
 
 		$this->data['departments']=$this->message_manager_model->get_departments();
-
-		$customer_id=$this->customer_manager_model->get_logged_customer_id();
-		$this->data['messages']=$this->message_manager_model->get_customer_messages($customer_id);
 		
+		$this->set_messages();
+
 		$this->data['lang_pages']=get_lang_pages(get_link("customer_message",TRUE));
 
 		$this->data['header_title']=$this->lang->line("messages").$this->lang->line("header_separator").$this->data['header_title'];
 
 		$this->send_customer_output("message_list");	
+	}
+
+	private function set_messages()
+	{
+		$customer_id=$this->customer_manager_model->get_logged_customer_id();
+		$total=$this->message_manager_model->get_customer_total_messages($customer_id);
+		//echo $total;
+
+		if($total)
+		{
+			$per_page=10;
+			$total_pages=ceil($total/$per_page);
+			$page=1;
+			if($this->input->get("page"))
+				$page=(int)$this->input->get("page");
+			if($page>$total_pages)
+				$page=$total_pages;
+
+			$start=($page-1)*$per_page;
+			$filters=array();
+			$filters['start']=$start;
+			$filters['length']=$per_page;
+			
+			$this->data['messages']=$this->message_manager_model->get_customer_messages($customer_id,$filters);
+			//bprint_r($this->data['messages']);
+			
+			$end=$start+sizeof($this->data['messages'])-1;
+
+			$this->data['messages_current_page']=$page;
+			$this->data['messages_total_pages']=$total_pages;
+			$this->data['messages_total']=$total;
+			$this->data['messages_start']=$start+1;
+			$this->data['messages_end']=$end+1;		
+		}
+		else
+		{
+			$this->data['messages_current_page']=0;
+			$this->data['messages_total_pages']=0;
+			$this->data['messages_total']=$total;
+			$this->data['messages_start']=0;
+			$this->data['messages_end']=0;
+		}
+
+		return;
 	}
 
 	public function c2d()

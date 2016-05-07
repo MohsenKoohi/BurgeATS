@@ -79,8 +79,8 @@ $lang['task_next_exec']="Repeat execution after";
 
 $lang['events']="Events";
 $lang['events_set_successfully']="Events set successfully.";
-
 $lang['address_has_not_been_specified']="Address has not been specified.";
+$lang['send_message']="Send Message";
 $lang['reciever']="Reciever";
 $lang['sender']="Sender";
 $lang['login']="Login as Customer";

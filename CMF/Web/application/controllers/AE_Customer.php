@@ -35,7 +35,7 @@ class AE_Customer extends Burge_CMF_Controller {
     	return;
 	}
 
-	private function  update_customers_provinces_and_cities()
+	private function update_customers_provinces_and_cities()
 	{
 		$this->db
 			->set("province_name","چهارمحال بختیاری")
@@ -208,6 +208,7 @@ class AE_Customer extends Burge_CMF_Controller {
 
 		$this->data['customer_id']=$customer_id;
 		$this->data['task_id']=$task_id;
+		$this->data['send_message_address']=get_link("admin_message_new")."?customer_ids=".$customer_id;
 
 		$this->lang->load('ae_customer_details',$this->selected_lang);
 

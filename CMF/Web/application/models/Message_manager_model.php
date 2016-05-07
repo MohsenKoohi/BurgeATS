@@ -602,6 +602,7 @@ class Message_manager_model extends CI_Model
 
 			//for u2u 
 			{
+				//tq= type query , aq= access query
 				$tq = " (mi_sender_type = 'user') AND (mi_receiver_type = 'user') ";
 				$aq = " 0 ";
 				if($user_id)

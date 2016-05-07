@@ -81,6 +81,7 @@ $lang['task_next_exec']="تاریخ اجرای مجدد";
 $lang['events']="رویدادها";
 $lang['events_set_successfully']="رویدادها با موفقیت ثبت شد.";
 $lang['address_has_not_been_specified']="آدرس مبدا مشخص نشده است.";
+$lang['send_message']="ارسال پیام";
 $lang['reciever']="گیرنده";
 $lang['sender']="فرستنده";
 $lang['login']="ورود به سیستم";

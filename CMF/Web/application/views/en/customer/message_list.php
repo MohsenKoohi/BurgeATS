@@ -59,7 +59,6 @@
 
 			<?php 
 				$i=$messages_start;
-				$verification_status=array();
 				if($messages_total)
 					foreach($messages as $mess)
 					{ 

@@ -252,6 +252,55 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
+	public function get_customer_message($message_id,$customer_id)
+	{
+		$message=$this->db
+			->select(
+				$this->message_info_table_name.".*,
+				, sender_customer.customer_name as scn
+				, receiver_customer.customer_name as rcn
+				")
+			->from($this->message_info_table_name)
+			->join("customer as sender_customer","mi_sender_id = sender_customer.customer_id","LEFT")
+			->join("customer as receiver_customer","mi_receiver_id = receiver_customer.customer_id","LEFT")
+			->where("mi_message_id",$message_id)
+			->where("(
+				( mi_sender_type = 'customer' AND mi_sender_id = $customer_id)
+				|| ( mi_receiver_type = 'customer' AND mi_receiver_id = $customer_id)
+				)")
+			->get()
+			->row_array();
+		
+		if(!$message)
+			return NULL;
+		
+		$threads=$this->db
+			->select(
+				$this->message_info_table_name.".*,".$this->message_thread_table_name.".*,
+				, sender_customer.customer_name as scn
+				")
+			->from($this->message_info_table_name)
+			->join($this->message_thread_table_name,"mi_message_id = mt_message_id","LEFT")
+			->join("customer as sender_customer","mt_sender_id = sender_customer.customer_id","LEFT")
+			->where("mi_message_id",$message_id)
+			->where("(
+				( mt_sender_type = 'customer' AND mt_sender_id = $customer_id)
+				|| ( mt_sender_type = 'customer' AND mt_sender_id != $customer_id AND mt_verifier_id !=0 )
+				|| ( mt_sender_type = 'department' )
+				)")
+			->order_by("mt_thread_id ASC")
+			->get()
+			->result_array();
+
+		if(!$threads)
+			return NULL;
+
+		return array(
+			"message"	=> $message
+			,"threads"	=> $threads
+		);
+	}
+
 	public function get_admin_message($message_id)
 	{
 		$access=$this->get_user_access_to_message($message_id);

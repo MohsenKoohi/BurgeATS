@@ -10,6 +10,36 @@ class CE_Message extends Burge_CMF_Controller {
 		$this->lang->load('ce_message',$this->selected_lang);		
 	}
 
+	public function details($message_id)
+	{
+		$message_id=(int)$message_id;
+
+		if(!$message_id || !$this->data['customer_logged_in'])
+			redirect(get_link("customer_login"));
+
+		$this->data['message_id']=$message_id;
+		$customer_id=$this->customer_manager_model->get_logged_customer_id();
+
+		$result=$this->message_manager_model->get_customer_message($message_id,$customer_id);
+		if($result)
+		{
+			$this->data['message_info']=$result['message'];
+			$this->data['threads']=$result['threads'];
+			$this->data['captcha']=get_captcha();
+		}
+		else
+			$this->data['message_info']=NULL;
+		
+		$this->data['page_link']=get_customer_message_details_link($message_id);
+		$this->data['departments']=$this->message_manager_model->get_departments();
+		$this->data['message']=get_message();
+		$this->data['lang_pages']=get_lang_pages(get_customer_message_details_link($message_id,TRUE));
+
+		$this->data['header_title']=$this->lang->line("message")." ".$message_id.$this->lang->line("header_separator").$this->data['header_title'];
+
+		$this->send_customer_output("message_details");	
+	}
+
 	public function message()
 	{
 		if(!$this->data['customer_logged_in'])

@@ -21,8 +21,8 @@ $lang['sender_from']="از";
 $lang['receiver_to']="به";
 $lang['content_of_last_message']="متن";
 $lang['view_details']="مشاهده";
-$lang['']="";
-$lang['']="";
-$lang['']="";
-$lang['']="";
-$lang['']="";
+
+$lang['message']="پیام";
+$lang['reply']="پاسخ";
+$lang['send']="ارسال";
+$lang['are_you_sure_to_send']="پاسخ شما ارسال شود؟";

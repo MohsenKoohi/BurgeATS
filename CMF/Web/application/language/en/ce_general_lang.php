@@ -16,3 +16,10 @@ $lang['contact_us']="Contact us";
 //added for BurgeATS
 $lang['dashboard']="Account";
 $lang['messages']="Messages";
+$lang['customer']="Customer";
+$lang['results']="Results";
+$lang['total_results']="Total";
+$lang['to']="to";
+$lang['']="";
+$lang['']="";
+$lang['']="";

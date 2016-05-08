@@ -16,3 +16,13 @@ $lang['message_sent_successfully']="پیام شما با موفقیت ثبت ش�
 $lang['to_send_message_you_should_login']="برای ارسال پیام باید به حساب کاربری خود وارد شوید:";
 $lang['login']="ورود";
 $lang['register']="ثبت نام";
+
+$lang['sender_from']="از";
+$lang['receiver_to']="به";
+$lang['content_of_last_message']="متن";
+$lang['view_details']="مشاهده";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";

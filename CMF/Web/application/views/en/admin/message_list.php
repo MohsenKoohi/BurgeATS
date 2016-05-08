@@ -299,7 +299,7 @@
 				if($messages_total)
 					foreach($messages as $mess)
 					{ 
-						$mess_link=get_admin_message_info_link($mess['mi_message_id']);
+						$mess_link=get_admin_message_details_link($mess['mi_message_id']);
 			?>
 						<div class="row even-odd-bg">
 							<div class="one column counter">

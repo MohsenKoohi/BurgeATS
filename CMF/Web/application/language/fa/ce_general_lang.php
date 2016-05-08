@@ -16,3 +16,10 @@ $lang['contact_us']="تماس با ما";
 //added for BurgeATS
 $lang['dashboard']="حساب کاربری";
 $lang['messages']="پیام‌ها";
+$lang['customer']="مشتری";
+$lang['results']="نتایج";
+$lang['total_results']="تعداد کل";
+$lang['to']="تا";
+$lang['']="";
+$lang['']="";
+$lang['']="";

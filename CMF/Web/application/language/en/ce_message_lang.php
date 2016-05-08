@@ -16,3 +16,13 @@ $lang['message_sent_successfully']="We have received your message and contact yo
 $lang['to_send_message_you_should_login']="You should login to your account before sending a message:";
 $lang['login']="Login";
 $lang['register']="Signup";
+
+$lang['sender_from']="From";
+$lang['receiver_to']="To";
+$lang['content_of_last_message']="Content";
+$lang['view_details']="View";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";
+$lang['']="";

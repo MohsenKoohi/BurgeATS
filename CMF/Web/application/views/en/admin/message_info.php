@@ -219,7 +219,7 @@
 					<br><br>
 					<input type="hidden" name="post_type" value="verify_c2c_messages"/>
 					<input type="hidden" name="verified_messages" value=""/>
-					<input type="hidden" name="redirect_link" value="<?php echo get_admin_message_info_link($message_id);?>"/>
+					<input type="hidden" name="redirect_link" value="<?php echo get_admin_message_details_link($message_id);?>"/>
 					<input type="hidden" name="not_verified_messages" value=""/>
 					<div class="row">
 							<div class="nine columns">&nbsp;</div>
@@ -262,7 +262,7 @@
 			
 			<div class="separated">
 				<h2>{reply_or_comment_text}</h2>
-				<?php echo form_open(get_admin_message_info_link($message_id),array()); ?>
+				<?php echo form_open(get_admin_message_details_link($message_id),array()); ?>
 				<input type="hidden" name="post_type" value="add_reply_comment" />			
 					<div class="row response-type">
 						<div class="three columns">
@@ -342,7 +342,7 @@
 			<br><br>
 			<div class="separated">
 				<h2>{participants_text}</h2>
-				<?php echo form_open(get_admin_message_info_link($message_id),array("onsubmit"=>"return participantsFormSubmitted();")); ?>
+				<?php echo form_open(get_admin_message_details_link($message_id),array("onsubmit"=>"return participantsFormSubmitted();")); ?>
 				<input type="hidden" name="post_type" value="set_participants" />			
 					
 					<div class="row even-odd-bg dont-magnify">			

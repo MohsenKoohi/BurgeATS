@@ -16,8 +16,8 @@ class CE_Message extends Burge_CMF_Controller {
 			redirect(get_link("customer_login"));
 
 		$this->data['message']=get_message();
-
 		$this->data['departments']=$this->message_manager_model->get_departments();
+		$this->data['page_link']=get_link("customer_message");
 		
 		$this->set_messages();
 

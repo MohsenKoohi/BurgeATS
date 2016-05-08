@@ -170,7 +170,7 @@ class AE_Message extends Burge_CMF_Controller {
 
 		$this->data['message_id']=$message_id;
 		$this->data['message']=get_message();
-		$this->data['lang_pages']=get_lang_pages(get_admin_message_info_link($message_id,TRUE));
+		$this->data['lang_pages']=get_lang_pages(get_admin_message_details_link($message_id,TRUE));
 		$this->data['header_title']=$this->lang->line("message")." ".$message_id;
 
 		$this->send_admin_output("message_info");
@@ -192,7 +192,7 @@ class AE_Message extends Burge_CMF_Controller {
 
 		set_message($this->lang->line("participants_saved_successfully"));
 
-		return redirect(get_admin_message_info_link($message_id));
+		return redirect(get_admin_message_details_link($message_id));
 	}
 
 	private function add_reply_comment($message_id,$mess)
@@ -263,7 +263,7 @@ class AE_Message extends Burge_CMF_Controller {
 			set_message($this->lang->line("your_reply_added_successfully"));
 		}
 
-		return redirect(get_admin_message_info_link($message_id));
+		return redirect(get_admin_message_details_link($message_id));
 	}
 
 	public function index()

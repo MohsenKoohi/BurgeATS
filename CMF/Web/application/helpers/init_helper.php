@@ -75,12 +75,12 @@ function &get_links($just_common=FALSE)
 
 			,'admin_message'								=> ADMIN_SURL_LANG."/message"
 			,'admin_message_new'							=> ADMIN_SURL_LANG."/message/new"
-			,'admin_message_info_format'				=> ADMIN_SURL_LANG."/message/message_id"
+			,'admin_message_details_format'				=> ADMIN_SURL_LANG."/message/message_id"
 			,'admin_message_access'						=> ADMIN_SURL_LANG."/message_access"
 			,'admin_message_access_user_format'		=> ADMIN_SURL_LANG."/message_access/user_id"
 			,'admin_message_search_departments'		=> ADMIN_SURL_LANG."/message/search_departments"
 			,'customer_message'							=> HOME_URL_LANG."/message"
-			,'customer_message_info_format'			=> HOME_URL_LANG."/message/message_id"
+			,'customer_message_details_format'			=> HOME_URL_LANG."/message/message_id"
 			,'customer_message_c2d'						=> HOME_URL_LANG."/contact_us"
 
 		));
@@ -92,21 +92,21 @@ function &get_links($just_common=FALSE)
 	return $LINKS;
 }
 
-function get_customer_message_info_link($message_id, $do_not_set_lang=FALSE)
+function get_customer_message_details_link($message_id, $do_not_set_lang=FALSE)
 {
 	return str_replace(
 		array("message_id")
 		,array($message_id)
-		,get_link("customer_message_info_format",$do_not_set_lang)
+		,get_link("customer_message_details_format",$do_not_set_lang)
 	);
 }
 
-function get_admin_message_info_link($message_id, $do_not_set_lang=FALSE)
+function get_admin_message_details_link($message_id, $do_not_set_lang=FALSE)
 {
 	return str_replace(
 		array("message_id")
 		,array($message_id)
-		,get_link("admin_message_info_format",$do_not_set_lang)
+		,get_link("admin_message_details_format",$do_not_set_lang)
 	);
 }
 

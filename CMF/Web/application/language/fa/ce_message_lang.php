@@ -26,3 +26,4 @@ $lang['message']="پیام";
 $lang['reply']="پاسخ";
 $lang['send']="ارسال";
 $lang['are_you_sure_to_send']="پاسخ شما ارسال شود؟";
+$lang['message_sent_successfully']="پاسخ شما با موفقیت ثبت شد.";

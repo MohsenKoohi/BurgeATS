@@ -21,6 +21,13 @@ $lang['sender_from']="From";
 $lang['receiver_to']="To";
 $lang['content_of_last_message']="Content";
 $lang['view_details']="View";
+
+$lang['message']="Message";
+$lang['reply']="Reply";
+$lang['send']="Send";
+$lang['are_you_sure_to_send']="Are you sure to send this reply?";
+$lang['message_sent_successfully']="Your reply sent successfully.";
+
 $lang['']="";
 $lang['']="";
 $lang['']="";

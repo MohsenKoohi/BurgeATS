@@ -168,15 +168,15 @@
 					<br><br>
 					<div class="row">
 						<div class="twelve columns">
-							<textarea id="content-ta" name="content" class="full-width" rows="7"></textarea>
+							<textarea id="content-ta" name="content" class="full-width" rows="7">{content}</textarea>
 						</div>
 					</div>
 					<div class="row">
-						<div class="two columns">
+						<div class="three columns">
 							{captcha}
 						</div>
 						<div class="three columns">
-							<input name="captcha" class="full-width"/>
+							<input name="captcha" class="full-width lang-en"/>
 						</div>
 					</div>
 					<br><br>

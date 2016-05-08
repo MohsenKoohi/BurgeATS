@@ -23,12 +23,17 @@ class CE_Message extends Burge_CMF_Controller {
 		$result=$this->message_manager_model->get_customer_message($message_id,$customer_id);
 		if($result)
 		{
+			if($this->input->post("post_type")==="add_reply")
+				return $this->add_reply($message_id,$customer_id);
+
 			$this->data['message_info']=$result['message'];
 			$this->data['threads']=$result['threads'];
 			$this->data['captcha']=get_captcha();
 		}
 		else
 			$this->data['message_info']=NULL;
+
+		$this->data['content']=$this->session->flashdata("content".$message_id);
 		
 		$this->data['page_link']=get_customer_message_details_link($message_id);
 		$this->data['departments']=$this->message_manager_model->get_departments();
@@ -38,6 +43,25 @@ class CE_Message extends Burge_CMF_Controller {
 		$this->data['header_title']=$this->lang->line("message")." ".$message_id.$this->lang->line("header_separator").$this->data['header_title'];
 
 		$this->send_customer_output("message_details");	
+	}
+
+	private function add_reply($message_id,$customer_id)
+	{
+		$link=get_customer_message_details_link($message_id);
+		$content=$this->input->post("content");
+
+		if(verify_captcha($this->input->post("captcha")))
+		{
+			$this->message_manager_model->add_customer_reply($message_id,$customer_id,$content);
+			set_message($this->lang->line("message_sent_successfully"));
+		}
+		else
+		{
+			set_message($this->lang->line("captcha_incorrect"));
+			$this->session->set_flashdata("content".$message_id,$content);
+		}
+
+		return redirect($link);
 	}
 
 	public function message()

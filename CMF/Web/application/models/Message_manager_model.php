@@ -977,6 +977,35 @@ class Message_manager_model extends CI_Model
 		return;
 	}
 
+	public function add_customer_reply($message_id,$customer_id,$content)
+	{
+		$current_time=get_current_time();
+
+		$tprops=array(
+			"mt_sender_type"=>"customer"
+			,"mt_sender_id"=>$customer_id
+			,"mt_timestamp"=>$current_time
+			,"mt_message_id"=>$message_id
+			,"mt_content"=>$content
+		);
+
+		$tid=$this->add_thread($tprops);
+		$tprops['thread_id']=$tid;
+
+		$mprops=array(
+			"mi_last_activity"=>$current_time
+			,"mi_complete"=>0
+		);
+		
+		$this->update_message($message_id,$mprops);
+		
+		$this->load->model("customer_manager_model");
+		$this->customer_manager_model->set_customer_event($customer_id,"has_message");
+		$this->customer_manager_model->add_customer_log($customer_id,'MESSAGE_THREAD_ADD',$tprops);
+
+		return $tid;	
+	}
+
 	public function add_reply($message_id,$message_props,$thread_props)
 	{
 		$current_time=get_current_time();

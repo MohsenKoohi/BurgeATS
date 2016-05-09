@@ -62,8 +62,8 @@ define ('HOME_DIR',getcwd());
 define ('LOG_DIR',HOME_DIR."/application/logs/burge_cmf");
 define ('LOGS_PREFIX','bcmf-log-');
 
-define ('COOKIE_PREFIX','burge_cmf_');
-define ('SESSION_VARS_PREFIX','burge_cmf_');
+define ('COOKIE_PREFIX','burge_ats');
+define ('SESSION_VARS_PREFIX','burge_ats');
 
 define ('VISITOR_TRACKING_COOKIE_NAME',"visitor_tracking");
 define ('TRACKING_ENCRYPTION_KEY',		'YW32sde23rAeedfe');

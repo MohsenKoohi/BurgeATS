@@ -53,7 +53,7 @@ class CE_Message extends Burge_CMF_Controller {
 		if(verify_captcha($this->input->post("captcha")))
 		{
 			$this->message_manager_model->add_customer_reply($message_id,$customer_id,$content);
-			set_message($this->lang->line("message_sent_successfully"));
+			set_message($this->lang->line("reply_message_sent_successfully"));
 		}
 		else
 		{
@@ -126,6 +126,81 @@ class CE_Message extends Burge_CMF_Controller {
 		return;
 	}
 
+	public function c2c($customer_id)
+	{
+		$customer_id=(int)$customer_id;
+		if(!$customer_id)
+			return redirect(get_link("home_url"));
+
+		//check access first
+		if(!$this->data['customer_logged_in'])
+		{
+			$this->session->set_userdata("backurl",get_customer_message_c2c_link($customer_id));
+			return redirect(get_link("customer_login"));
+		}
+
+		$customer_info=$this->customer_manager_model->get_customer_info($customer_id);
+		if(!$customer_info)
+			return redirect(get_link("home_url"));
+
+		$this->data['customer_name']=$customer_info['customer_name'];
+		$this->data['post_url']=get_customer_message_c2c_link($customer_id);
+
+		if($this->input->post())
+			return $this->add_new_c2c_message($customer_id);
+
+		$this->data['message']=get_message();
+		$this->data['captcha']=get_captcha();
+		$this->data['lang_pages']=get_lang_pages(get_customer_message_c2c_link($customer_id,TRUE));
+
+		$this->data['subject']=$this->session->flashdata("message_c2c_subject");
+		$this->data['content']=$this->session->flashdata("message_c2c_content");
+		
+		$this->data['header_meta_robots']="noindex";
+
+		$this->data['header_title']=$this->lang->line("send_message").$this->lang->line("header_separator").$this->data['header_title'];
+	
+		$this->send_customer_output("message_c2c");
+
+		return;
+	}
+
+	private function add_new_c2c_message($receiver_id)
+	{
+		
+		if(verify_captcha($this->input->post("captcha")))
+		{
+			$fields=array("subject","content");
+			$props=array();
+			foreach($fields as $field)
+				$props[$field]=$this->input->post($field);
+			
+			if($props['subject'] && $props['content'] )
+			{
+				persian_normalize($props);
+
+				$customer_id=$this->customer_manager_model->get_logged_customer_id();
+				$props['sender_id']=$customer_id;
+				$props['receiver_id']=$receiver_id;
+
+				$this->message_manager_model->add_c2c_message($props);
+
+				set_message($this->lang->line("message_sent_successfully"));
+				return redirect(get_link("customer_message"));
+			}
+			else
+				set_message($this->lang->line("fill_all_fields"));
+		}
+		else
+			set_message($this->lang->line("captcha_incorrect"));
+		
+
+		$this->session->set_flashdata("message_c2c_subject",$this->input->post("subject"));
+		$this->session->set_flashdata("message_c2c_content",$this->input->post("content"));
+
+		return redirect(get_customer_message_c2c_link($receiver_id));
+	}
+
 	public function c2d()
 	{	
 		if($this->input->post())
@@ -172,9 +247,9 @@ class CE_Message extends Burge_CMF_Controller {
 
 					$this->message_manager_model->add_c2d_message($props);
 
-					set_message($this->lang->line("message_sent_successfully"));
+					set_message($this->lang->line("department_message_sent_successfully"));
 
-					redirect(get_link("customer_messages"));
+					redirect(get_link("customer_message"));
 				}
 				else
 					set_message($this->lang->line("fill_all_fields"));

@@ -880,6 +880,42 @@ class Message_manager_model extends CI_Model
 		return $ret;
 	}
 
+	public function add_c2c_message(&$props)
+	{
+		$mess=array(
+			"mi_sender_type"		=>"customer"
+			,"mi_sender_id"		=>$props['sender_id']
+			,"mi_receiver_type"	=>"customer"
+			,"mi_receiver_id"		=>$props['receiver_id']
+			,"mi_subject"			=>$props['subject']
+		);
+
+		$mid=$this->add_message($mess);
+		$mess['message_type']="c2c";
+		$mess['message_id']=$mid;
+		
+		$this->load->model("customer_manager_model");
+		$this->customer_manager_model->set_customer_event($props['sender_id'],"has_message");
+		$this->customer_manager_model->add_customer_log($props['sender_id'],'MESSAGE_ADD',$mess);
+
+		$this->customer_manager_model->set_customer_event($props['receiver_id'],"has_message");
+		$this->customer_manager_model->add_customer_log($props['receiver_id'],'MESSAGE_ADD',$mess);
+
+		$thr=array(
+			'mt_message_id'	=> $mid
+			,'mt_sender_type'	=> "customer"
+			,'mt_sender_id'	=> $props['sender_id']
+			,'mt_content'		=> $props['content']
+		);
+
+		$tid=$this->add_thread($thr);
+
+		$thr['mt_thread_id']=$tid;		
+		$this->customer_manager_model->add_customer_log($props['sender_id'],'MESSAGE_THREAD_ADD',$thr);
+
+		return $mid;
+	}
+
 	public function add_c2d_message(&$props)
 	{
 		$mess=array(

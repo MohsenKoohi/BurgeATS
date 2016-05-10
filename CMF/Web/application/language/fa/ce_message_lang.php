@@ -11,7 +11,7 @@ $lang['submit']="ثبت";
 
 $lang['fill_all_fields']="لطفا تمامی فیلدها را کامل کنید.";
 $lang['captcha_incorrect']="حروف تصویر را اشتباه ثبت کرده اید.";
-$lang['message_sent_successfully']="پیام شما با موفقیت ثبت شد.<br> به زودی با شما تماس می گیریم";
+$lang['department_message_sent_successfully']="پیام شما با موفقیت ثبت شد.<br> به زودی با شما تماس می گیریم";
 
 $lang['to_send_message_you_should_login']="برای ارسال پیام باید به حساب کاربری خود وارد شوید:";
 $lang['login']="ورود";
@@ -26,4 +26,8 @@ $lang['message']="پیام";
 $lang['reply']="پاسخ";
 $lang['send']="ارسال";
 $lang['are_you_sure_to_send']="پاسخ شما ارسال شود؟";
-$lang['message_sent_successfully']="پاسخ شما با موفقیت ثبت شد.";
+$lang['reply_message_sent_successfully']="پاسخ شما با موفقیت ثبت شد.";
+
+$lang['send_message']="ارسال پیام";
+$lang['receiver']="گیرنده";
+$lang['message_sent_successfully']="پیام شما با موفقیت ثبت شد.";

@@ -109,6 +109,7 @@ $route[ADMIN_URL_FOLDER."/message/search_departments/(.*)"]		= "AE_Message/searc
 $route["contact_us"]															= "CE_Message/c2d";
 $route['message']																= "CE_Message/message";
 $route['message/(\d+)']														= "CE_Message/details/$1";
+$route['message/send/(\d+)']												= "CE_Message/c2c/$1";
 
 $route['(((:any)/)*:any)']="CE_Home/redirect";
 

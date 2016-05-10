@@ -11,7 +11,7 @@ $lang['submit']="Submit";
 
 $lang['fill_all_fields']="Please fill all fields.";
 $lang['captcha_incorrect']="Captcha is incorrect.";
-$lang['message_sent_successfully']="We have received your message and contact you ASAP.";
+$lang['department_message_sent_successfully']="We have received your message and contact you ASAP.";
 
 $lang['to_send_message_you_should_login']="You should login to your account before sending a message:";
 $lang['login']="Login";
@@ -26,10 +26,8 @@ $lang['message']="Message";
 $lang['reply']="Reply";
 $lang['send']="Send";
 $lang['are_you_sure_to_send']="Are you sure to send this reply?";
-$lang['message_sent_successfully']="Your reply sent successfully.";
+$lang['reply_message_sent_successfully']="Your reply sent successfully.";
 
-$lang['']="";
-$lang['']="";
-$lang['']="";
-$lang['']="";
-$lang['']="";
+$lang['send_message']="Send Message";
+$lang['receiver']="Receiver";
+$lang['message_sent_successfully']="Your message sent successfully.";

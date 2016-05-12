@@ -440,7 +440,6 @@ $config['csrf_expire'] = 60*60;
 $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array(
 	ADMIN_URL_FOLDER."/file/.*"
-	,"message/send/(\d+)"
 );
 
 /*

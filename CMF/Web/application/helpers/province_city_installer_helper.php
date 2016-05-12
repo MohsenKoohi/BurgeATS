@@ -979,7 +979,12 @@ function insert_Iran_provinces_and_cities_to_db()
 			(443, 31, 'en', 'Harat'),
 			(443, 31, 'fa', 'هرات'),
 			(444, 31, 'en', 'Yazd'),
-			(444, 31, 'fa', 'یزد');
+			(444, 31, 'fa', 'یزد'),
+			(445, 17, 'en', 'Larestan'),
+			(445, 17, 'fa', 'لارستان'),
+			(446, 25, 'en', 'Talesh'),
+			(446, 25, 'fa', 'تالش')
+
 	");
 	
 	return;	

@@ -170,12 +170,12 @@ class Customer_manager_model extends CI_Model
 		if(isset($filter['province']))
 		{
 			$filter['province']=persian_normalize($filter['province']);
-			$this->db->where("customer_province LIKE '%".str_replace(' ', '%', $filter['province'])."%'");
+			$this->db->where("customer_province = ".(int)$filter['province']."");
 		}
 		if(isset($filter['city']))
 		{
 			$filter['city']=persian_normalize($filter['city']);
-			$this->db->where("customer_city LIKE '%".str_replace(' ', '%', $filter['city'])."%'");
+			$this->db->where("customer_city = ".(int)$filter['city']."");
 		}
 		if(isset($filter['address']))
 		{

@@ -202,8 +202,8 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->data['message']=get_message();
 
 		$this->data['header_title']=$this->lang->line("signup").$this->lang->line("header_separator").$this->data['header_title'];
-		$this->data['header_meta_description']=$this->lang->line("header_meta_description");
-		$this->data['header_meta_keywords'].=",".$this->lang->line("header_meta_keywords");
+		$this->data['header_meta_description']="";
+		$this->data['header_meta_keywords']="";
 		$this->data['header_meta_robots']="noindex";
 		
 		$this->send_customer_output("signup");

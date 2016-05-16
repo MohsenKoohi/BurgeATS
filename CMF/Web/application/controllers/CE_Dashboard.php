@@ -24,9 +24,10 @@ class CE_Dashboard extends Burge_CMF_Controller {
 
 		$this->data['lang_pages']=get_lang_pages(get_link("customer_dashboard",TRUE));
 
-		$this->data['header_title'].=$this->lang->line("header_title");
-		$this->data['header_meta_description'].=$this->lang->line("header_meta_description");
-		$this->data['header_meta_keywords'].=$this->lang->line("header_meta_keywords");
+		$this->data['header_title']=$this->lang->line("header_title").$this->lang->line("header_separator").$this->data['header_title'];
+		$this->data['header_meta_description']="";
+		$this->data['header_meta_keywords']="";
+		$this->data['header_meta_robots']="noindex";
 		
 		$this->send_customer_output("dashboard");
 

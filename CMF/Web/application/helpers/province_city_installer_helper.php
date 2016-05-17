@@ -984,7 +984,7 @@ function insert_Iran_provinces_and_cities_to_db()
 			(445, 17, 'fa', 'لارستان'),
 			(446, 25, 'en', 'Talesh'),
 			(446, 25, 'fa', 'تالش'),
-			(447, 4,  'en', 'Chedegan'),
+			(447, 4,  'en', 'Chadegan'),
 			(447, 4,  'fa', 'چادگان'),
 			(448, 9,  'en', 'Kiar'),
 			(448, 9,  'fa', 'کیار')

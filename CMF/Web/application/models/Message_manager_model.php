@@ -268,6 +268,7 @@ class Message_manager_model extends CI_Model
 				( mi_sender_type = 'customer' AND mi_sender_id = $customer_id)
 				|| ( mi_receiver_type = 'customer' AND mi_receiver_id = $customer_id)
 				)")
+			->where("mi_active",1)
 			->get()
 			->row_array();
 		

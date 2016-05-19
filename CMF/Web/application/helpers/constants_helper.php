@@ -2,6 +2,9 @@
 
 define('MAIN_ADDRESS',"192.168.2.100/Web/BurgeATS/CMF/Web");
 
+//if you have different domains for your different languages
+//define('MAIN_ADDRESS_EN',"your english webiste");
+
 define('ENVIRONMENT', 'development');
 //define('ENVIRONMENT', 'production');
 
@@ -62,12 +65,12 @@ define ('HOME_DIR',getcwd());
 define ('LOG_DIR',HOME_DIR."/application/logs/burge_cmf");
 define ('LOGS_PREFIX','bcmf-log-');
 
-define ('COOKIE_PREFIX','burge_ats');
-define ('SESSION_VARS_PREFIX','burge_ats');
+define ('COOKIE_PREFIX','asfamqw78a6asdfzxasd');
+define ('SESSION_VARS_PREFIX','jdsa834SN3');
 
-define ('VISITOR_TRACKING_COOKIE_NAME',"visitor_tracking");
+define ('VISITOR_TRACKING_COOKIE_NAME',"sMD239wfsfdaQQsd9f7q");
 define ('TRACKING_ENCRYPTION_KEY',		'YW32sde23rAeedfe');
-define ('TRACKING_IV',						'1820903763ebca98');
+define ('TRACKING_IV',						'182090376ebca98');
 
 define ('IMAGES_URL', HOME_URL."/images");
 define ('IMAGES_DIR', HOME_DIR."/images");

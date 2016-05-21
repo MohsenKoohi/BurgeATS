@@ -3,13 +3,17 @@
 		<h1>{customer_details_text} <?php if($customer_info) echo $comma_text." ".$customer_info['customer_name']; ?></h1>
 
 		<div class="row general-buttons">
-			<div class="two columns button button-primary half-col-margin" onclick="document.location='{send_message_address}';">
+			<div class="anti-float two columns button button-primary half-col-margin" onclick="document.location='{send_message_address}';">
 				{send_message_text}
 			</div>
-			<div class="two columns button sub-primary button-type1 half-col-margin" onclick="printAddress()">
+		</div>
+		<div class="row general-buttons">
+			<div class="anti-float two columns button sub-primary button-type1 half-col-margin" onclick="printAddress()">
 				{print_address_text}
 			</div>
-			<div class="two columns button sub-primary button-type2" onclick="customerLogin()">
+		</div>
+		<div class="row general-buttons">	
+			<div class="anti-float two columns button sub-primary button-type2" onclick="customerLogin()">
 				{login_text}
 			</div>
 		</div>

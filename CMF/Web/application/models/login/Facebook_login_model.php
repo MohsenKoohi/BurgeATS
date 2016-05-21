@@ -1,14 +1,14 @@
 <?php
 class Facebook_login_model extends CI_Model
 {
-	var $client_id = '';
-	var $client_secret = '';
+	var $client_id = '103221530032359';
+	var $client_secret = 'f77f15e07e76f81d08ba3ec2384358e8';
  	var $redirect_uri;
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->redirect_uri = get_link("facebook_login_page");
+		$this->redirect_uri = get_link("customer_login_facebook");
 	}
 
 

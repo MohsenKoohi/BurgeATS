@@ -156,12 +156,13 @@ class AE_Task_Exec extends Burge_CMF_Controller {
 		header('Last-Modified: 0 0 0 0 0');
 		header('Pragma :');
 		header('Content-Type: image/jpeg');
-		*/
+		
 
 		if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
 		   header('HTTP/1.1 304 Not Modified');
 		   die();
 		}
+		*/
 			
 		$extension=pathinfo($path, PATHINFO_EXTENSION);
 		$this->output->set_content_type($extension);

@@ -242,7 +242,7 @@ class CE_Login extends Burge_CMF_Controller {
 		}
 
 		$this->yahoo_login_model->SetIdentity('https://me.yahoo.com');
-		$realm_link="ENTER YOUR DOMAIN NAME REGISTERED BY YAHOO HERE, for example http://www.burge.ir";
+		$realm_link=get_link("home_url");
 		$return_link=get_link("customer_login_yahoo");	
 
 		$redirect_link=$this->yahoo_login_model->RedirectToYahooServer($realm_link,$return_link);

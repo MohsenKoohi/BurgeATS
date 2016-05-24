@@ -1,9 +1,10 @@
 #[Burge Affairs Tracking System](http://burge.ir/BurgeATS)
-##	[An Open Source Customer Relationship Managemnt, Affairs Tracking System, and Ticketing System  based on BurgeCMF](http://burge.ir/BurgeATS)
+##	[An Open Source Customer Relationship Management System, Affairs Tracking System, and Ticketing System  based on BurgeCMF](http://burge.ir/BurgeATS)
 
 ![BurgATS Logo](http://burge.ir/BurgeATS/logo-text-en.jpg)
 
 ##Features
+* Allows you not only to manage your customers, but also manage and coordinate your employees, allocating different tasks to different persons, and review the results.
 * MVC architecture using CodeIgniter
 * Multi-language admin and customer environments
 * Multi language admin and custoemr environments, very useful for multi-language companies, and organizations.

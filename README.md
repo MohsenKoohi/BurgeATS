@@ -1,10 +1,13 @@
-#Burge Affairs Tracking System
+#[Burge Affairs Tracking System](http://burge.ir/BurgeATS)
+##	[An Open Source Customer Relationship Managemnt, Affairs Tracking System, and Ticketing System  based on BurgeCMF](http://burge.ir/BurgeATS)
 
-Burge ATS, is a simple and open source CRM, which focus on task execution. It has been implemented using BurgeCMF. 
+![BurgATS Logo](http://burge.ir/BurgeATS/logo-text-en.jpg)
 
-Features:
-* Multi language admin and custoemr environments, very useful for multi-language companies.
-* Customer manager module, which allows add and edit customer properties, tracking customer logs, and executing tasks.
+##Features
+* MVC architecture using CodeIgniter
+* Multi-language admin and customer environments
+* Multi language admin and custoemr environments, very useful for multi-language companies, and organizations.
+* **Customer Manager** module, which allows add and edit customer properties, tracking customer logs, and executing tasks.
 * Customer manager module includes a powerful logger, which creates a file for each event of customer and stores it in JSON format to the related customer folder. 
 * **Task Manager** module, which declares each task. Each task has a specific class which is called by the system scheduler to specify users for which task should be executed.
 * **Task Execution** module, which executes a task for a user and creates its log. some executions require manger note.

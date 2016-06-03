@@ -20,6 +20,7 @@ function &get_links($just_common=FALSE)
 			,'styles_url'			=> STYLES_URL
 			,'scripts_url'			=> SCRIPTS_URL
 			,'upload_url'			=> UPLOAD_URL
+			,'post_gallery_url'	=> POST_GALLERY_URL
 		);
 
 		$LINKS=array_merge($LINKS_COMMON, array(
@@ -231,6 +232,16 @@ function get_customer_category_details_link($category_id,$category_name,$page=1,
 function get_admin_contact_us_message_details_link($message_id, $do_not_set_lang=FALSE)
 {
 	return str_replace("message_id",$message_id,get_link("admin_contact_us_message_details_format",$do_not_set_lang));	
+}
+
+function get_post_gallery_image_path($img)
+{
+	return POST_GALLERY_DIR."/".$img;
+}
+
+function get_post_gallery_image_url($img)
+{
+	return POST_GALLERY_URL."/".$img;
 }
 
 

@@ -21,7 +21,7 @@
 					</div>
 				</div>
 				<br>
-				<?php echo form_open(get_admin_post_details_link($post_id),array("onsubmit"=>"return formSubmit();")); ?>
+				<?php echo form_open_multipart(get_admin_post_details_link($post_id),array("onsubmit"=>"return formSubmit();")); ?>
 					<input type="hidden" name="post_type" value="edit_post" />
 					<div class="row even-odd-bg" >
 						<div class="three columns">
@@ -172,6 +172,25 @@
 											/>
 										</div>
 									</div>
+									<div class="row even-odd-bg">
+										<div class="three columns">
+											<span>{copy_from_text}</span>
+										</div>
+										<div class="six columns">
+											<select class="full-width" name="<?php echo $lang;?>[copy]">
+												<option value="">{please_select_text}</option>
+												<?php 
+													foreach($all_langs as $slang=>$value)
+													{
+														if($slang === $lang)
+															continue;
+
+														echo "<option value='$slang'>".${"lang_".$slang."_name_text"}."</option>";
+													}
+												?>
+											</select>
+										</div>
+									</div>
 									<div class="row even-odd-bg" >
 										<div class="three columns">
 											<span>{title_text}</span>
@@ -245,6 +264,64 @@
 											/>
 										</div>
 									</div>
+									<div class="row even-odd-bg" >
+										<div class="three columns">
+											<span>{gallery_text}</span>
+										</div>
+										<div class="nine columns">
+											<style type="text/css">
+												.gallery-row img
+												{
+													max-width: 100%;
+													max-height: 300px;
+												}
+											</style>
+											<?php 
+												$gallery=$pc['pc_gallery']; 
+												if($gallery)
+													foreach($gallery['images'] as $index=>$gim)
+													{
+														$img_link=get_post_gallery_image_url($gim['image']);
+											?>
+													<div class="row gallery-row separated">
+														<input type='hidden' name='<?php echo $lang;?>[pc_gallery][old_images][]' value='<?php echo $index;?>'/>
+														<div class="five columns">
+															<a href="<?php echo $img_link; ?>" target="_blank">
+																<img src="<?php echo $img_link; ?>"/>
+															</a>
+														</div>
+														<div class="six columns half-col-margin">
+															<input type="text"  class="full-width" 
+																name='<?php echo $lang;?>[pc_gallery][old_image_text][<?php echo $index?>]'
+																value="<?php echo $gim['text']; ?>"
+															/>
+															<input type="hidden"  
+																name='<?php echo $lang;?>[pc_gallery][old_image_image][<?php echo $index?>]'
+																value="<?php echo $gim['image']; ?>"
+															/>
+															<br><br>
+															{delete_text}
+															<input type="checkbox" class="graphical"
+																name='<?php echo $lang;?>[pc_gallery][old_image_delete][<?php echo $index?>]'
+															/>
+														</div>
+													</div>
+											<?php
+													}
+											?>
+											<input type="hidden"  
+												name="<?php echo $lang;?>[pc_gallery][count]"  
+												value="0"
+											/>
+											<div class="row separated">
+												<label>&nbsp;</label>
+												<div class="five columns button button-type1" style="font-size:1.3em"
+													onclick="addGalleryRow('<?php echo $lang;?>',this);" >
+													{add_image_text}
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						<?php } ?>
@@ -252,7 +329,7 @@
 					<br><br>
 					<div class="row">
 							<div class="four columns">&nbsp;</div>
-							<input type="submit" class=" button-primary four columns" value="{submit_text}"/>
+							<input type="submit" class="button-primary four columns" value="{submit_text}"/>
 					</div>				
 				</form>
 
@@ -264,8 +341,40 @@
 
 					<script type="text/javascript">
 
-					//operations for post_content iamges
+					//gallery operations
+					function addGalleryRow(lang,el)
+					{
+						var counter=$("input[name='"+lang+"[pc_gallery][count]']");
+						var index=parseInt(counter.val());
+						counter.val(index+1);
+						
+						var html=
+							"<div class='row separated'>"
+							+	"<input type='hidden' name='"+lang+"[pc_gallery][new_images][]' value='"+index+"'/>"
+							+	"<div class='four columns'>"
+							+		"<label>{image_text}</label>"
+							+		"<input type='file' multiple name='"+lang+"[pc_gallery][new_image]["+index+"][]'/>"
+							+	"</div>"
+							+	"<div class='two columns'>"
+							+		"<label>{watermark_text}</label>"
+							+		"<input type='checkbox' checked name='"+lang+"[pc_gallery][new_image_watermark]["+index+"]'/>"
+							+	"</div>"
+							+	"<div class='six columns'>"
+							+		"<label>{description_text}</label>"
+							+		"<input type='text' class='full-width' name='"+lang+"[pc_gallery][new_text]["+index+"]'/>"
+							+	"</div>"
+							+"</div>";
 
+						html=$(html);
+						setCheckBoxGraphical($("input[type=checkbox]",html)[0]);
+
+						$(el).parent().before(html);
+
+						setupMovingHeader();
+					}
+					//end of gallery operations
+
+					//operations for post_content iamges
 					var activeLang;
 
 					function selectImage(lang)
@@ -298,6 +407,7 @@
 							+"</div>"
 						));
 					}
+
 					function checkExit(event)
 					{
 						if(event.keyCode == 27)
@@ -337,10 +447,9 @@
 							lastImages[lang]="";
 						}
 					}
-
 					//end of operations for post_content images	
 
-					$(initializeTextAreas);
+					$(window).load(initializeTextAreas);
 					var tmTextAreas=[];
 					<?php
 						foreach($langs as $lang => $value)
@@ -373,6 +482,9 @@
 
 					function formSubmit()
 					{
+						if(!confirm("{are_you_sure_to_submit_text}"))
+							return false;
+
 						return true;
 					}
 
@@ -421,6 +533,7 @@
 						
 						setTimeout(setupMovingHeader,1000);
               	}
+
               	function deletePost()
 						{
 							if(!confirm("{are_you_sure_to_delete_this_post_text}"))

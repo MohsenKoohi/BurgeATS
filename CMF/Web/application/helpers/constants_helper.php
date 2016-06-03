@@ -69,14 +69,17 @@ define ('COOKIE_PREFIX','asfamqw78a6asdfzxasd');
 define ('SESSION_VARS_PREFIX','jdsa834SN3');
 
 define ('VISITOR_TRACKING_COOKIE_NAME',"sMD239wfsfdaQQsd9f7q");
-define ('TRACKING_ENCRYPTION_KEY',		'YW32sde23rAeedfe');
-define ('TRACKING_IV',						'182090376ebca98');
+define ('TRACKING_ENCRYPTION_KEY',		'YW32sde23rAeedXW');
+define ('TRACKING_IV',						'182090376ebca98w');
 
 define ('IMAGES_URL', HOME_URL."/images");
 define ('IMAGES_DIR', HOME_DIR."/images");
 
 define ('CAPTCHA_DIR', IMAGES_DIR."/captcha");
 define ('CAPTCHA_URL', IMAGES_URL."/captcha");
+
+define ('POST_GALLERY_DIR', IMAGES_DIR."/gallery");
+define ('POST_GALLERY_URL', IMAGES_URL."/gallery");
 
 define ('STYLES_URL', HOME_URL."/styles");
 

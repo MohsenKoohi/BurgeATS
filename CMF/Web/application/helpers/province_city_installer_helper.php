@@ -987,7 +987,9 @@ function insert_Iran_provinces_and_cities_to_db()
 			(447, 4,  'en', 'Chadegan'),
 			(447, 4,  'fa', 'چادگان'),
 			(448, 9,  'en', 'Kiar'),
-			(448, 9,  'fa', 'کیار')
+			(448, 9,  'fa', 'کیار'),
+			(449, 17, 'en', 'Mamasani'),
+			(449, 17, 'fa', 'ممسنی')
 
 	");
 	

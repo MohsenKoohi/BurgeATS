@@ -28,8 +28,8 @@
 		</style>
 		<h1>{messages_text}</h1>
 		<div class="row general-buttons">
-			<a href="<?php echo get_link('admin_message_new');?>">
-				<div class="two columns button button-type1 half-col-margin">
+			<a href="<?php echo get_link('admin_message_new');?>" class="two columns">
+				<div class="full-width button button-type1 half-col-margin">
 					{add_new_message_text}
 				</div>
 			</a>

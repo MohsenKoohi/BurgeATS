@@ -844,10 +844,16 @@
 					return;
 				}
 
+				var provinceId=$("#props [name='customer_province']").val();
+				var provinceName=$("#props [name='customer_province'] option[value='"+provinceId+"']").html();
+
+				var cityId=$("#props [name='customer_city']").val();
+				var cityName=$("#props [name='customer_city'] option[value='"+cityId+"']").html();
+
 				html="<html><head><meta charset='UTF-8' /></head><body style='direction:rtl;font-family: b mitra;font-size:40px;font-weight:bold'>";
 				html+="{reciever_text}:<br>";
-				html+=$("#props [name='customer_province']").val();
-				html+=" - "+$("#props [name='customer_city']").val();
+				html+=provinceName;
+				html+=" - "+cityName;
 				html+=" - "+$("#props [name='customer_address']").val();
 				html+="<br>"+$("#props [name='customer_name']").val();
 				html+="<br><br>";

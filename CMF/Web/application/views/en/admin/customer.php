@@ -140,12 +140,32 @@
 
 						function setCities(province_id)
 						{
-							var html='<option value=""></option>';
+							var html='';//<option value="">--- انتخاب نمایید ---</option>';
 							var provinceCities=cities[province_id];
+
+							//sorting
+							var allCities=[];
+							var c=0;
 							for(var i in provinceCities)
+								allCities[c++]={id:i,name:provinceCities[i]};
+							for(i=0;i<c;i++)
+								for(j=i+1;j<c;j++)
+									if(allCities[i].name > allCities[j].name)
+									{
+										var tempId=allCities[i].id;
+										var tempName=allCities[i].name;
+
+										allCities[i].id=allCities[j].id;
+										allCities[i].name=allCities[j].name;
+
+										allCities[j].id=tempId;
+										allCities[j].name=tempName;
+									}
+
+							for(var i in allCities)
 								if(provinceCities.hasOwnProperty(i))
-									html+='<option value="'+i+'">'+provinceCities[i]+'</option>';
-							$(".filter select[name=city]").html(html);
+									html+='<option value="'+allCities[i].id+'">'+allCities[i].name+'</option>';
+							$("select[name=customer_city]").html(html);
 						}
 
 							

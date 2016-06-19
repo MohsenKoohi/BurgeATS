@@ -602,7 +602,7 @@ class Customer_manager_model extends CI_Model
 		if($lang_id)
 			$this->db
 				->where("city_lang",$lang_id)
-				->where("province_lang",$lang_id);
+				->where("province_lang",$lang_id)
 				->order_by("province_id asc, city_name asc");
 		else
 			$this->db->order_by("province_id asc, city_id asc");
@@ -622,7 +622,7 @@ class Customer_manager_model extends CI_Model
 		if($lang_id)
 			$this->db
 				->where("city_lang",$lang_id)
-				->where("province_lang",$lang_id);
+				->where("province_lang",$lang_id)
 				->order_by("province_id asc, city_name asc");
 		else
 			$this->db->order_by("province_id asc, city_id asc");

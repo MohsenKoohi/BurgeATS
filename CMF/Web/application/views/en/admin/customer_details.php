@@ -681,7 +681,7 @@
 											}
 
 									for(var i in allCities)
-										if(provinceCities.hasOwnProperty(i))
+										if(allCities.hasOwnProperty(i))
 											html+='<option value="'+allCities[i].id+'">'+allCities[i].name+'</option>';
 									$("select[name=customer_city]").html(html);
 								}

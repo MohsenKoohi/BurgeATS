@@ -23,6 +23,8 @@ $(window).load(function()
   $(window).on('resize',setupMovingHeader);
 
   changeGraphicalCheckBoxes();
+
+  lazyLoader();
 });
 
 function changeGraphicalCheckBoxes()
@@ -48,13 +50,13 @@ function setupMovingHeader()
   $(".side-menu .mobile .click").unbind("click");
   $(".main").css("height","auto");
 
-  if(winWidth<=600)
+  if(winWidth<=550)
   {
     $(".side-menu").css("min-height","none").css("height","auto");
     $(".side-menu .mobile .click").click(function()
-      {
-        $(".side-menu ul").toggleClass("active");
-      });
+    {
+      $(".side-menu ul").toggleClass("active");
+    });
   }
   else
   {
@@ -149,6 +151,51 @@ function setupMovingHeader_with_moving_header()
 }
 
 setupMovingHeader();
+
+//lazy loader
+//loads all images and background images
+//with data-ll-url and data-ll-type props
+//after document loaded completely, so decreases page load time
+function lazyLoader()
+{
+  var images=$(".lazy-load");
+  var imageIndex=-1;
+  loadNext();
+
+  var el;
+  var url;
+
+  function loadNext()
+  {
+    imageIndex++;
+    if(imageIndex === images.length)
+    {
+      setupMovingHeader();
+      return;
+    }
+
+    el=$(images[imageIndex]);
+    url=el.data('ll-url');
+
+    $.get(url, function()
+    {
+      switch(el.data('ll-type'))
+      {
+        case "background-image":
+          el.css("background-image","url('"+url+"')");
+          break;
+
+        case "src":
+          el.prop("src",url);
+          break;
+      }
+
+    }).always(loadNext);
+
+  }
+}
+
+
 
 /*!
  * jQuery Browser Plugin 0.0.8

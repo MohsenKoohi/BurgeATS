@@ -12,6 +12,8 @@ $lang['select']="انتخاب نمایید";
 $lang['read_more']="بیشتر بخوانید";
 $lang['page']="صفحه";
 $lang['contact_us']="تماس با ما";
+$lang['image']="تصویر";
+$lang['from']="از";
 
 //added for BurgeATS
 $lang['dashboard']="حساب کاربری";

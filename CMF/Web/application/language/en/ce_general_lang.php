@@ -12,6 +12,8 @@ $lang['select']="Please select";
 $lang['read_more']="More";
 $lang['page']="Page";
 $lang['contact_us']="Contact us";
+$lang['image']="Image";
+$lang['from']="from";
 
 //added for BurgeATS
 $lang['dashboard']="Account";

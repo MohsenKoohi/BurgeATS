@@ -991,7 +991,9 @@ function insert_Iran_provinces_and_cities_to_db()
 			(449, 17, 'en', 'Mamasani'),
 			(449, 17, 'fa', 'ممسنی'),
 			(450, 17, 'en', 'Sepidan'),
-			(450, 17, 'fa', 'سپیدان')
+			(450, 17, 'fa', 'سپیدان'),
+			(448, 9,  'en', 'Bon'),
+			(448, 9,  'fa', 'بن')
 
 	");
 	

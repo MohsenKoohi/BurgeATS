@@ -992,8 +992,10 @@ function insert_Iran_provinces_and_cities_to_db()
 			(449, 17, 'fa', 'ممسنی'),
 			(450, 17, 'en', 'Sepidan'),
 			(450, 17, 'fa', 'سپیدان'),
-			(448, 9,  'en', 'Bon'),
-			(448, 9,  'fa', 'بن')
+			(451, 9,  'en', 'Ben'),
+			(451, 9,  'fa', 'بن'),
+			(452, 29, 'en', 'Bashagard'),
+			(452, 29, 'fa', 'بشاگرد')
 
 	");
 	

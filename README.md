@@ -1,7 +1,7 @@
-#[Burge Affairs Tracking System](http://burge.ir/BurgeATS)
+#[Burge Affairs Tracking System](http://www.burge.ir/category-4/BurgeATS)
 ##	[An Open Source Customer Relationship Management System, Affairs Tracking System, and Ticketing System  based on BurgeCMF](http://burge.ir/BurgeATS)
 
-![BurgATS Logo](http://burge.ir/BurgeATS/logo-text-en.jpg)
+![BurgATS Logo](http://www.burge.ir/upload/cat-4-BurgeATS/logo_back_white.jpg)
 
 ##Features
 * Allows you not only to manage your customers, but also manage and coordinate your employees, allocating different tasks to different persons, and review the results.

@@ -1,5 +1,5 @@
 #[Burge Affairs Tracking System](http://www.burge.ir/category-4/BurgeATS)
-##	[An Open Source Customer Relationship Management System, Affairs Tracking System, and Ticketing System  based on BurgeCMF](http://burge.ir/BurgeATS)
+##	[An Open Source Customer Relationship Management System, Affairs Tracking System, and Ticketing System  based on BurgeCMF](http://www.burge.ir/category-4/BurgeATS)
 
 ![BurgATS Logo](http://www.burge.ir/upload/cat-4-BurgeATS/logo_back_white.jpg)
 

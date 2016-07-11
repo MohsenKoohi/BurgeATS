@@ -443,6 +443,17 @@ class AE_Customer extends Burge_CMF_Controller {
 				{
 					$date_function=DATE_FUNCTION;
 					$next_exec=$date_function("Y-m-d H:i:s",time()+60*60*24*(int)$next_exec);
+					//since we have different months with 31 days in Georgian calendar 
+					//in comparison to Jalali date, 
+					//we should remove next execution in 31th of the month
+					//however, new tasks are executed in these days ;)
+					//note that it doesn't have any problem to comment the following line for Georgian calendar
+					//but comparisons failed in Jalali date
+					//
+					//another solution is to specify if the next exec is a 31th day and 
+					//also the related georgian month  doesn't have 31 days
+					//then add one of 24 hours to $next_exec
+					$next_exec=str_replace("-31 ", "-30 ", $next_exec);
 					$props['te_next_exec']=$next_exec;
 				}
 			}

@@ -440,22 +440,7 @@ class AE_Customer extends Burge_CMF_Controller {
 			{
 				$next_exec=persian_normalize_word($this->input->post("manager_remind_in"));
 				if($next_exec)
-				{
-					$date_function=DATE_FUNCTION;
-					$next_exec=$date_function("Y-m-d H:i:s",time()+60*60*24*(int)$next_exec);
-					//since we have different months with 31 days in Georgian calendar 
-					//in comparison to Jalali date, 
-					//we should remove next execution in 31th of the month
-					//however, new tasks are executed in these days ;)
-					//note that it doesn't have any problem to comment the following line for Georgian calendar
-					//but comparisons failed in Jalali date
-					//
-					//another solution is to specify if the next exec is a 31th day and 
-					//also the related georgian month  doesn't have 31 days
-					//then add one of 24 hours to $next_exec
-					$next_exec=str_replace("-31 ", "-30 ", $next_exec);
-					$props['te_next_exec']=$next_exec;
-				}
+					$props['te_next_exec']=$this->get_next_exec_date($next_exec);
 			}
 
 			$this->task_exec_manager_model->set_manager_note($customer_id, $task_id, $props);
@@ -475,7 +460,7 @@ class AE_Customer extends Burge_CMF_Controller {
 			if("changing" === $status)
 			{
 				$next_exec=persian_normalize_word($this->input->post("task_exec_remind_in"));
-				$next_exec=$date_function("Y-m-d H:i:s",time()+60*60*24*(int)$next_exec);
+				$next_exec=$this->get_next_exec_date($next_exec);
 			}
 
 			$result=$this->input->post("task_exec_result");
@@ -537,6 +522,29 @@ class AE_Customer extends Burge_CMF_Controller {
 		$this->data['task_exec_statuses']=$this->task_exec_manager_model->get_task_statuses();
 
 		return;
+	}
+
+	private function get_next_exec_date($days)
+	{
+		$date_function=DATE_FUNCTION;
+		$next_seconds=time()+60*60*24*(int)$days;
+		$next_exec=$date_function("Y-m-d H:i:s",$next_seconds);
+
+		if($date_function !== "jdate")
+			return $next_exec;
+
+		list($next_date,$next_time)=explode(" ",$next_exec);
+		list($year,$month,$day)=explode("-",$next_date);
+
+		if($month == 2 && $day > 28)
+			$day=28;
+
+		if(($month == 4 || $month == 6) && ($day>30))
+			$day=30;
+
+		$next_exec=$year."-".$month."-".$day." ".$next_time;
+
+		return $next_exec;
 	}
 
 	private function get_task_exec_history($customer_id,$task_id)

@@ -27,6 +27,8 @@ class Category_manager_model extends CI_Model
 			"CREATE TABLE IF NOT EXISTS $tbl_name (
 				`category_id` INT AUTO_INCREMENT
 				,`category_parent_id` INT DEFAULT 0
+				,`category_sort_order` INT DEFAULT 0
+				,`category_show_in_list` BIT(1) DEFAULT 1
 				,PRIMARY KEY (category_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
@@ -79,6 +81,25 @@ class Category_manager_model extends CI_Model
 		return $ret;		
 	}
 
+	public function sort_categories($cat_ids)
+	{
+		$update_array=array();
+		$i=1;
+		foreach($cat_ids as $cat_id)
+			$update_array[]=array(
+				"category_id"=>$cat_id
+				,"category_sort_order"=>$i++
+			);
+
+		$this->db->update_batch($this->category_table_name,$update_array, "category_id");
+
+		$this->organize();
+		
+		$this->log_manager_model->info("CATEGORY_RESORT",array("category_ids"=>implode(",",$cat_ids)));	
+
+		return;
+	}
+
 	//this method is responsible for creating hierarchical structure of categories,
 	//so we don't need to run multiplt queries to retreive the structure from the database.
 	//it should be updated 
@@ -88,7 +109,7 @@ class Category_manager_model extends CI_Model
 			->select("*")
 			->from($this->category_table_name)
 			->join($this->category_description_table_name,"category_id = cd_category_id","left")
-			->order_by("category_id ASC, cd_lang_id ASC")
+			->order_by("category_sort_order ASC, category_id ASC, cd_lang_id ASC")
 			->get();
 
 		$rows=$result->result_array();
@@ -102,6 +123,7 @@ class Category_manager_model extends CI_Model
 				$cats[$cid]=array();
 
 				$cats[$cid]['id']=$cid;
+				$cats[$cid]['show_in_list']=$row['category_show_in_list'];
 				$cats[$cid]['parents']=array();
 				$cats[$cid]['parents'][0]=$row['category_parent_id'];
 				
@@ -320,12 +342,15 @@ class Category_manager_model extends CI_Model
 		$log_props=array();
 
 		$parent_id=$category_props['category_parent_id'];
+		$show_in_list=$category_props['category_show_in_list'];
 		$this->db
 			->set("category_parent_id",$parent_id)
+			->set("category_show_in_list",$show_in_list)
 			->where("category_id",$category_id)
 			->update($this->category_table_name);
 
 		$log_props["category_parent_id"]=$parent_id;
+		$log_props["category_show_in_list"]=$show_in_list;
 
 		foreach($category_props['descriptions'] as $category_description)
 		{

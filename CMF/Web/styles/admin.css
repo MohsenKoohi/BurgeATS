@@ -18,6 +18,8 @@ body {
 .rtl {
   direction: rtl;
   text-align: justify; }
+  .rtl h1, .rtl h2, .rtl h3, .rtl h4, .rtl h5, .rtl h6 {
+    text-align: right; }
 
 .fa {
   font-family: b koodak, koodak, tahoma; }
@@ -319,7 +321,7 @@ body.ltr .top-menu > ul > li, body.rtl .top-menu > ul > li {
   font-size: 1.2em;
   display: inline-block;
   vertical-align: top;
-  height: 100%;
+  height: auto;
   padding: 10px;
   margin: 0;
   box-sizing: border-box;
@@ -327,19 +329,41 @@ body.ltr .top-menu > ul > li, body.rtl .top-menu > ul > li {
   width: calc(20% - 10px); }
 
 body.rtl .side-menu {
-  float: right;
   background: linear-gradient(to left, #fff, #bbb); }
 
 body.ltr .side-menu {
-  float: left;
   background: linear-gradient(to right, #fff, #bbb); }
 
 @media (min-width: 600px) {
-  body.ltr .side-menu:not(.moving) {
+  body.ltr .side-menu {
     margin-right: 10px; }
 
-  body.rtl .side-menu:not(.moving) {
-    margin-left: 10px; } }
+  body.rtl .side-menu {
+    margin-left: 10px; }
+
+  .content > div {
+    display: table;
+    width: 100%;
+    height: 100%; }
+    .content > div .side-menu-container {
+      display: table-cell;
+      width: 20%;
+      height: 100%;
+      vertical-align: top; }
+      .content > div .side-menu-container .side-menu {
+        height: 100%;
+        width: 100%; }
+    .content > div .message-main {
+      display: table-cell;
+      width: 80%;
+      height: 100%;
+      vertical-align: top; }
+
+  body.ltr .side-menu-container {
+    padding-right: 10px; }
+
+  body.rtl .side-menu-container {
+    padding-left: 10px; } }
 .side-menu-ul, .side-menu ul {
   list-style: none; }
 
@@ -382,32 +406,14 @@ body.ltr .side-menu-ul a:hover {
     width: 100%; }
 
   body.rtl .side-menu, body.ltr .side-menu {
-    float: none; }
-
-  body.rtl .side-menu, body.ltr .side-menu {
     display: inline-block;
     width: 100%;
     padding: 0;
     margin: 0 0 10px 0;
     background: linear-gradient(to left, white, rgba(255, 255, 255, 0.3), white);
-    height: 80px;
     z-index: 10;
     position: relative;
     transition: background-color .3s; }
-
-  .side-menu.moving {
-    width: 95%;
-    top: 0;
-    position: fixed;
-    box-shadow: inset 0px -1px 1px #555;
-    border-radius: 0px; }
-
-  .side-menu.moving:hover {
-    background-color: white;
-    transition: background-color .3s; }
-
-  .side-menu.moving ul {
-    margin-top: 0; }
 
   .side-menu .mobile {
     vertical-align: middle;
@@ -673,6 +679,20 @@ body.ltr .dash-ul li:before {
   color: #0C7B77;
   transition: color, .6s; }
 
+.main .container.dashboard .module {
+  height: 200px;
+  overflow: auto; }
+  @media (min-width: 600px) {
+    .main .container.dashboard .module {
+      width: calc(33.33% - 10px);
+      margin: 0 0 15px 0px; } }
+
+body.ltr .main .container.dashboard .module:not(:nth-child(3n + 4)) {
+  margin-right: 15px; }
+
+body.rtl .main .container.dashboard .module:not(:nth-child(3n + 4)) {
+  margin-left: 15px; }
+
 .general-buttons div, .general-buttons a {
   font-size: 1.2em; }
 
@@ -761,6 +781,38 @@ body.rtl .category-div li {
 body.ltr .category-div li {
   border-left: 1px dotted #555; }
 
+.category-list .cat {
+  padding: 5px;
+  width: 33%; }
+  .category-list .cat > div {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px; }
+  .category-list .cat > div:hover {
+    cursor: move;
+    box-shadow: 2px 2px 5px #555; }
+  .category-list .cat .id {
+    color: #C63672; }
+  .category-list .cat .cat-sign {
+    font-family: tahoma;
+    color: #0C7B77; }
+  .category-list .cat .name {
+    font-size: 1.3em;
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px 0;
+    border-radius: 5px;
+    background-color: #0C7B77; }
+    .category-list .cat .name a {
+      color: white; }
+  .category-list .cat .parent {
+    font-size: .8em;
+    height: 20px; }
+  .category-list .cat .parent, .category-list .cat .name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap; }
+
 .burgeFileMan {
   position: fixed;
   width: 100%;
@@ -808,7 +860,7 @@ body.ltr .category-div li {
   font-size: 1.2em;
   border-radius: 5px; }
 
-@media (min-width: 550px) {
+@media (min-width: 600px) {
   .aclist > div.three.columns {
     width: calc(25% - 10px); }
 

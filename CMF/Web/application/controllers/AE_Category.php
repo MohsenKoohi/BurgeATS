@@ -16,6 +16,9 @@ class AE_Category extends Burge_CMF_Controller {
 		if($this->input->post("post_type")==="add_category")
 			return $this->add_category();
 
+		if($this->input->post("post_type")==="resort")
+			return $this->resort();
+
 		$this->data['message']=get_message();
 
 		$this->data['categories']=$this->category_manager_model->get_all();
@@ -25,6 +28,18 @@ class AE_Category extends Burge_CMF_Controller {
 		$this->send_admin_output("category");
 
 		return;
+	}
+
+	private function resort()
+	{
+		$ids=$this->input->post("ids");
+		$ids=explode(",",$ids);
+
+		$this->category_manager_model->sort_categories($ids);
+
+		set_message($this->lang->line("category_sorted_successfully"));
+
+		return redirect(get_link("admin_category"));
 	}
 
 	private function add_category($parent_id=0)
@@ -82,10 +97,12 @@ class AE_Category extends Burge_CMF_Controller {
 		$props['descriptions']=array();
 
 		$props['category_parent_id']=$this->input->post("category_parent_id");
+		$props['category_show_in_list']=($this->input->post("category_show_in_list")==="on");
 
 		foreach($this->language->get_languages() as $lang=>$name)
 		{
 			$category_content=$this->input->post($lang);
+			$category_content['cd_description']=$_POST[$lang]['cd_description'];
 			$category_content['cd_lang_id']=$lang;
 
 			$props['descriptions'][]=$category_content;

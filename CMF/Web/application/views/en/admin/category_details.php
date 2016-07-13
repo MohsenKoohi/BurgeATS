@@ -13,6 +13,7 @@
 		<?php 
 			}else{ 
 		?>
+			<script src="{scripts_url}/tinymce/tinymce.min.js"></script>
 			<div class="container">
 				<div class="row general-buttons">
 					<div class="two columns half-col-margin button sub-primary button-type2" onclick="deleteCategory()">
@@ -23,7 +24,7 @@
 					</div>
 				</div>
 				<br><br>
-				<?php echo form_open(get_admin_category_details_link($category_id),array()); ?>
+				<?php echo form_open(get_admin_category_details_link($category_id),array("onsubmit"=>"return formSubmit();")); ?>
 					<input type="hidden" name="post_type" value="edit_category" />
 					
 					<div class="tab-container">
@@ -61,24 +62,6 @@
 									   $content.show();						   	
 
 									   e.preventDefault();
-									   
-									   <?php if(0) { ?>
-										   //since each tab has different height, 
-										   //we should reequalize  height of sidebar and main div.
-										   //may be a bad hack,
-										   //which should be corrected in future versions.
-										   //
-										   //what should we  do ?
-										   //we should allow developers to register a list of functions 
-										   //to be called on document\.ready event,
-										   //but each function has a priority, 
-										   //so we can sort their execution by that priority.
-										   //and this will solve the problem
-										   //for example in this situation, in each load, we should first equalize height of
-										   //all tabs, and then call setupMovingHeader 
-										   //in this way we don't need to call setupMovingHeader in each tab change event
-										<?php } ?>
-									   setupMovingHeader();
 									});
 								});
 							});
@@ -117,7 +100,7 @@
 											<span>{description_text}</span>
 										</div>
 										<div class="nine columns ">
-											<textarea class="full-width" rows="3"
+											<textarea class="full-width" rows="10"
 												name="<?php echo $lang;?>[cd_description]"
 											><?php echo $cd['cd_description']; ?></textarea>
 										</div>
@@ -195,82 +178,92 @@
 
 								}
 							);
-
-							var activeLang;
-
-							function selectImage(lang)
-							{
-								var fileMan=$(".burgeFileMan");
-								if(!fileMan.length)
-									createFileMan();
-
-								fileMan.css("display","block");
-								setTimeout(function()
-								{
-									$(".burgeFileMan iframe")[0].focus();
-								},1000);
-
-								activeLang=lang;
-							}
-
-							function createFileMan()
-							{
-								var src="<?php echo get_link('admin_file_inline');?>";
-								src+="?parent_function=fileSelected";
-								$(document.body).append(
-									"<div class='burgeFileMan' onkeypress='checkExit(event);' tabindex='1' >"
-										+"<div class='bmain'>"
-										+	"<div class='bheader'>File Manager"
-										+		"<button class='close' onclick='closeFileMan()'>×</button>"
-										+ "</div>"
-										+	"<iframe src='"+src+"'></iframe>"
-										+"</div>"
-									+"</div>"
-								);
-							}
-
-							function checkExit(event)
-							{
-								if(event.keyCode == 27)
-									closeFileMan();
-								
-							}
-
-							function closeFileMan()
-							{
-								var fileMan=$(".burgeFileMan");
-								
-								fileMan.css("display","none");//.remove();	
-							}
-
-							function fileSelected(path)
-							{
-								$("#img-"+activeLang).prop("src",path);
-								$("input[name='"+activeLang+"[cd_image]']").val(path);
-								$("#del-img-"+activeLang).prop("checked",false);
-								lastImages[activeLang]="";
-								closeFileMan();
-							}
-
-							var lastImages=[];
-
-							function deleteImage(lang)
-							{
-								if(typeof(lastImages[lang])==="undefined" || lastImages[lang]=="")
-								{
-									lastImages[lang]=$("#img-"+lang).prop("src");
-									$("input[name='"+lang+"[cd_image]']").val("");
-									$("#img-"+lang).prop("src","{no_image_url}");
-								}
-								else
-								{
-									$("input[name='"+lang+"[cd_image]']").val(lastImages[lang]);
-									$("#img-"+lang).prop("src",lastImages[lang]);	
-									lastImages[lang]="";
-								}
-							}
 						</script>
 					</div>
+					<div class="row even-odd-bg">
+						<div class="three columns">
+							<span>{show_in_list_text}</span>
+						</div>
+						<div class="nine columns">
+							<input type="checkbox" class="graphical" name="category_show_in_list" 
+								<?php if($info[$selected_lang]['category_show_in_list']) echo 'checked';?>
+							/>
+						</div>
+					</div>
+					<script type="text/javascript">
+						var activeLang;
+
+						function selectImage(lang)
+						{
+							var fileMan=$(".burgeFileMan");
+							if(!fileMan.length)
+								createFileMan();
+
+							fileMan.css("display","block");
+							setTimeout(function()
+							{
+								$(".burgeFileMan iframe")[0].focus();
+							},1000);
+
+							activeLang=lang;
+						}
+
+						function createFileMan()
+						{
+							var src="<?php echo get_link('admin_file_inline');?>";
+							src+="?parent_function=fileSelected";
+							$(document.body).append(
+								"<div class='burgeFileMan' onkeypress='checkExit(event);' tabindex='1' >"
+									+"<div class='bmain'>"
+									+	"<div class='bheader'>File Manager"
+									+		"<button class='close' onclick='closeFileMan()'>×</button>"
+									+ "</div>"
+									+	"<iframe src='"+src+"'></iframe>"
+									+"</div>"
+								+"</div>"
+							);
+						}
+
+						function checkExit(event)
+						{
+							if(event.keyCode == 27)
+								closeFileMan();	
+						}
+
+						function closeFileMan()
+						{
+							var fileMan=$(".burgeFileMan");
+							
+							fileMan.css("display","none");//.remove();	
+						}
+
+						function fileSelected(path)
+						{
+							$("#img-"+activeLang).prop("src",path);
+							$("input[name='"+activeLang+"[cd_image]']").val(path);
+							$("#del-img-"+activeLang).prop("checked",false);
+							lastImages[activeLang]="";
+							closeFileMan();
+						}
+
+						var lastImages=[];
+
+						function deleteImage(lang)
+						{
+							if(typeof(lastImages[lang])==="undefined" || lastImages[lang]=="")
+							{
+								lastImages[lang]=$("#img-"+lang).prop("src");
+								$("input[name='"+lang+"[cd_image]']").val("");
+								$("#img-"+lang).prop("src","{no_image_url}");
+							}
+							else
+							{
+								$("input[name='"+lang+"[cd_image]']").val(lastImages[lang]);
+								$("#img-"+lang).prop("src",lastImages[lang]);	
+								lastImages[lang]="";
+							}
+						}
+					</script>
 					<br><br>
 					<div class="row">
 							<div class="four columns">&nbsp;</div>
@@ -305,6 +298,14 @@
 							$("#parent-category input[name=category][value="+parId+"]").trigger("change");
 						});
 
+						function formSubmit()
+						{
+							if(!confirm("{are_you_sure_to_submit_text}"))
+								return false;
+
+							return true;
+						}
+
 	              	function deleteCategory()
 						{
 							if(!confirm("{are_you_sure_to_delete_this_category_text}"))
@@ -318,6 +319,83 @@
 							$("form#delete input[name=post_type]").val("add_sub_category");
 							$("form#delete").submit();
 						}
+
+						$(window).load(initializeTextAreas);
+						var tmTextAreas=[];
+						<?php
+							foreach($all_langs as $lang => $value)
+								echo "\n".'tmTextAreas.push("textarea[name=\''.$lang.'[cd_description]\']");';
+						?>
+						var tineMCEFontFamilies=
+							"Mitra= b mitra, mitra;Yagut= b yagut, yagut; Titr= b titr, titr; Zar= b zar, zar; Koodak= b koodak, koodak;"+
+							+"Andale Mono=andale mono,times;"
+							+"Arial=arial,helvetica,sans-serif;"
+							+"Arial Black=arial black,avant garde;"
+							+"Book Antiqua=book antiqua,palatino;"
+							+"Comic Sans MS=comic sans ms,sans-serif;"
+							+"Courier New=courier new,courier;"
+							+"Georgia=georgia,palatino;"
+							+"Helvetica=helvetica;"
+							+"Impact=impact,chicago;"
+							+"Symbol=symbol;"
+							+"Tahoma=tahoma,arial,helvetica,sans-serif;"
+							+"Terminal=terminal,monaco;"
+							+"Times New Roman=times new roman,times;"
+							+"Trebuchet MS=trebuchet ms,geneva;"
+							+"Verdana=verdana,geneva;"
+							+"Webdings=webdings;"
+							+"Wingdings=wingdings,zapf dingbats";
+						var tinyMCEPlugins="directionality textcolor link image hr emoticons2 lineheight colorpicker media";
+						var tinyMCEToolbar=[
+						   "link image media hr bold italic underline strikethrough alignleft aligncenter alignright alignjustify styleselect formatselect fontselect fontsizeselect  emoticons2",
+						   "cut copy paste bullist numlist outdent indent forecolor backcolor removeformat  ltr rtl lineheightselect "
+						];
+
+						
+						function RoxyFileBrowser(field_name, url, type, win)
+						{
+							var roxyFileman ="<?php echo get_link('admin_file_inline');?>";
+
+							if (roxyFileman.indexOf("?") < 0) {     
+							 roxyFileman += "?type=" + type;   
+							}
+							else {
+							 roxyFileman += "&type=" + type;
+							}
+							roxyFileman += '&input=' + field_name + '&value=' + win.document.getElementById(field_name).value;
+							if(tinyMCE.activeEditor.settings.language){
+							 roxyFileman += '&langCode=' + tinyMCE.activeEditor.settings.language;
+							}
+							tinyMCE.activeEditor.windowManager.open({
+							  file: roxyFileman,
+							  title: 'Roxy Fileman',
+							  width: 850, 
+							  height: 650,
+							  resizable: "yes",
+							  plugins: "media",
+							  inline: "yes",
+							  close_previous: "no"  
+							}, {     window: win,     input: field_name    });
+						
+							return false; 
+						}
+
+						function initializeTextAreas()
+						{
+							for(i in tmTextAreas)
+			               tinymce.init({
+									selector: tmTextAreas[i]
+									,plugins: tinyMCEPlugins
+									,file_browser_callback: RoxyFileBrowser
+									//,width:"600"
+									,height:"600"
+									,convert_urls:false
+									,toolbar: tinyMCEToolbar
+									,font_formats:tineMCEFontFamilies
+									,media_live_embeds: true
+		               	});
+	              	}
+
 					</script>
 				</div>
 			</div>

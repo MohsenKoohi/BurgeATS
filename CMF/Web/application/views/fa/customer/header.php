@@ -107,48 +107,57 @@
   </div>
   <div class="content">
     <div>
-      <div class="side-menu">
-        <div class="mobile">
-          <img src="{images_url}/logo-text-fa.png"/>
-          <div class="click">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+      <div class="side-menu-container">
+        <div class="side-menu">
+          <div class="mobile">
+            <img src="{images_url}/logo-text.png"/>
+            <div class="click">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
           </div>
-        </div>
-        <ul class="side-menu-ul">
-          <?php 
-            foreach($categories as $cat)
-            {
-              $id=$cat['id'];
-              $name=$cat['names'][$selected_lang];
-              $link=get_customer_category_details_link($id,$cat['urls'][$selected_lang]);
-              echo "<li><a href='$link'>$name</a>\n";
-
-              if($cat['children'])
+          <ul class="side-menu-ul">
+            <?php 
+              foreach($categories as $cat)
               {
-                echo "<ul>\n";
-                foreach($cat['children'] as $child)
+                if(!$cat['show_in_list'])
+                  continue;
+
+                $id=$cat['id'];
+                $name=$cat['names'][$selected_lang];
+                $link=get_customer_category_details_link($id,$cat['urls'][$selected_lang]);
+                echo "<li><a href='$link'>$name</a>\n";
+
+                if($cat['children'])
                 {
-                  $id=$child['id'];
-                  $name=$child['names'][$selected_lang];
-                  $link=get_customer_category_details_link($id,$child['urls'][$selected_lang]);
-                  echo "<li><a href='$link'>$name</a>\n";
+                  echo "<ul>\n";
+                  foreach($cat['children'] as $child)
+                  {
+                    if(!$child['show_in_list'])
+                      continue;
+                    
+                    $id=$child['id'];
+                    $name=$child['names'][$selected_lang];
+                    $link=get_customer_category_details_link($id,$child['urls'][$selected_lang]);
+                    echo "<li><a href='$link'>$name</a>\n";
+                  }
+                  echo "</ul>\n";
                 }
-                echo "</ul>\n";
+                echo "</li>\n";
               }
-              echo "</li>\n";
-            }
-          ?>
-          <li class="separator">&nbsp;</li>
-          <li><a href="<?php echo get_link("customer_dashboard");?>">{dashboard_text}</a></li>
-          <li><a href='<?php echo get_link("customer_contact_us");?>'>{contact_us_text}</a></li>
-          
-        </ul>
+            ?>
+            <li class="separator">&nbsp;</li>
+            <li><a href="<?php echo get_link("customer_dashboard");?>">{dashboard_text}</a></li>
+            <li><a href='<?php echo get_link("customer_contact_us");?>'>{contact_us_text}</a></li>
+          </ul>
+        </div>
       </div>
 
       <div class="message-main">
         <?php if(isset($message) && strlen($message)>0)
           echo '<div class="message">'.$message.'</div>';
         ?>
+
+     

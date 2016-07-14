@@ -1,4 +1,6 @@
 <div class="main">
+	<link rel="stylesheet" type="text/css" href="{styles_url}/jquery-ui.min.css" />
+	<script src="{scripts_url}/jquery-ui.min.js"></script>
 	<div class="container">
 		<style type="text/css">
 			.even-odd-bg .even-odd-bg

@@ -115,7 +115,7 @@ class Burge_CMF_Controller extends CI_Controller{
 		//and like the user knows it changes. for example for messages module
 		//but since it requires all modules to be loaded,  it increases the process
 		//time and we don't run by default
-		if(TRUE)
+		if(FALSE)
 			foreach ($modules as &$module)
 			{
 				$module_id=$module['id'];

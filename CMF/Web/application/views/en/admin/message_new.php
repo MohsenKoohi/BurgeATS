@@ -1,4 +1,6 @@
 <div class="main">
+	<link rel="stylesheet" type="text/css" href="{styles_url}/jquery-ui.min.css" />
+	<script src="{scripts_url}/jquery-ui.min.js"></script>
 	<div class="container">
 		<h1>{add_new_message_text}</h1>
 

@@ -4,7 +4,7 @@
 	<meta charset="UTF-8" />
 	<title>{header_title}</title>
 	<link rel="shortcut icon" href="{images_url}/favicon.png"/>
-  	<link rel="stylesheet" type="text/css" href="{styles_url}/customer/style-common.css" />
+  	<link rel="stylesheet" type="text/css" href="{styles_url}/customer.css" />
 </head>
 <body style="text-align:center;background:none">
 	<br>

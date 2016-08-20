@@ -995,7 +995,10 @@ function insert_Iran_provinces_and_cities_to_db()
 			(451, 9,  'en', 'Ben'),
 			(451, 9,  'fa', 'بن'),
 			(452, 29, 'en', 'Bashagard'),
-			(452, 29, 'fa', 'بشاگرد')
+			(452, 29, 'fa', 'بشاگرد'),
+			(453, 7,  'en', 'Dashti'),
+			(453, 7,  'fa', 'دشتی')
+			
 
 	");
 	

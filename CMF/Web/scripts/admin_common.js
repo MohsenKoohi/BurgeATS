@@ -24,6 +24,7 @@ $(window).load(function()
 
   changeGraphicalCheckBoxes();
 
+  lazyLoader();
 });
 
 function changeGraphicalCheckBoxes()
@@ -50,6 +51,7 @@ function windowResizedDefault()
   var winWidth=$(window).width();
   var winHeight=$(window).height();
 
+  $(".side-menu").css("min-height","auto");
   $(".side-menu .mobile .click").unbind("click");
   $(".side-menu ul").removeClass("active");
   $(".main").css("min-height",winHeight);
@@ -64,13 +66,57 @@ function windowResizedDefault()
   }
   else
   {
-    
+    $(".side-menu").css("min-height",winHeight);    
   }
 
   return;
 }
 
 windowResizedDefault();
+
+//lazy loader
+//loads all images and background images
+//with data-ll-url and data-ll-type props
+//after document loaded completely, so decreases page load time
+function lazyLoader()
+{
+  var images=$(".lazy-load");
+  var imageIndex=-1;
+  loadNext();
+
+  var el;
+  var url;
+
+  function loadNext()
+  {
+    imageIndex++;
+    if(imageIndex === images.length)
+    {
+      return;
+    }
+
+    el=$(images[imageIndex]);
+    url=el.data('ll-url');
+
+    $.get(url, function()
+    {
+      switch(el.data('ll-type'))
+      {
+        case "background-image":
+          el.css("background-image","url('"+url+"')");
+          break;
+
+        case "src":
+          el.prop("src",url);
+          break;
+      }
+
+    }).always(loadNext);
+
+  }
+}
+
+
 
 /*!
  * jQuery Browser Plugin 0.0.8
@@ -347,19 +393,19 @@ windowResizedDefault();
     }
   })( this, jQuery );
 
-  //using fontSpy:
-  /*
-  fontSpy('koodak', {
-      glyphs: '\ue81a\ue82d\ue823',
-      failure: function()
-      {
-        fontSpy('b koodak', {
-          glyphs: '\ue81a\ue82d\ue823',
-          failure: function()
-          {
-           $("body").append('<style type="text/css"> * { font-family: OnLineKoodak, tahoma;}</style>')
-          }
-        });          
-      }
-    });
+//using fontSpy:
+/*
+fontSpy('koodak', {
+    glyphs: '\ue81a\ue82d\ue823',
+    failure: function()
+    {
+      fontSpy('b koodak', {
+        glyphs: '\ue81a\ue82d\ue823',
+        failure: function()
+        {
+         $("body").append('<style type="text/css"> * { font-family: OnLineKoodak, tahoma;}</style>')
+        }
+      });          
+    }
+  });
 */

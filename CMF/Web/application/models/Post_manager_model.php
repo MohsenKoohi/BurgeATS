@@ -143,12 +143,11 @@ class Post_manager_model extends CI_Model
 
 	public function get_total($filter)
 	{
-		$this->db->select("COUNT(*) as count");
+		$this->db->select("COUNT( DISTINCT post_id ) as count");
 		$this->db->from($this->post_table_name);
 		$this->db->join($this->post_content_table_name,"post_id = pc_post_id","left");
 		$this->db->join($this->post_category_table_name,"post_id = pcat_post_id","left");
-			
-		$filter['count']=1;
+		
 		$this->set_post_query_filter($filter);
 		
 		$row=$this->db->get()->row_array();
@@ -164,6 +163,13 @@ class Post_manager_model extends CI_Model
 		if(isset($filter['category_id']))
 			$this->db->where("pcat_category_id",$filter['category_id']);
 
+		if(isset($filter['title']))
+		{
+			$title=trim($filter['title']);
+			$title="%".str_replace(" ","%",$title)."%";
+			$this->db->where("( `pc_title` LIKE '$title')");
+		}
+
 		if(isset($filter['active']))
 			$this->db->where(array(
 				"post_active"=>$filter['active']
@@ -171,7 +177,10 @@ class Post_manager_model extends CI_Model
 			));
 
 		if(isset($filter['post_date_le']))
-			$this->db->where("post_date <",$filter['post_date_le']);
+			$this->db->where("post_date <=",$filter['post_date_le']);
+
+		if(isset($filter['post_date_ge']))
+			$this->db->where("post_date >=",$filter['post_date_ge']);
 
 		if(isset($filter['order_by']))
 		{
@@ -186,9 +195,8 @@ class Post_manager_model extends CI_Model
 		if(isset($filter['start']))
 			$this->db->limit($filter['count'],$filter['start']);
 
-		if(!isset($filter['count']))
-			if(isset($filter['lang']) || isset($filter['category_id']))
-				$this->db->group_by("post_id");
+		if(isset($filter['group_by']))
+			$this->db->group_by($filter['group_by']);
 	
 		return;
 	}

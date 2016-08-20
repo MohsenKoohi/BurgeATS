@@ -30,14 +30,20 @@ $(window).load(function()
 function changeGraphicalCheckBoxes()
 {
   if(!($.browser.msie && (parseInt($.browser.version) < 10)))
-    $("input[type=checkbox].graphical").each(function(index,el)
-    {
-      var html=$(el).clone().wrapAll('<div>').parent().html();
-      var html='<div class="checkbox-holder">'+html+'<label><i></i></label></div>';
-      $(el).replaceWith(html);
-    });
+    $("input[type=checkbox].graphical").each(
+      function(index,el)
+      {
+        setCheckBoxGraphical(el);
+      }
+    );
 }
 
+function setCheckBoxGraphical(el)
+{
+  var html=$(el).clone().wrapAll('<div>').parent().html();
+  var html='<div class="checkbox-holder">'+html+'<label><i></i></label></div>';
+  $(el).replaceWith(html);  
+}
 
 function windowResizedDefault()
 {
@@ -45,6 +51,7 @@ function windowResizedDefault()
   var winWidth=$(window).width();
   var winHeight=$(window).height();
 
+  $(".side-menu").css("min-height","auto");
   $(".side-menu .mobile .click").unbind("click");
   $(".side-menu ul").removeClass("active");
   $(".main").css("min-height",winHeight);
@@ -59,7 +66,7 @@ function windowResizedDefault()
   }
   else
   {
-    
+    $(".side-menu").css("min-height",winHeight);    
   }
 
   return;
@@ -386,19 +393,19 @@ function lazyLoader()
     }
   })( this, jQuery );
 
-  //using fontSpy:
-  /*
-  fontSpy('koodak', {
-      glyphs: '\ue81a\ue82d\ue823',
-      failure: function()
-      {
-        fontSpy('b koodak', {
-          glyphs: '\ue81a\ue82d\ue823',
-          failure: function()
-          {
-           $("body").append('<style type="text/css"> * { font-family: OnLineKoodak, tahoma;}</style>')
-          }
-        });          
-      }
-    });
+//using fontSpy:
+/*
+fontSpy('koodak', {
+    glyphs: '\ue81a\ue82d\ue823',
+    failure: function()
+    {
+      fontSpy('b koodak', {
+        glyphs: '\ue81a\ue82d\ue823',
+        failure: function()
+        {
+         $("body").append('<style type="text/css"> * { font-family: OnLineKoodak, tahoma;}</style>')
+        }
+      });          
+    }
+  });
 */

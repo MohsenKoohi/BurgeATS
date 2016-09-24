@@ -35,67 +35,8 @@ class AE_Customer extends Burge_CMF_Controller {
     	return;
 	}
 
-	private function update_customers_provinces_and_cities()
-	{
-		$this->db
-			->set("province_name","چهارمحال بختیاری")
-			->where("province_id",9)
-			->where("province_lang","fa")
-			->update("province");
-
-		$table=$this->db->dbprefix("customer"); 
-		$this->db->query("UPDATE $table set customer_address = CONCAT(customer_city,'-',customer_address)");
-
-		$res=$this->db
-			->select("customer_id,customer_province,customer_city,province_id")
-			->from("customer")
-			->join("province","customer_province = province_name","left")
-			->where("province_lang","fa")
-			->get()
-			->result_array();
-
-		$this->db
-			->set("province_name","چهارمحال و بختیاری")
-			->where("province_id",9)
-			->where("province_lang","fa")
-			->update("province");
-
-		$b=array();
-		foreach($res as $r)
-			$b[]=array(
-				"customer_id"=>$r['customer_id']
-				,"customer_province"=>$r['province_id']
-			);
-
-		$this->db->update_batch("customer",$b,"customer_id");
-
-		$table=$this->db->dbprefix("customer"); 
-		$this->db->query("ALTER TABLE $table MODIFY customer_province INT NOT NULL");
-
-		$res=$this->db
-			->select("customer_id,customer_province,customer_city,city_id")
-			->from("customer")
-			->join("city","customer_city = city_name","left")
-			->where("city_lang","fa")
-			->get()
-			->result_array();
-
-		$b=array();
-		foreach($res as $r)
-			$b[]=array(
-				"customer_id"=>$r['customer_id']
-				,"customer_city"=>$r['city_id']
-			);
-
-		$this->db->update_batch("customer",$b,"customer_id");
-
-		$table=$this->db->dbprefix("customer"); 
-		$this->db->query("ALTER TABLE $table MODIFY customer_city INT NOT NULL");
-	}
 	public function index()
 	{
-		//$this->update_customers_provinces_and_cities();
-
 		$this->lang->load('ae_customer',$this->selected_lang);
 		
 		if($this->input->post())

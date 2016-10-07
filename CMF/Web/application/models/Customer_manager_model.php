@@ -107,6 +107,11 @@ class Customer_manager_model extends CI_Model
 		
 		$this->insert_province_and_citiy_tables_to_db();
 
+		$this->load->model("constant_manager_model");
+		//these important keys should be set to 0 by functions called periodially
+		//may be in the daily result function
+		$this->constant_manager_model->set("allow_user_login_to_customer_account",0);
+
 		return;
 	}
 
@@ -690,7 +695,10 @@ class Customer_manager_model extends CI_Model
 		//who may access customers accounts directly
 
 		//return FALSE;
-		
+		$this->load->model("constant_manager_model");
+		if(!$this->constant_manager_model->get("allow_user_login_to_customer_account"))
+			return FALSE;
+			
 		$ret=FALSE;
 		
 		$result=$this->db->get_where($this->customer_table_name,array("customer_id"=>$customer_id));

@@ -15,18 +15,23 @@ body {
   direction: ltr;
   text-align: left; }
 
+.ltr-inb {
+  direction: ltr;
+  text-align: left;
+  display: inline-block; }
+
 .rtl {
   direction: rtl;
   text-align: right; }
 
 .fa {
-  font-family: b koodak, koodak, tahoma; }
+  font-family: b yagut, yagut, tahoma; }
 
 .en {
   font-family: Times New Roman, Arial; }
 
 .lang-fa {
-  font-family: b koodak, koodak, tahoma;
+  font-family: b yagut, yagut, tahoma;
   direction: rtl;
   text-align: justify; }
 
@@ -310,7 +315,8 @@ body.ltr .top-menu > ul > li, body.rtl .top-menu > ul > li {
   color: #223F56;
   font-size: 1.5em;
   border: 1px solid #223F56;
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+  font-weight: bold; }
 
 .main {
   height: 100%;
@@ -481,6 +487,9 @@ body.ltr .side-menu-ul a:hover {
 
   .side-menu ul.active {
     display: block; } }
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold; }
+
 .main h1, .main h3, .main h5 {
   color: #0C7B77; }
 

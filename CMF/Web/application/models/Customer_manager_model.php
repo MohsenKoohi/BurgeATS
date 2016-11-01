@@ -323,7 +323,6 @@ class Customer_manager_model extends CI_Model
 		{
 			$this->db->select("count(customer_id) as count");
 			$this->db->from($this->customer_table_name);
-			$this->db->where("customer_id !=",$customer_id);
 			$this->db->where("customer_email",$props['customer_email']);
 			$result=$this->db->get();
 			$row=$result->row_array();

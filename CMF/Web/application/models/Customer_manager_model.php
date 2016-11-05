@@ -463,7 +463,13 @@ class Customer_manager_model extends CI_Model
 			$desc["active_user_id"]=$CI->user->get_id();
 			$desc["active_user_code"]=$CI->user->get_code();
 			$desc["active_user_name"]=$CI->user->get_name();
-		}		
+		}	
+
+		$desc['visitor_ip']=$this->input->ip_address();	
+		$desc['visitor_id']=$this->log_manager_model->get_visitor_id();
+		$ua=$this->input->user_agent();
+		if($ua)
+      	$desc["visitor_user_agent"]=$ua;
 		
 		$log_path=$this->get_customer_log_path($customer_id,$type_index);
 

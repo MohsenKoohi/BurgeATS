@@ -53,7 +53,7 @@ function &get_links($just_common=FALSE)
 			,'admin_contact_us'									=> ADMIN_SURL_LANG."/contact_us"
 			,'admin_contact_us_send_new'						=> ADMIN_SURL_LANG."/contact_us/send_new"
 			,'admin_contact_us_message_details_format'	=> ADMIN_SURL_LANG."/contact_us/message_id"
-			,'customer_contact_us'								=> HOME_URL_LANG."/contact_us"
+			,'customer_contact_us'								=> HOME_SURL_LANG."/contact_us"
 
 			,'admin_customer'						=> ADMIN_SURL_LANG."/customer"
 			,'admin_customer_search'			=> ADMIN_SURL_LANG."/customer/search"
@@ -65,14 +65,14 @@ function &get_links($just_common=FALSE)
 			,'admin_task_exec'				=> ADMIN_SURL_LANG."/task_exec"
 			,'admin_task_exec_file_format'=> ADMIN_SURL_LANG."/task_exec/get_file/customer_id/file_name"
 
-			,'customer_dashboard'				=> HOME_URL_LANG."/dashboard"
-			,'customer_login'						=> HOME_URL_LANG."/login"
-			,'customer_login_yahoo'				=> HOME_URL_LANG."/login/yahoo"
-			,'customer_login_google'			=> HOME_URL_LANG."/login/google"
-			,'customer_login_facebook'			=> HOME_URL_LANG."/login/facebook"
-			,'customer_logout'					=> HOME_URL_LANG."/logout"
-			,'customer_signup'					=> HOME_URL_LANG."/signup"
-			,'customer_forgotten_password'	=> HOME_URL_LANG."/forgotten_password"
+			,'customer_dashboard'				=> HOME_SURL_LANG."/dashboard"
+			,'customer_login'						=> HOME_SURL_LANG."/login"
+			,'customer_login_yahoo'				=> HOME_SURL_LANG."/login/yahoo"
+			,'customer_login_google'			=> HOME_SURL_LANG."/login/google"
+			,'customer_login_facebook'			=> HOME_SURL_LANG."/login/facebook"
+			,'customer_logout'					=> HOME_SURL_LANG."/logout"
+			,'customer_signup'					=> HOME_SURL_LANG."/signup"
+			,'customer_forgotten_password'	=> HOME_SURL_LANG."/forgotten_password"
 
 			,'admin_message'								=> ADMIN_SURL_LANG."/message"
 			,'admin_message_new'							=> ADMIN_SURL_LANG."/message/new"
@@ -80,10 +80,10 @@ function &get_links($just_common=FALSE)
 			,'admin_message_access'						=> ADMIN_SURL_LANG."/message_access"
 			,'admin_message_access_user_format'		=> ADMIN_SURL_LANG."/message_access/user_id"
 			,'admin_message_search_departments'		=> ADMIN_SURL_LANG."/message/search_departments"
-			,'customer_message'							=> HOME_URL_LANG."/message"
-			,'customer_message_details_format'		=> HOME_URL_LANG."/message/message_id"
-			,'customer_message_c2d'						=> HOME_URL_LANG."/contact_us"
-			,'customer_message_c2c_format'			=> HOME_URL_LANG."/message/send/customer_id"
+			,'customer_message'							=> HOME_SURL_LANG."/message"
+			,'customer_message_details_format'		=> HOME_SURL_LANG."/message/message_id"
+			,'customer_message_c2d'						=> HOME_SURL_LANG."/contact_us"
+			,'customer_message_c2c_format'			=> HOME_SURL_LANG."/message/send/customer_id"
 		));
 	}
 

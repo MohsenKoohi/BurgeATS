@@ -11,7 +11,7 @@ class Google_login_model extends CI_Model
 
 		require_once "google/autoload.php";
 
-		$this->redirect_uri = get_link("google_login_page");
+		$this->redirect_uri = get_link("customer_login_google");
 	}
 
 

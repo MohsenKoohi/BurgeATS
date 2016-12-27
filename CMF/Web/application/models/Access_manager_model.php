@@ -12,12 +12,16 @@ class Access_manager_model extends CI_Model
 
 	public function install()
 	{
+		//we use negative numbers indicating ids of users
+		//and positive numbers indicating ids of groups
+		//so we don't need to add a type column 
+
 		$access_table=$this->db->dbprefix($this->access_table_name); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $access_table (
-				`user_id` int NOT NULL,
+				`user_group_id` int NOT NULL,
 				`module_id` char(50) NOT NULL,
-				PRIMARY KEY (user_id , module_id)	
+				PRIMARY KEY (user_group_id , module_id)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
@@ -31,77 +35,6 @@ class Access_manager_model extends CI_Model
 
 	public function uninstall()
 	{
-		return;
-	}
-
-	//this method adds access to an array of modules for a user
-	public function set_allowed_modules_for_user($user_id,$modules)
-	{
-		$this->unset_user_access($user_id);
-
-		if(!$modules || !sizeof($modules))
-			return;
-
-		$batch=array();
-		foreach ($modules as $module)
-			$batch[]=array(
-				"user_id"=>$user_id
-				,"module_id"=>$module
-				);
-
-		$this->db->insert_batch($this->access_table_name,$batch);
-
-		$this->log_manager_model->info("ACCESS_ALLOW_USER",array(
-			"modules"=>implode(" , ", $modules),
-			"for_user"=>$user_id
-		));
-
-		return TRUE;
-	}
-
-	public function unset_user_access($user_id)
-	{
-		$this->db->delete($this->access_table_name,array("user_id"=>$user_id));
-
-		$this->log_manager_model->info("ACCESS_UNSET_USER",array(
-			"for_user"=>$user_id
-		));
-
-		return;
-	}
-
-	public function set_allowed_users_for_module($module_id,$users)
-	{
-		$this->unset_module_access($module_id);
-
-		if(!$users || !sizeof($users))
-			return;
-
-		$batch=array();
-		foreach ($users as $user_id)
-			$batch[]=array(
-				"user_id"=>$user_id
-				,"module_id"=>$module_id
-				);
-
-		$this->db->insert_batch($this->access_table_name,$batch);
-
-		$this->log_manager_model->info("ACCESS_ALLOW_USER",array(
-			"for_user_ids"=>implode(" , ", $users)
-			,"module_id"=>$module_id
-		));
-
-		return TRUE;
-	}
-
-	public function unset_module_access($module_id)
-	{
-		$this->db->delete($this->access_table_name,array("module_id"=>$module_id));
-
-		$this->log_manager_model->info("ACCESS_UNSET_MODULE",array(
-			"module_id"=>$module_id
-		));
-
 		return;
 	}
 
@@ -119,15 +52,25 @@ class Access_manager_model extends CI_Model
 		else
 			if($user)
 			{
-				$log_context['user_id']=$user->get_id();
+				$user_id=$user->get_id();
+				$group_id=$user->get_group_id();
+
+				$log_context['user_id']=$user_id;
 				
 				//check access to module
-				$query_result=$this->db->get_where($this->access_table_name,array("user_id"=>$user->get_id(),"module_id"=>$module));
+				$query_result=$this->db
+					->from($this->access_table_name)
+					->where("module_id",$module)
+					->where("( ( user_group_id = -$user_id ) || ( user_group_id = $group_id ) )")
+					->group_by("module_id")
+					->get();
+
 				if($query_result->num_rows() == 1)
 				{
 					//$log_context['user_email']=$user->get_email();
 					$log_context['user_name']=$user->get_name();
 					$log_context['user_code']=$user->get_code();
+					$log_context['user_group_id']=$group_id;
 
 					$log_context['has_access']=TRUE;
 
@@ -147,29 +90,83 @@ class Access_manager_model extends CI_Model
 	}
 
 	//returns an array of all modules a user has access to
-	public function get_user_modules($user_id)
+	public function get_user_modules($user)
 	{
 		$ret=array();
-		if(!$user_id)
+		if(!$user)
 			return $ret;
 
-		$result=$this->db->get_where($this->access_table_name,array("user_id"=>$user_id));
-		foreach($result->result_array() as $row)
-			$ret[]=$row["module_id"];
+		$user_id=$user->get_id();
+		$group_id=$user->get_group_id();
 
-		return $ret;
+		$result=$this->db
+			->select("GROUP_CONCAT(module_id) as module_ids")
+			->from($this->access_table_name)
+			->where("( ( user_group_id = -$user_id ) || ( user_group_id = $group_id ) )")
+			->get()
+			->row_array();
+
+		$module_ids=explode(",", $result['module_ids']);
+
+		return $module_ids;		
 	}
 
-	public function get_users_have_access_to_module($module_id)
-	{	
-		$this->db->select("user.user_name,user.user_code,user.user_id");
-		$this->db->from("user");
-		$this->db->join($this->access_table_name,"user.user_id = access.user_id","left");
-		$this->db->where(array("module_id"=>$module_id));
-		$this->db->order_by("access.user_id desc");
-		$result=$this->db->get();
-		
-		return $result->result_array();
+	public function get_modules($access_id)
+	{
+		if(!$access_id)
+			return array();
+
+		$result=$this->db
+			->select("GROUP_CONCAT(module_id) as module_ids")
+			->from($this->access_table_name)
+			->where(array("user_group_id"=>$access_id))
+			->get()
+			->row_array();
+
+		return explode(",", $result['module_ids']);
 	}
+
+	public function unset_all_modules($access_id)
+	{
+		if(!$access_id)
+			return;
+
+		$this->db
+			->where("user_group_id",$access_id)
+			->delete($this->access_table_name);
+
+		$this->log_manager_model->info("ACCESS_UNSET",array(
+			"access_id"=>$access_id
+		));
+	}
+
+	//this method adds access to an array of modules for a user
+	public function set_modules($access_id,$module_ids)
+	{
+		if(!$access_id)
+			return;
+
+		$this->unset_all_modules($access_id);
+
+		if(!$module_ids || !sizeof($module_ids))
+			return;
+
+		$batch=array();
+		foreach ($module_ids as $module_id)
+			$batch[]=array(
+				"user_group_id"	=> $access_id
+				,"module_id"		=> $module_id
+				);
+
+		$this->db->insert_batch($this->access_table_name,$batch);
+
+		$this->log_manager_model->info("ACCESS_SET",array(
+			"module_ids"=>implode(" , ", $module_ids),
+			"access_id"=>$access_id
+		));
+
+		return TRUE;
+	}
+	
 
 }

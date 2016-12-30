@@ -91,5 +91,8 @@ define ('UPLOAD_URL', HOME_URL."/upload");
 
 define ('CATEGORY_CACHE_DIR', HOME_DIR."/application/cache/category");
 
+define ('MESSAGE_ATTACHMENT_DIR', HOME_DIR."/message");
+define ('MESSAGE_ATTACHMENT_URL', HOME_URL."/message");
+
 //settings for BurgeATS
 define ('CUSTOMER_SESSION_EXPIRATION',60*60*3);

@@ -87,7 +87,9 @@ $lang['please_specify_the_sender_department']="Please specify the sender.";
 $lang['please_specify_the_receiver']="Please specify the receiver.";
 $lang['please_fill_subject_and_content']="Please fill subject and content fields.";
 $lang['message_added_successfully']="The new message sent successfully.";
-$lang['']="";
-$lang['']="";
-$lang['']="";
-$lang['']="";
+
+$lang['attachment']="Attachment";
+$lang['the_file_is_erroneous']="The received file is errornous. Please try again.";
+$lang['the_file_size_is_larger_than']="Size of the received file is larger than 3MB.";
+$lang['the_file_format_is_not_supported']="The file format is not supported.";
+

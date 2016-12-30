@@ -2,9 +2,15 @@
 
 class AE_Message extends Burge_CMF_Controller {
 
+	private $attachment_max_size=0;
+	private $attachment_extenstions=NULL;
+
 	function __construct()
 	{
 		parent::__construct();
+
+		$this->attachment_max_size=3 * 1024 * 1024;
+		$this->attachment_extenstions=array("jpg","pdf","doc","png","gif","docx");
 
 		$this->lang->load('ae_message',$this->selected_lang);
 		$this->load->model(array("user_manager_model","message_manager_model"));
@@ -139,9 +145,6 @@ class AE_Message extends Burge_CMF_Controller {
 				
 		$ret=$this->message_manager_model->get_admin_message($message_id);
 
-		//bprint_r($ret['access']['added_departments']);
-		//bprint_r($ret['access']['added_users']);
-		
 		if($ret)
 		{
 			if($this->input->post("post_type") === "add_reply_comment")
@@ -169,6 +172,8 @@ class AE_Message extends Burge_CMF_Controller {
 		}
 
 		$this->data['message_id']=$message_id;
+		$this->data['content']=$this->session->flashdata("content");
+
 		$this->data['message']=get_message();
 		$this->data['lang_pages']=get_lang_pages(get_admin_message_details_link($message_id,TRUE));
 		$this->data['header_title']=$this->lang->line("message")." ".$message_id;
@@ -196,12 +201,24 @@ class AE_Message extends Burge_CMF_Controller {
 	}
 
 	private function add_reply_comment($message_id,$mess)
-	{
+	{	
+		$attachment=NULL;
+		$error="";
+		$this->get_attachment_file($attachment,$error);
+
+		if($error)
+		{
+			$this->session->set_flashdata("content",$this->input->post("content"));
+			set_message($error);
+			return redirect(get_admin_message_details_link($message_id));
+		}
+
 		if($this->input->post("response_type") === "comment")
 		{
 			$thread_props=array(
-				"content"=>$this->input->post("content")
-				,"user_id"=>$this->user_manager_model->get_user_info()->get_id()
+				"content"		=> $this->input->post("content")
+				,"user_id"		=> $this->user_manager_model->get_user_info()->get_id()
+				,"attachment"	=> $attachment
 			);
 
 			$message_props=array(
@@ -218,7 +235,8 @@ class AE_Message extends Burge_CMF_Controller {
 		if($this->input->post("response_type") === "reply")
 		{
 			$thread_props=array(
-				"content"=>$this->input->post("content")
+				"content"		=> $this->input->post("content")
+				,"attachment"	=> $attachment
 			);
 
 			$user_id=$this->user_manager_model->get_user_info()->get_id();
@@ -264,6 +282,46 @@ class AE_Message extends Burge_CMF_Controller {
 		}
 
 		return redirect(get_admin_message_details_link($message_id));
+	}
+
+	private function get_attachment_file(&$attachment,&$error)
+	{
+		$attachment=NULL;
+		$error="";
+
+		$file_name=$_FILES['attachment']['name'];
+		$file_tmp_name=$_FILES['attachment']['tmp_name'];
+		$file_error=$_FILES['attachment']['error'];
+		$file_size=$_FILES['attachment']['size'];
+
+		if($file_error ==  UPLOAD_ERR_NO_FILE)
+			return;
+	
+		if($file_error)
+		{
+			$error=$this->lang->line("the_file_is_erroneous");
+			return;
+		}
+
+		if($file_size >  $this->attachment_max_size )
+		{
+			$error = $this->lang->line("the_file_size_is_larger_than");
+			return;
+		}
+
+		$extension=pathinfo($file_name, PATHINFO_EXTENSION);
+		if(!in_array(strtolower($extension),$this->attachment_extenstions))
+		{
+			$error=$this->lang->line("the_file_format_is_not_supported");
+			return;
+		}
+
+		$attachment=array(
+			"temp_name"		=> $file_tmp_name
+			,"extension"	=> $extension
+		);
+
+		return;		
 	}
 
 	public function index()

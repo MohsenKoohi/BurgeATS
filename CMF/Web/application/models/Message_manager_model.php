@@ -72,6 +72,7 @@ class Message_manager_model extends CI_Model
 				,`mt_sender_id` BIGINT
 				,`mt_content` TEXT
 				,`mt_timestamp` DATETIME
+				,`mt_attachment` VARCHAR(127) DEFAULT NULL
 				,`mt_verifier_id` BIGINT DEFAULT 0
 				,PRIMARY KEY (`mt_thread_id`)	
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
@@ -991,15 +992,20 @@ class Message_manager_model extends CI_Model
 	}
 
 	public function add_comment($message_id,$message_props,$thread_props)
-	{
+	{	
+		$attachment=NULL;
+		if(isset($thread_props['attachment']))
+			$attachment=$thread_props['attachment'];
+
 		$current_time=get_current_time();
 
 		$this->add_thread(array(
-			"mt_sender_type"=>"user"
-			,"mt_sender_id"=>$thread_props['user_id']
-			,"mt_timestamp"=>$current_time
-			,"mt_message_id"=>$message_id
-			,"mt_content"=>$thread_props['content']
+			"mt_sender_type"	=> "user"
+			,"mt_sender_id"	=> $thread_props['user_id']
+			,"mt_timestamp"	=> $current_time
+			,"mt_message_id"	=> $message_id
+			,"mt_content"		=> $thread_props['content']
+			,"mt_attachment"	=> $attachment
 		));
 
 		$mprops=array(
@@ -1045,14 +1051,19 @@ class Message_manager_model extends CI_Model
 
 	public function add_reply($message_id,$message_props,$thread_props)
 	{
+		$attachment=NULL;
+		if(isset($thread_props['attachment']))
+			$attachment=$thread_props['attachment'];
+
 		$current_time=get_current_time();
 
 		$tprops=array(
-			"mt_sender_type"=>$thread_props['sender_type']
-			,"mt_sender_id"=>$thread_props['sender_id']
-			,"mt_timestamp"=>$current_time
-			,"mt_message_id"=>$message_id
-			,"mt_content"=>$thread_props['content']
+			"mt_sender_type"	=> $thread_props['sender_type']
+			,"mt_sender_id"	=> $thread_props['sender_id']
+			,"mt_timestamp"	=> $current_time
+			,"mt_message_id"	=> $message_id
+			,"mt_content"		=> $thread_props['content']
+			,"mt_attachment"	=> $attachment
 		);
 
 		if(isset($thread_props['verifier_id']))
@@ -1104,8 +1115,24 @@ class Message_manager_model extends CI_Model
 		if(!isset($props['mt_timestamp']))
 			$props['mt_timestamp']=get_current_time();
 
+		if(isset($props['mt_attachment']) && $props['mt_attachment'])
+		{
+			$temp_name=$props['mt_attachment']['temp_name'];
+			$extension=$props['mt_attachment']['extension'];
+
+			$props['mt_attachment']=get_random_word(8).".".$extension;
+		}
+		else
+			$props['mt_attachment']=NULL;
+
 		$this->db->insert($this->message_thread_table_name,$props);
 		$id=$this->db->insert_id();
+
+		if($props['mt_attachment'])
+		{
+			$path=get_message_thread_attachment_path($props['mt_message_id'],$id,$props['mt_attachment']);
+			move_uploaded_file($temp_name, $path);
+		}
 
 		$props['mt_thread_id']=$id;
 		$this->log_manager_model->info("MESSAGE_THREAD_ADD",$props);

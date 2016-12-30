@@ -88,7 +88,9 @@ $lang['please_specify_the_sender_department']="لطفا فرستنده را مش
 $lang['please_specify_the_receiver']="گیرنده پیام را مشخص فرمایید.";
 $lang['please_fill_subject_and_content']="لطفا عنوان و متن پیام رامشخص نمایید.";
 $lang['message_added_successfully']="پیام شما با موفقیت ارسال شد.";
-$lang['']="";
-$lang['']="";
-$lang['']="";
+
+$lang['attachment']="ضمیمه";
+$lang['the_file_is_erroneous']="ارسال فایل همراه با خطا بود. لطفا مجددا تلاش نمایید.";
+$lang['the_file_size_is_larger_than']="حجم فایل ارسال شده بیشتر از ۳ مگابایت است.";
+$lang['the_file_format_is_not_supported']="فرمت فایل ارسال شده قابل قبول نیست.";
 $lang['']="";

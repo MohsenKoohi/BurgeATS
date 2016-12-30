@@ -95,6 +95,22 @@ function &get_links($just_common=FALSE)
 	return $LINKS;
 }
 
+function get_message_thread_attachment_url($message_id,$thread_id,$filename)
+{
+	if(!$filename)
+		return NULL;
+
+	return MESSAGE_ATTACHMENT_URL."/".$message_id."_".$thread_id."_".$filename;
+}
+
+function get_message_thread_attachment_path($message_id,$thread_id,$filename)
+{
+	if(!$filename)
+		return NULL;
+
+	return MESSAGE_ATTACHMENT_DIR."/".$message_id."_".$thread_id."_".$filename;
+}
+
 function get_customer_message_c2c_link($customer_id, $do_not_set_lang=FALSE)
 {
 	return str_replace(

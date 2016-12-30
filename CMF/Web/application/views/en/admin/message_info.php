@@ -208,7 +208,24 @@
 							<span>
 								<?php echo nl2br($thread['mt_content']);?>
 							</span>
-						</div>			
+						</div>
+
+						<?php 
+							if($thread['mt_attachment'])
+							{ 
+								$link=get_message_thread_attachment_url($thread['mt_message_id'],$thread['mt_thread_id'],$thread['mt_attachment']);
+						?>
+								<div class="three columns">
+									<a href="<?php echo $link;?>" target="_blank">
+										<span>
+											<b>{attachment_text}</b>
+										</span>
+									</a>
+								</div>	
+						<?php 
+							} 
+						?>
+						
 					</div>
 				<?php 
 						}
@@ -264,7 +281,7 @@
 			
 			<div class="separated">
 				<h2>{reply_or_comment_text}</h2>
-				<?php echo form_open(get_admin_message_details_link($message_id),array()); ?>
+				<?php echo form_open_multipart(get_admin_message_details_link($message_id),array()); ?>
 				<input type="hidden" name="post_type" value="add_reply_comment" />			
 					<div class="row response-type">
 						<div class="three columns">
@@ -331,7 +348,15 @@
 					<br><br>
 					<div class="row">
 						<div class="twelve columns">
-							<textarea id="content-ta" name="content" class="full-width" rows="7"></textarea>
+							<textarea id="content-ta" name="content" class="full-width" rows="7">{content}</textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="three columns">
+							<span>{attachment_text}</span>
+						</div>
+						<div class="three columns">
+							<input type="file" name="attachment" class="full-width" />
 						</div>
 					</div>
 					<br><br>
@@ -427,7 +452,6 @@
 								
 								$("#deps-main").val(depIds.join(","));
 							}
-
 						</script>
 					</div>
 
@@ -510,7 +534,6 @@
 								
 								$("#users-main").val(userIds.join(","));
 							}
-
 						</script>
 					</div>
 
@@ -530,9 +553,7 @@
 
 							return true;
 						}
-					</script>
-
-					
+					</script>	
 				</form>
 			</div>
 			<br><br><br>

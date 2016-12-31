@@ -19,7 +19,7 @@
 					</div>
 				</div>
 			<?php } else {?>
-				<?php echo form_open(get_link("customer_contact_us"),array("id"=>"contact-form","onsubmit"=>"return checkForm();")); ?>
+				<?php echo form_open_multipart(get_link("customer_contact_us"),array("id"=>"contact-form","onsubmit"=>"return checkForm();")); ?>
 					<div class="row">
 						<div class="three columns">
 							<label>{department_text}</label>
@@ -49,6 +49,14 @@
 						</div>
 						<div class="nine columns">
 							<textarea name="content" class="full-width" rows="5">{content}</textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="three columns">
+							<span>{attachment_text}</span>
+						</div>
+						<div class="three columns">
+							<input type="file" name="attachment" class="full-width" />
 						</div>
 					</div>
 					<div class="row">

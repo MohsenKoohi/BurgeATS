@@ -1,12 +1,24 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class CE_Message extends Burge_CMF_Controller {
+
+	private $attachment_max_size=0;
+	private $attachment_extenstions=NULL;
+
 	function __construct()
 	{
 		parent::__construct();
 
-		$this->load->model(array("customer_manager_model","message_manager_model"));
+		$this->attachment_max_size=2 * 1024 * 1024;
+		$this->attachment_extenstions=array("jpg","pdf","doc","png","gif","docx");
+
+		$this->load->model(array(
+			"customer_manager_model"
+			,"message_manager_model"
+		));
+		
 		$this->data['customer_logged_in']=$this->customer_manager_model->has_customer_logged_in();
+		
 		$this->lang->load('ce_message',$this->selected_lang);		
 	}
 
@@ -52,8 +64,20 @@ class CE_Message extends Burge_CMF_Controller {
 
 		if(verify_captcha($this->input->post("captcha")))
 		{
-			$this->message_manager_model->add_customer_reply($message_id,$customer_id,$content);
-			set_message($this->lang->line("reply_message_sent_successfully"));
+			$attachment=NULL;
+			$error="";
+			$this->get_attachment_file($attachment,$error);
+
+			if($error)
+			{
+				$this->session->set_flashdata("content".$message_id,$content);
+				set_message($error);
+			}
+			else
+			{
+				$this->message_manager_model->add_customer_reply($message_id,$customer_id,$content,$attachment);
+				set_message($this->lang->line("reply_message_sent_successfully"));
+			}
 		}
 		else
 		{
@@ -233,26 +257,36 @@ class CE_Message extends Burge_CMF_Controller {
 		{
 			if(verify_captcha($this->input->post("captcha")))
 			{
-				$fields=array("department","subject","content");
-				$props=array();
-				foreach($fields as $field)
-					$props[$field]=$this->input->post($field);
-				
-				if($props['subject']  && $props['department'] && $props['content'] )
+				$attachment=NULL;
+				$error="";
+				$this->get_attachment_file($attachment,$error);
+
+				if(!$error)
 				{
-					persian_normalize($props);
+					$fields=array("department","subject","content");
+					$props=array();
+					foreach($fields as $field)
+						$props[$field]=$this->input->post($field);
+					
+					if($props['subject']  && $props['department'] && $props['content'] )
+					{
+						persian_normalize($props);
 
-					$customer_info=$this->customer_manager_model->get_logged_customer_info();
-					$props['customer_id']=$customer_info['customer_id'];
+						$customer_info=$this->customer_manager_model->get_logged_customer_info();
+						$props['customer_id']=$customer_info['customer_id'];
+						$props['attachment']=$attachment;
 
-					$this->message_manager_model->add_c2d_message($props);
+						$this->message_manager_model->add_c2d_message($props);
 
-					set_message($this->lang->line("department_message_sent_successfully"));
+						set_message($this->lang->line("department_message_sent_successfully"));
 
-					redirect(get_link("customer_message"));
+						redirect(get_link("customer_message"));
+					}
+					else
+						set_message($this->lang->line("fill_all_fields"));
 				}
 				else
-					set_message($this->lang->line("fill_all_fields"));
+					set_message($error);
 			}
 			else
 				set_message($this->lang->line("captcha_incorrect"));
@@ -267,4 +301,45 @@ class CE_Message extends Burge_CMF_Controller {
 
 		return;
 	}
+
+	private function get_attachment_file(&$attachment,&$error)
+	{
+		$attachment=NULL;
+		$error="";
+
+		$file_name=$_FILES['attachment']['name'];
+		$file_tmp_name=$_FILES['attachment']['tmp_name'];
+		$file_error=$_FILES['attachment']['error'];
+		$file_size=$_FILES['attachment']['size'];
+
+		if($file_error ==  UPLOAD_ERR_NO_FILE)
+			return;
+	
+		if($file_error)
+		{
+			$error=$this->lang->line("the_file_is_erroneous");
+			return;
+		}
+
+		if($file_size >  $this->attachment_max_size )
+		{
+			$error = $this->lang->line("the_file_size_is_larger_than");
+			return;
+		}
+
+		$extension=strtolower(pathinfo($file_name, PATHINFO_EXTENSION));		
+		if(!in_array($extension,$this->attachment_extenstions))
+		{
+			$error=$this->lang->line("the_file_format_is_not_supported");
+			return;
+		}
+
+		$attachment=array(
+			"temp_name"		=> $file_tmp_name
+			,"extension"	=> $extension
+		);
+
+		return;		
+	}
+
 }

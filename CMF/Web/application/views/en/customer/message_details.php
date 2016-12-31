@@ -142,7 +142,7 @@
 			
 			<div class="separated">
 				<h2>{reply_text}</h2>
-				<?php echo form_open(get_customer_message_details_link($message_id),array(
+				<?php echo form_open_multipart(get_customer_message_details_link($message_id),array(
 					"onsubmit"=>"return confirm('{are_you_sure_to_send_text}')")); ?>
 				<input type="hidden" name="post_type" value="add_reply" />			
 					<div class="row response-type">
@@ -184,6 +184,14 @@
 					<div class="row">
 						<div class="twelve columns">
 							<textarea id="content-ta" name="content" class="full-width" rows="7">{content}</textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="three columns">
+							<span>{attachment_text}</span>
+						</div>
+						<div class="three columns">
+							<input type="file" name="attachment" class="full-width" />
 						</div>
 					</div>
 					<div class="row">

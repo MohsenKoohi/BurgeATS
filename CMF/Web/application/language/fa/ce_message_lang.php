@@ -31,4 +31,8 @@ $lang['reply_message_sent_successfully']="پاسخ شما با موفقیت ثب
 $lang['send_message']="ارسال پیام";
 $lang['receiver']="گیرنده";
 $lang['message_sent_successfully']="پیام شما با موفقیت ثبت شد.";
+
 $lang['attachment']="ضمیمه";
+$lang['the_file_is_erroneous']="ارسال فایل همراه با خطا بود. لطفا مجددا تلاش نمایید.";
+$lang['the_file_size_is_larger_than']="حجم فایل ارسال شده بیشتر از ۲ مگابایت است.";
+$lang['the_file_format_is_not_supported']="فرمت فایل ارسال شده قابل قبول نیست.";

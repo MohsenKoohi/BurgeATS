@@ -31,4 +31,8 @@ $lang['reply_message_sent_successfully']="Your reply sent successfully.";
 $lang['send_message']="Send Message";
 $lang['receiver']="Receiver";
 $lang['message_sent_successfully']="Your message sent successfully.";
+
 $lang['attachment']="Attachment";
+$lang['the_file_is_erroneous']="The received file is errornous. Please try again.";
+$lang['the_file_size_is_larger_than']="Size of the received file is larger than 2MB.";
+$lang['the_file_format_is_not_supported']="The file format is not supported.";

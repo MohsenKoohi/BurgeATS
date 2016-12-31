@@ -944,6 +944,7 @@ class Message_manager_model extends CI_Model
 			,'mt_sender_type'	=> "customer"
 			,'mt_sender_id'	=> $props['customer_id']
 			,'mt_content'		=> $props['content']
+			,'mt_attachment'	=> $props['attachment']
 		);
 
 		$tid=$this->add_thread($thr);
@@ -1023,16 +1024,17 @@ class Message_manager_model extends CI_Model
 		return;
 	}
 
-	public function add_customer_reply($message_id,$customer_id,$content)
+	public function add_customer_reply($message_id,$customer_id,$content,$attachment)
 	{
 		$current_time=get_current_time();
 
 		$tprops=array(
-			"mt_sender_type"=>"customer"
-			,"mt_sender_id"=>$customer_id
-			,"mt_timestamp"=>$current_time
-			,"mt_message_id"=>$message_id
-			,"mt_content"=>$content
+			"mt_sender_type"	=> "customer"
+			,"mt_sender_id"	=> $customer_id
+			,"mt_timestamp"	=> $current_time
+			,"mt_message_id"	=> $message_id
+			,"mt_content"		=> $content
+			,"mt_attachment"	=> $attachment
 		);
 
 		$tid=$this->add_thread($tprops);

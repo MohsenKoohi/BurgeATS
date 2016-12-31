@@ -810,8 +810,12 @@ class Message_manager_model extends CI_Model
 	{
 		$ret=array();
 
+		$i=0;
+
 		foreach($props['receiver_ids'] as $rid)
 		{
+			$i++;
+
 			$mess=array(
 				"mi_sender_type"		=>"user"
 				,"mi_sender_id"		=>$props['sender_id']
@@ -827,14 +831,26 @@ class Message_manager_model extends CI_Model
 				,'mt_sender_type'	=> "user"
 				,'mt_sender_id'	=> $props['sender_id']
 				,'mt_content'		=> $props['content']
-				,'mt_attachment'	=> $props['attachment']
 			);
+
+			if($props['attachment'])
+			{
+				$new_copy_name=$props['attachment']['temp_name'].$i;
+				copy($props['attachment']['temp_name'],$new_copy_name);
+
+				$thr['mt_attachment']=array(
+					'extension' 	=> $props['attachment']['extension']
+					,'temp_name' 	=> $new_copy_name
+					,'copy'			=> 1
+				);
+			}
+			else
+				$props['mt_attachment']=NULL;
 
 			$tid=$this->add_thread($thr);
 
 			$ret[]=$mid;
 		}
-
 
 		return $ret;
 	}
@@ -1124,6 +1140,7 @@ class Message_manager_model extends CI_Model
 		{
 			$temp_name=$props['mt_attachment']['temp_name'];
 			$extension=$props['mt_attachment']['extension'];
+			$copy=(isset($props['mt_attachment']['copy']) && $props['mt_attachment']['copy']);
 
 			$props['mt_attachment']=get_random_word(8).".".$extension;
 		}
@@ -1136,7 +1153,11 @@ class Message_manager_model extends CI_Model
 		if($props['mt_attachment'])
 		{
 			$path=get_message_thread_attachment_path($props['mt_message_id'],$id,$props['mt_attachment']);
-			move_uploaded_file($temp_name, $path);
+			
+			if($copy)
+				copy($temp_name, $path);
+			else
+				move_uploaded_file($temp_name, $path);
 
 			$props['mt_attachment']=get_message_thread_attachment_url($props['mt_message_id'],$id,$props['mt_attachment']);
 		}

@@ -135,6 +135,10 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 .no-display {
   display: none; }
 
+img.clips {
+  width: 48px;
+  vertical-align: middle; }
+
 .header {
   display: block;
   line-height: 0;

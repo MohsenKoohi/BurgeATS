@@ -218,6 +218,7 @@
 								<div class="three columns">
 									<a href="<?php echo $link;?>" target="_blank">
 										<span>
+											<img class='clips' src="{images_url}/clips.png"/>
 											<b>{attachment_text}</b>
 										</span>
 									</a>

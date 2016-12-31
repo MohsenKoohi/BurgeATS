@@ -31,3 +31,4 @@ $lang['reply_message_sent_successfully']="Your reply sent successfully.";
 $lang['send_message']="Send Message";
 $lang['receiver']="Receiver";
 $lang['message_sent_successfully']="Your message sent successfully.";
+$lang['attachment']="Attachment";

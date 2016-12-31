@@ -827,6 +827,7 @@ class Message_manager_model extends CI_Model
 				,'mt_sender_type'	=> "user"
 				,'mt_sender_id'	=> $props['sender_id']
 				,'mt_content'		=> $props['content']
+				,'mt_attachment'	=> $props['attachment']
 			);
 
 			$tid=$this->add_thread($thr);
@@ -867,6 +868,7 @@ class Message_manager_model extends CI_Model
 				,'mt_sender_id'	=> $props['sender_id']
 				,'mt_verifier_id' => $props['verifier_id']
 				,'mt_content'		=> $props['content']
+				,'mt_attachment'	=> $props['attachment']
 			);
 
 			$tid=$this->add_thread($thr);
@@ -999,14 +1001,15 @@ class Message_manager_model extends CI_Model
 
 		$current_time=get_current_time();
 
-		$this->add_thread(array(
+		$props=array(
 			"mt_sender_type"	=> "user"
 			,"mt_sender_id"	=> $thread_props['user_id']
 			,"mt_timestamp"	=> $current_time
 			,"mt_message_id"	=> $message_id
 			,"mt_content"		=> $thread_props['content']
 			,"mt_attachment"	=> $attachment
-		));
+		);
+		$this->add_thread($props);
 
 		$mprops=array(
 			"mi_last_activity"=>$current_time
@@ -1110,7 +1113,7 @@ class Message_manager_model extends CI_Model
 		return $id;
 	}
 
-	private function add_thread($props)
+	private function add_thread(&$props)
 	{
 		if(!isset($props['mt_timestamp']))
 			$props['mt_timestamp']=get_current_time();
@@ -1132,6 +1135,8 @@ class Message_manager_model extends CI_Model
 		{
 			$path=get_message_thread_attachment_path($props['mt_message_id'],$id,$props['mt_attachment']);
 			move_uploaded_file($temp_name, $path);
+
+			$props['mt_attachment']=get_message_thread_attachment_url($props['mt_message_id'],$id,$props['mt_attachment']);
 		}
 
 		$props['mt_thread_id']=$id;

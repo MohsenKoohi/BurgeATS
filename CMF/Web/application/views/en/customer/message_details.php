@@ -118,7 +118,22 @@
 							<span>
 								<?php echo nl2br($thread['mt_content']);?>
 							</span>
-						</div>			
+						</div>
+						<?php 
+							if($thread['mt_attachment'])
+							{ 
+								$link=get_message_thread_attachment_url($thread['mt_message_id'],$thread['mt_thread_id'],$thread['mt_attachment']);
+						?>
+								<div class="three columns">
+									<a href="<?php echo $link;?>" target="_blank">
+										<span>
+											<b>{attachment_text}</b>
+										</span>
+									</a>
+								</div>	
+						<?php 
+							} 
+						?>			
 					</div>
 				<?php 
 						}

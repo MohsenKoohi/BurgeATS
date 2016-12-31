@@ -58,6 +58,9 @@ class AE_Message extends Burge_CMF_Controller {
 		$this->data['users_search_url']=get_link("admin_user_search");
 		$this->data['customers_search_url']=get_link("admin_customer_search");
 
+		$this->data['subject']=$this->session->flashdata("subject");
+		$this->data['content']=$this->session->flashdata("content");
+
 		$this->data['message']=get_message();
 		$this->data['departments']=$this->message_manager_model->get_departments();
 		$this->data['lang_pages']=get_lang_pages(get_link("admin_message_new",TRUE));
@@ -70,6 +73,19 @@ class AE_Message extends Burge_CMF_Controller {
 
 	private function add_new_message()
 	{
+		$attachment=NULL;
+		$error="";
+		$this->get_attachment_file($attachment,$error);
+
+		if($error)
+		{
+			$this->session->set_flashdata("content",$this->input->post("content"));
+			$this->session->set_flashdata("subject",$this->input->post("subject"));
+			
+			set_message($error);
+			return redirect(get_link("admin_message_new"));
+		}
+
 		$rt=$this->input->post("receiver_type");
 		$rids=explode(",",$this->input->post("receivers_ids"));
 		$subject=$this->input->post("subject");
@@ -82,6 +98,7 @@ class AE_Message extends Burge_CMF_Controller {
 				,"receiver_ids"=>$rids
 				,"subject"=>$subject
 				,"content"=>$content
+				,"attachment"=>$attachment
 			);
 
 			$this->message_manager_model->add_u2u_message($props);
@@ -97,6 +114,7 @@ class AE_Message extends Burge_CMF_Controller {
 					,"receiver_ids"=>$rids
 					,"subject"=>$subject
 					,"content"=>$content
+					,"attachment"=>$attachment
 				);
 
 				$this->message_manager_model->add_d2c_message($props);
@@ -309,8 +327,8 @@ class AE_Message extends Burge_CMF_Controller {
 			return;
 		}
 
-		$extension=pathinfo($file_name, PATHINFO_EXTENSION);
-		if(!in_array(strtolower($extension),$this->attachment_extenstions))
+		$extension=strtolower(pathinfo($file_name, PATHINFO_EXTENSION));		
+		if(!in_array($extension,$this->attachment_extenstions))
 		{
 			$error=$this->lang->line("the_file_format_is_not_supported");
 			return;

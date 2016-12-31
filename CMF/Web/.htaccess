@@ -21,5 +21,5 @@ ExpiresByType video/mp4 "access plus 1 months"
 Options -Indexes 
 
 RewriteEngine on
-RewriteCond $1 !^(index\.php|images|scripts|styles|upload|message|robots\.txt)
+RewriteCond $1 !^(index\.php|images|scripts|styles|upload|robots\.txt)
 RewriteRule ^(.*)$ index.php/$1 [L]

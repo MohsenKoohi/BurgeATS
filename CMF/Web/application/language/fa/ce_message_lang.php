@@ -31,3 +31,4 @@ $lang['reply_message_sent_successfully']="پاسخ شما با موفقیت ثب
 $lang['send_message']="ارسال پیام";
 $lang['receiver']="گیرنده";
 $lang['message_sent_successfully']="پیام شما با موفقیت ثبت شد.";
+$lang['attachment']="ضمیمه";

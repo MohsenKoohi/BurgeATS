@@ -4,7 +4,7 @@
 	<div class="container">
 		<h1>{add_new_message_text}</h1>
 
-		<?php echo form_open(get_link("admin_message_new"),array("onsubmit"=>"return verifySubmit();")); ?>
+		<?php echo form_open_multipart(get_link("admin_message_new"),array("onsubmit"=>"return verifySubmit();")); ?>
 			<input type="hidden" name="post_type" value="add_new_message"/>
 			<div class="row even-odd-bg dont-magnify">
 				<div class="two columns">
@@ -112,7 +112,7 @@
 					</span>
 				</div>
 				<div class="ten columns">
-					<input type="text" name="subject" id="subject" class="full-width"/>
+					<input type="text" name="subject" id="subject" value="{subject}" class="full-width"/>
 				</div>
 			</div>
 			<div class="row even-odd-bg dont-magnify">
@@ -122,7 +122,15 @@
 					</span>
 				</div>
 				<div class="ten columns">
-					<textarea rows="10" name="content" id="content" class="full-width"></textarea>
+					<textarea rows="10" name="content" id="content" class="full-width">{content}</textarea>
+				</div>
+			</div>
+			<div class="row even-odd-bg">
+				<div class="three columns">
+					<span>{attachment_text}</span>
+				</div>
+				<div class="three columns">
+					<input type="file" name="attachment" class="full-width" />
 				</div>
 			</div>
 

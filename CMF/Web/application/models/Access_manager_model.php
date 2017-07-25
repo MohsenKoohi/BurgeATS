@@ -167,6 +167,21 @@ class Access_manager_model extends CI_Model
 
 		return TRUE;
 	}
+
+	public function get_users_have_access_to_module($module_id)
+	{	
+		$result=$this->db
+			->select("*")
+			->from('access a')
+			->join("user u", " u.user_group_id = a.user_group_id || u.user_id = ABS(a.user_group_id)","INNER")
+			->where("module_id",$module_id)
+			->group_by('u.user_id')
+			->order_by("user_id ASC")
+			->get()
+			->result_array();
+		
+		return $result;
+	}
 	
 
 }

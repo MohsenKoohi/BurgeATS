@@ -14,6 +14,7 @@ $lang['constant']="مقادیر ثابت";
 $lang['file']="فایل‌ها";
 $lang['category']="دسته‌ها";
 $lang['contact_us']="تماس با ما";
+$lang['footer_link']="لینک‌های فوتر";
 
 $lang['customer']="مشتریان";
 $lang['task']="وظایف";

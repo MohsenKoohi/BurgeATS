@@ -55,7 +55,10 @@ function &get_links($just_common=FALSE)
 			,'admin_contact_us'									=> ADMIN_SURL_LANG."/contact_us"
 			,'admin_contact_us_send_new'						=> ADMIN_SURL_LANG."/contact_us/send_new"
 			,'admin_contact_us_message_details_format'	=> ADMIN_SURL_LANG."/contact_us/message_id"
-			,'customer_contact_us'								=> HOME_SURL_LANG."/contact_us"
+
+			,'customer_contact_us'								=> HOME_URL_LANG."/contact_us"
+
+			,'admin_footer_link'									=> ADMIN_SURL_LANG."/footer_link"
 
 			,'admin_customer'						=> ADMIN_SURL_LANG."/customer"
 			,'admin_customer_search'			=> ADMIN_SURL_LANG."/customer/search"
@@ -86,6 +89,7 @@ function &get_links($just_common=FALSE)
 			,'customer_message_details_format'		=> HOME_SURL_LANG."/message/message_id"
 			,'customer_message_c2d'						=> HOME_SURL_LANG."/contact_us"
 			,'customer_message_c2c_format'			=> HOME_SURL_LANG."/message/send/customer_id"
+
 		));
 	}
 

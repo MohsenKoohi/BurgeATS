@@ -97,6 +97,8 @@ class AE_Setup extends CI_Controller {
 
 		$this->module_manager_model->install_module("contact_us_manager");
 
+		$this->module_manager_model->install_module("footer_link_manager");
+
 		$this->module_manager_model->install_module("customer_manager");
 
 		$this->module_manager_model->install_module("task_manager");

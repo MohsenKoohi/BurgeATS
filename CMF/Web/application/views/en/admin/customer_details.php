@@ -37,45 +37,6 @@
 				text-overflow: ellipsis;
 				display: block;
 			}
-
-			.task_histories .even-odd-bg  div.columns
-			{
-				box-shadow: 1px 1px #888,-1px -1px #ccc;
-				border-radius: 5px;
-				padding:10px;
-			}
-
-			.task_histories .even-odd-bg:nth-child(2n + 1)  div.columns
-			{
-				box-shadow: -1px -1px #888,1px 1px #ccc;
-			}
-			.task_histories .even-odd-bg  .two.columns
-			{
-				margin:5px;
-				width:calc(16.66% - 10px);
-			}
-
-			.task_histories .even-odd-bg  .three.columns
-			{
-				margin:5px;
-				width:calc(25% - 10px);
-			}
-			.task_histories .even-odd-bg  .six.columns
-			{
-				margin:5px;
-				width:calc(50% - 10px);
-			}
-
-			.task_histories .manager_note
-			{
-				margin-top:20px;
-			}
-
-			.task_histories > div
-			{
-				margin-top:10px;
-			}
-
 		</style>
 
 		<div class="tab-container">

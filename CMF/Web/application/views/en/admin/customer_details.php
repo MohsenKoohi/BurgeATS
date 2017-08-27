@@ -517,7 +517,7 @@
 			</div>
 
 			<div class="tab" id="props" style="">
-				<div class="container">
+				<div class="container separated">
 					<h2>{properties_text}</h2>	
 						<?php if($customer_info) { ?>
 							<?php echo form_open(get_admin_customer_details_link($customer_id,$task_id,"props"),array()); ?>
@@ -640,7 +640,30 @@
 								})
 							</script>
 						<?php } ?>				
-						
+				</div>
+
+				<br><br>
+				<div class="container separated">
+					<h2>{new_password_text}</h2>	
+						<?php if($customer_info) { ?>
+							<?php echo form_open(get_admin_customer_details_link($customer_id,$task_id,"props"),array()); ?>
+								<input type="hidden" name="post_type" value="set_password" />	
+								<span></span>
+								<div class="row even-odd-bg dont-magnify" >
+									<div class="three columns">
+										<label>{new_password_text}</label>
+									</div>
+									<div class="eight columns">
+										<input value="" type="password" name="customer_password" class="ltr full-width" />
+									</div>
+								</div>
+								<br><br>
+								<div class="row">
+										<div class="four columns">&nbsp;</div>
+										<input type="submit" class=" button-primary four columns" value="{save_text}"/>
+								</div>				
+							</form>
+						<?php } ?>				
 				</div>
 			</div>
 

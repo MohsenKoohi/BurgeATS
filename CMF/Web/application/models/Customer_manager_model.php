@@ -831,6 +831,40 @@ class Customer_manager_model extends CI_Model
 			return FALSE;
 	}
 
+	//returns a new pass or FALSE
+	public function set_new_password_by_id($customer_id, $pass=NULL)
+	{
+		$ret=FALSE;
+
+		//$pass=random_string("numeric",7);
+		if(!$pass)
+			$pass=random_string("alnum",7);
+		$salt=random_string("alnum",32);
+
+		$this->db->set("customer_pass", $this->getPass($pass,$salt));
+		$this->db->set("customer_salt", $salt);
+		$this->db->where("customer_id",$customer_id);
+		$this->db->limit(1);
+		$this->db->update($this->customer_table_name);
+
+		$props=array("customer_id"=>$customer_id);
+
+		if($this->db->affected_rows())
+		{
+			$ret=TRUE;
+			$this->add_customer_log($customer_id,'CUSTOMER_PASS_CHANGE',$props);
+		}
+
+		$props['result']=$ret;
+		
+		$this->log_manager_model->info("CUSTOMER_PASS_CHANGE",$props);
+
+		if($ret)
+			return $pass;
+		else
+			return FALSE;
+	}
+
 	private function set_customer_logged_in($customer_id,$customer_email)
 	{
 		$this->session->set_userdata(SESSION_VARS_PREFIX."customer_logged_in","true");

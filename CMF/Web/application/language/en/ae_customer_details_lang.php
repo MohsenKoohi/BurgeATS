@@ -93,3 +93,9 @@ $lang['registeration_email_content']='Your registeration completed successfully.
 			password: <span style="font-family:arial;">$pass</span><br>
 			Please reply to this email, if you have any problem.<br>
 			Using <a style="color:#0870E3" href="$link">this link</a>, you can enter your account.<br>';
+$lang['new_password']='New Password';
+$lang['new_password_email_content']='
+	Dear user،<br>
+	Your new password is:<br>
+	<span style="font-family:times new roman">$pass</span><br/>';
+$lang['new_password_was_successfully_set']='The new password was successfully set.';

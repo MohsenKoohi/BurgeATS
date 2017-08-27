@@ -153,6 +153,8 @@ class AE_Customer extends Burge_CMF_Controller {
 
 		$this->lang->load('ae_customer_details',$this->selected_lang);
 
+		$this->data['customer_info']=$this->customer_manager_model->get_customer_info($customer_id);		
+
 		if($this->input->post())
 		{
 			$this->lang->load('error',$this->selected_lang);
@@ -160,9 +162,11 @@ class AE_Customer extends Burge_CMF_Controller {
 			if("customer_properties" === $this->input->post("post_type"))
 				return $this->save_customer_new_properties($customer_id,$task_id);
 
+			if("set_password" === $this->input->post("post_type"))
+				return $this->set_customer_password($customer_id,$task_id);
+
 			if("customer_login" === $this->input->post("post_type"))
 				return $this->user_login_as_customer($customer_id);
-
 		}
 
 		//check customer events for events tab
@@ -184,8 +188,6 @@ class AE_Customer extends Burge_CMF_Controller {
 
 		$this->data['customer_tasks']=$customer_tasks;
 
-		$this->data['customer_info']=$this->customer_manager_model->get_customer_info($customer_id);		
-		
 		$this->get_logs($customer_id);
 
 		$this->data['message']=get_message();
@@ -342,6 +344,41 @@ class AE_Customer extends Burge_CMF_Controller {
 		}
 
 		redirect(get_admin_customer_details_link($customer_id,$task_id));
+
+		return;
+	}
+
+	private function set_customer_password($customer_id,$task_id)
+	{
+		$pass=trim($this->input->post("customer_password"));
+		if(!$pass)
+			return redirect(get_admin_customer_details_link($customer_id,$task_id));
+
+		$result=$this->customer_manager_model->set_new_password_by_id($customer_id,$pass);
+		$email=$this->data['customer_info']['customer_email'];
+
+		if($result && $email)
+		{
+			$this->lang->load('email_lang',$this->selected_lang);		
+			$this->lang->load('ae_customer_details_lang',$this->selected_lang);		
+
+			$subject=$this->lang->line("new_password");
+			$subject=$subject.$this->lang->line("header_separator").$this->lang->line("main_name");
+			$content=str_replace('$pass',$pass, $this->lang->line("new_password_email_content"));
+			
+			$message=str_replace(
+				array('$content','$slogan','$response_to'),
+				array($content,$this->lang->line("slogan"),"")
+				,$this->lang->line("email_template")
+			);
+
+			burge_cmf_send_mail($email,$subject,$message);
+		}
+
+		if($result)
+			set_message($this->lang->line("new_password_was_successfully_set"));
+		
+		redirect(get_admin_customer_details_link($customer_id,$task_id)."#");
 
 		return;
 	}

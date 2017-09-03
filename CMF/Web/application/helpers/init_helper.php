@@ -1108,7 +1108,8 @@ function burge_cmf_send_mail($receiver,$subject,$message)
 	$CI->email->subject($subject);
 	$CI->email->message($message);
 
-	$CI->email->send();
+	$result=$CI->email->send();
 
-	return;
+	return $result;
 }
+

@@ -15,6 +15,8 @@
 * For each task, it is possible to set users, who execute that task, and also managers who can consider and note about that task.
 * Each customer has some events(for example requires urgent call, or has sent an email), which indicates an action should be done for that customer. These events can be defined in the customer manager and the a task can check if a customer's flag has been raised, and ask a user to consider the events.
 * A comprehensive **Ticketing and Messaging System (TMS)**, defined as *Message Manager* module, which allows messaging between different parts of organizations including departments, customers, and users. It also allow adding participants from another departments to a message, in-organization commenting on messages (private to the customers), and specifying access level of each user to messages.
+* An  **Email and SMS Manager**, to accept requests to send email/sms to customers from other modules and 
+sending email/sms asynchronously through cron job or synchronously.
 
 ## License
 * GNU GPL2

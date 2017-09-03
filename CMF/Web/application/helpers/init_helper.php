@@ -89,6 +89,7 @@ function &get_links($just_common=FALSE)
 			,'customer_message_c2d'						=> HOME_SURL_LANG."/contact_us"
 			,'customer_message_c2c_format'			=> HOME_SURL_LANG."/message/send/customer_id"
 
+			,'admin_es'					=> ADMIN_SURL_LANG."/es"
 		));
 	}
 

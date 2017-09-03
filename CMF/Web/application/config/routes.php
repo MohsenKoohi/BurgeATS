@@ -119,6 +119,8 @@ $route['message']																= "CE_Message/message";
 $route['message/(\d+)']														= "CE_Message/details/$1";
 $route['message/send/(\d+)']												= "CE_Message/c2c/$1";
 
+$route[ADMIN_URL_FOLDER."/es"]			= "AE_Es/index";
+
 $route['(((:any)/)*:any)']="CE_Home/redirect";
 
 /* End of file routes.php */

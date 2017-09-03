@@ -3,7 +3,7 @@
 
 ![BurgATS Logo](http://burge.pro/upload/cat-4-BurgeATS/logo_back_white.jpg)
 
-##Features
+## Features
 * Allows you not only to manage your customers, but also manage and coordinate your employees, allocating different tasks to different persons, and review the results.
 * MVC architecture using CodeIgniter
 * Multi-language admin and customer environments
@@ -16,6 +16,6 @@
 * Each customer has some events(for example requires urgent call, or has sent an email), which indicates an action should be done for that customer. These events can be defined in the customer manager and the a task can check if a customer's flag has been raised, and ask a user to consider the events.
 * A comprehensive **Ticketing and Messaging System (TMS)**, defined as *Message Manager* module, which allows messaging between different parts of organizations including departments, customers, and users. It also allow adding participants from another departments to a message, in-organization commenting on messages (private to the customers), and specifying access level of each user to messages.
 
-##License
+## License
 * GNU GPL2
 * Review LICENSE file

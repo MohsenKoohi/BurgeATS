@@ -21,7 +21,7 @@ class ES_manager_model extends CI_Model
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $tbl (
 				`es_id` INT  NOT NULL AUTO_INCREMENT
-				,`es_status` ENUM('sending','sent') DEFAULT 'sending'
+				,`es_status` ENUM('waiting','sent','canceled') DEFAULT 'waiting'
 				,`es_customer_id` INT
 				,`es_module_id` VARCHAR(50)
 				,`es_media` ENUM('email','sms') 
@@ -49,16 +49,115 @@ class ES_manager_model extends CI_Model
 		return;
 	}
 
+	public function cron($remaining_time)
+	{
+		$results=$this->db
+			->select("es.*, customer_mobile, customer_email, model_name")
+			->from($this->es_table_name)
+			->join("customer","es_customer_id = customer_id","INNER")
+			->join("module","es_module_id = module_id","INNER")
+			->where("es_status",'waiting')
+			->where("model_name != '' ")
+			->order_by('es_id DESC')
+			->limit(50)
+			->get()
+			->result_array();
+
+		$success_ids=array();
+		$failure_ids=array();
+		$start_time=time();
+
+		foreach($results as $es)
+		{
+			$res=FALSE;	
+
+			$this->load->model($es['model_name']."_model");
+			$model=$this->{$es['model_name']."_model"};
+
+			$es_id=$es['es_id'];
+			$keyword=$es['es_sender_keyword'];
+			$customer_id=$es['es_customer_id'];
+			$mobile=$es['customer_mobile'];
+			$email=$es['customer_email'];
+
+			if($es['es_media'] == 'sms' && $mobile)
+			{
+				if(method_exists($model, "get_sms_content"))
+				{
+					$content=$model->{"get_sms_content"}($customer_id, $keyword);
+					if($content)
+					{
+						$result=$this->send_sms($mobile,$content);
+						if($result)
+							$res=TRUE;
+					}
+				}
+			}
+
+			if($es['es_media'] == 'email' && $email)
+			{
+				if(method_exists($model, "get_sms_subject_and_content"))
+				{
+					list($subject, $content)=$model->{"get_sms_subject_and_content"}($customer_id, $keyword);
+					if($subject && $content )
+					{
+						$result=$this->send_email($email, $subject, $content);
+						if($result)
+							$res=TRUE;
+					}
+				}
+			}
+
+			if($res)
+			{
+				$success_ids[]=$es_id;
+				$this->update_es_status($es_id, "sent");
+			}
+			else
+			{
+				$failure_ids[]=$es_id;
+				$this->update_es_status($es_id, "canceled");
+			}
+
+			if(time()-$start_time > $remaining_time)
+				break;
+		}
+
+		$this->log_manager_model->info("ES_CRON",array(
+			"success_ids"	=> implode(",", $success_ids)
+			,"failure_ids"	=> implode(",", $failure_ids)
+		));
+
+		return;
+	}
+
+	public function get_sms_content($customer_id,$keyword)
+	{
+		return "Asd";
+	}
+
+	public function get_sms_subject_and_content($customer_id,$keyword)
+	{
+		return array("subject","content ".$customer_id. " ".$keyword);
+	}
+
+	public function schedule_sms($customer_id, $module_id, $keyword)
+	{
+		$es_id = $this->add_es("waiting", $customer_id, $module_id, "sms", $keyword);
+
+		return $es_id;
+	}
+
 	public function send_sms_now($customer_id, $module_id, $keyword, $number, $content)
 	{
-		$es_id = $this->add_es("sending", $customer_id, $module_id, "sms", $keyword);
+		$es_id = $this->add_es("waiting", $customer_id, $module_id, "sms", $keyword);
 
 		$result=$this->send_sms($number, $content);
 
 		if($result)
 			$this->update_es_status($es_id, "sent");
 		else
-			$this->update_es_status($es_id, "sending");
+			$this->update_es_status($es_id, "waiting");
 
 		return $result;
 	}
@@ -72,16 +171,23 @@ class ES_manager_model extends CI_Model
 		return $result;
 	}
 
+	public function schedule_email($customer_id, $module_id, $keyword)
+	{
+		$es_id = $this->add_es("waiting", $customer_id, $module_id, "email", $keyword);
+
+		return $es_id;
+	}
+
 	public function send_email_now($customer_id, $module_id, $keyword, $email, $subject, $content)
 	{
-		$es_id = $this->add_es("sending", $customer_id, $module_id, "email", $keyword);
+		$es_id = $this->add_es("waiting", $customer_id, $module_id, "email", $keyword);
 
 		$result=$this->send_email($email, $subject, $content);
 
 		if($result)
 			$this->update_es_status($es_id, "sent");
 		else
-			$this->update_es_status($es_id, "sending");
+			$this->update_es_status($es_id, "waiting");
 
 		return $result;
 	}

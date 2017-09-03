@@ -45,7 +45,6 @@ class Log_manager_model extends CI_Model
 		,"USER_GROUP_ADD"				=>107
 		,"USER_GROUP_DELETE"			=>108
 		,"USER_GROUP_CHANGE_PROPS"	=>109
-		
 
 		,"CONSTANT_SET"			=>131
 		,"CONSTANT_UNSET"			=>132		
@@ -100,6 +99,7 @@ class Log_manager_model extends CI_Model
 
 		,"ES_ADD"		=> 1171
 		,"ES_UPDATE"	=> 1172
+		,"ES_CRON"		=> 1173
 
 	);
 

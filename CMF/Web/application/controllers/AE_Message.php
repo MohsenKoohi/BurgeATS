@@ -125,7 +125,6 @@ class AE_Message extends Burge_CMF_Controller {
 		return redirect(get_link("admin_message"));		
 	}
 
-
 	public function search_departments($name)
 	{
 		$max_count=5;

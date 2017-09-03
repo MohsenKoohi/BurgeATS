@@ -4,6 +4,7 @@
 class ES_manager_model extends CI_Model
 {
 	private $es_table_name="es";
+	private $statuses=array('waiting','sent','canceled');
 
 	private $emails_per_execution="auto"; //it can be an integer or 'auto' which sends email to consume all the remained time
 	private $cron_exectution_period = 10; //in minutes
@@ -18,10 +19,13 @@ class ES_manager_model extends CI_Model
 	public function install()
 	{
 		$tbl=$this->db->dbprefix($this->es_table_name); 
+		$statuses="'".implode("','", $this->statuses)."'";
+		$default_status=$this->statuses[0];
+
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $tbl (
 				`es_id` INT  NOT NULL AUTO_INCREMENT
-				,`es_status` ENUM('waiting','sent','canceled') DEFAULT 'waiting'
+				,`es_status` ENUM($statuses) DEFAULT '$default_status'
 				,`es_customer_id` INT
 				,`es_module_id` VARCHAR(50)
 				,`es_media` ENUM('email','sms') 
@@ -47,6 +51,11 @@ class ES_manager_model extends CI_Model
 	public function uninstall()
 	{
 		return;
+	}
+
+	public function get_statuses()
+	{
+		return $this->statuses;
 	}
 
 	public function get_dashboard_info()
@@ -262,6 +271,72 @@ class ES_manager_model extends CI_Model
 		$this->log_manager_model->info("ES_UPDATE",$props);
 
 		return;
+	}
+
+		public function get_es($filter)
+	{
+		$this->db
+			->select("o.*,  customer_name, module_name")
+			->from($this->es_table_name." o")
+			->join("customer","es_customer_id = customer_id","LEFT")
+			->join("module_name","es_module_id = module_id","LEFT")
+			->where("lang",$this->selected_lang);
+			
+		$this->set_query_filters($filter);
+
+		return $this->db
+			->get()
+			->result_array();
+	}
+
+	public function get_total_es($filter)
+	{
+		$this->db
+			->select("COUNT(*) as count")
+			->from($this->es_table_name." o")
+			->join("customer","es_customer_id = customer_id","LEFT")
+			->join("module_name","es_module_id = module_id","LEFT")
+			->where("lang",$this->selected_lang);
+			
+		
+		$this->set_query_filters($filter);
+
+		$row=$this->db
+			->get()
+			->row_array();
+
+		return $row['count'];
+	}
+
+	private function set_query_filters($filter)
+	{
+		if(isset($filter['customer']))
+		{
+			if(is_numeric($filter['customer']))
+				$this->db->where("es_customer_id",(int)$filter['customer']);
+			else
+				if(is_string($filter['customer']))
+					$this->db->where("customer_name LIKE '%".str_replace(' ', '%', $filter['customer'])."%'");
+		}
+
+		if(isset($filter['status']))
+			$this->db->where("es_status", $filter['status']);
+
+		if(isset($filter['type']))
+			$this->db->where("es_media", $filter['type']);
+
+		if(isset($filter['start_date']))
+			$this->db->where("es_submit_time >=", $filter['start_date']." 00:00:00");
+
+		if(isset($filter['end_date']))
+			$this->db->where("es_submit_time <=", $filter['end_date']." 23:59:59");
+
+		if(isset($filter['order_by']))
+			$this->db->order_by($filter['order_by']);
+
+		if(isset($filter['start']) && isset($filter['length']))
+			$this->db->limit((int)$filter['length'],(int)$filter['start']);
+
 	}
 
 }

@@ -4,53 +4,37 @@
 		<div class="container separated">
 			<div class="row filter">
 				<div class="three columns">
-					<label>{name_text}</label>
-					<input type="text" name="name" class="full-width" />
+					<label>{customer_text}</label>
+					<input type="text" name="customer" class="full-width" />
 				</div>
 				<div class="three columns half-col-margin">
+					<label>{start_date_text}</label>
+					<input type="text" name="start_date" class="date full-width" />
+				</div>
+				<div class="three columns half-col-margin">
+					<label>{end_date_text}</label>
+					<input type="text" name="end_date" class="full-width" />
+				</div>
+
+				<div class="three columns">
 					<label>{type_text}</label>
 					<select name="type" class="full-width">
-						<option value=""></option>
+						<option value="">&nbsp;</option>
+						<option value='email'>{email_text}</option>
+						<option value='sms'>{sms_text}</option>
+					</select>
+				</div>
+				<div class="three columns  half-col-margin">
+					<label>{status_text}</label>
+					<select name="status" class="full-width">
+						<option value="">&nbsp;</option>
 						<?php
-							foreach ($customer_types as $type)
-								echo "<option value='$type'>".${"type_".$type."_text"}."</option>";
+							foreach ($statuses as $status)
+								echo "<option value='$status'>".${"es_status_".$status."_text"}."</option>";
 						?>
 					</select>
 				</div>
-				<div class="three columns half-col-margin">
-					<label>{email_text}</label>
-					<input type="text" name="email" class="full-width" />
-				</div>
-				<div class="three columns">
-					<label>{code_text}</label>
-					<input type="text" name="code" class="full-width" />
-				</div>
-				<div class="three columns half-col-margin">
-					<label>{province_text}</label>
-					<select name="province" class="full-width" onchange="setCities($(this).val())">
-						<option value=""></option>
-						<?php 
-							foreach($provinces as $pv)
-								echo "<option value='".$pv['province_id']."'>".$pv['province_name']."</option>";
-						?>
-					</select>
-				</div>
-				<div class="three columns half-col-margin">
-					<label>{city_text}</label>
-					<select name="city" class="full-width">
-					</select>
-				</div>
-
-				<div class="three columns ">
-					<label>{address_text}</label>
-					<input type="text" name="address" class="full-width" />
-				</div>
-
-				<div class="three columns half-col-margin">
-					<label>{phone_text}/{mobile_text}</label>
-					<input type="text" name="phone_mobile" class="full-width" />
-				</div>	
-
+				
 			</div>
 			<div clas="row">
 				<div class="two columns results-search-again">
@@ -59,18 +43,18 @@
 			</div>
 			
 			<div class="row results-count" >
-				<div class="three columns">
+				<div class="eight columns">
 					<label>
-						{results_text} {customers_start} {to_text} {customers_end} - {total_results_text}: {customers_total}
+						{results_text} {start} {to_text} {end} - {total_results_text}: {total}
 					</label>
 				</div>
 				<div class="three columns results-page-select">
 					<select class="full-width" onchange="pageChanged($(this).val());">
 						<?php 
-							for($i=1;$i<=$customers_total_pages;$i++)
+							for($i=1;$i<=$total_pages;$i++)
 							{
 								$sel="";
-								if($i == $customers_current_page)
+								if($i == $current_page)
 									$sel="selected";
 
 								echo "<option value='$i' $sel>$page_text $i</option>";
@@ -81,40 +65,6 @@
 			</div>
 
 			<script type="text/javascript">
-				var cities=JSON.parse('<?php echo json_encode($cities);?>');
-
-				function setCities(province_id)
-				{
-					var html='';//<option value="">--- انتخاب نمایید ---</option>';
-					var provinceCities=cities[province_id];
-
-					//sorting
-					var allCities=[];
-					var c=0;
-					for(var i in provinceCities)
-						allCities[c++]={id:i,name:provinceCities[i]};
-					for(i=0;i<c;i++)
-						for(j=i+1;j<c;j++)
-							if(allCities[i].name > allCities[j].name)
-							{
-								var tempId=allCities[i].id;
-								var tempName=allCities[i].name;
-
-								allCities[i].id=allCities[j].id;
-								allCities[i].name=allCities[j].name;
-
-								allCities[j].id=tempId;
-								allCities[j].name=tempName;
-							}
-
-					for(var i in allCities)
-						if(allCities.hasOwnProperty(i))
-							html+='<option value="'+allCities[i].id+'">'+allCities[i].name+'</option>';
-					
-					$(".filter select[name=city]").html(html);
-				}
-
-					
 				var initialFilters=[];
 				<?php
 					foreach($filter as $key => $val)
@@ -178,6 +128,61 @@
 					document.location=getCustomerSearchUrl(initialFilters)+"&page="+pageNumber;
 				}
 			</script>
+
+			<?php foreach($es_info as $e) {?>
+				<div class='row even-odd-bg'>
+					<div class='two columns'>
+						<span class='counter'><?php echo $e['es_id'];?></span>
+					</div>
+
+					<div class='two columns'>
+						<label>{customer_text}</label>
+						<span>
+							<a href="<?php echo get_admin_customer_details_link($e['es_customer_id']);?>"
+								target='_blank'
+							>
+								<?php echo $e['customer_name'];?>
+							</a>
+						</span>
+					</div>
+
+					<div class='two columns'>
+						<label>{type_text}</label>
+						<span><?php echo ${$e['es_media']."_text"};?></span>
+					</div>
+
+					<div class='two columns'>
+						<label>{status_text}</label>
+						<span><?php echo ${'es_status_'.$e['es_status']."_text"};?></span>
+					</div>
+
+					<div class='two columns'>
+						<label>{submit_time_text}</label>
+						<span class='date'><?php echo $e['es_submit_time'];?></span>
+					</div>
+
+					<div class='two columns'>
+						<label>{last_try_text}</label>
+						<span class='date'> &nbsp;<?php echo $e['es_last_try_time'];?></span>
+					</div>
+
+					<div class='two columns'>
+						<label>{try_count_text}</label>
+						<span class='date'> <?php echo $e['es_try_count'];?></span>
+					</div>
+
+					<div class='two columns'>
+						<label>{module_text}</label>
+						<span class='date'><?php echo $e['module_name'];?></span>
+					</div>
+
+					<div class='two columns'>
+						<label>{keyword_text}</label>
+						<span class='date'><?php echo $e['es_sender_keyword'];?></span>
+					</div>
+
+				</div>
+			<?php } ?>
 		</div>		
 	</div>
 </div>

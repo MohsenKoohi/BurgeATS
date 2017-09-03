@@ -1113,3 +1113,20 @@ function burge_cmf_send_mail($receiver,$subject,$message)
 	return $result;
 }
 
+function burge_cmf_send_sms($receiver, $content)
+{
+	$url="";
+
+	$url=str_replace(
+		array("TO","CONTENT")
+		,array($receiver, utf8_encode($content))
+		,$url
+	);
+
+	if($url)
+		$result=file_get_contents($url);
+	else
+		$result=0;
+
+	return $result;
+}

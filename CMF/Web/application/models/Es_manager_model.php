@@ -49,21 +49,56 @@ class ES_manager_model extends CI_Model
 		return;
 	}
 
+	public function send_sms_now($customer_id, $module_id, $keyword, $number, $content)
+	{
+		$es_id = $this->add_es("sending", $customer_id, $module_id, "sms", $keyword);
+
+		$result=$this->send_sms($number, $content);
+
+		if($result)
+			$this->update_es_status($es_id, "sent");
+		else
+			$this->update_es_status($es_id, "sending");
+
+		return $result;
+	}
+
+	private function send_sms($number, $content)
+	{
+		$content=$content."\n".$this->lang->line("main_name");
+		
+		$result=burge_cmf_send_sms($number, $content);
+
+		return $result;
+	}
+
 	public function send_email_now($customer_id, $module_id, $keyword, $email, $subject, $content)
 	{
-		$es_id = $this->add_es("sending", $customer_id, $module_id, $keyword);
+		$es_id = $this->add_es("sending", $customer_id, $module_id, "email", $keyword);
 
 		$result=$this->send_email($email, $subject, $content);
 
 		if($result)
 			$this->update_es_status($es_id, "sent");
+		else
+			$this->update_es_status($es_id, "sending");
 
 		return $result;
 	}
 
 	private function send_email($email, $subject, $content)
 	{
-		
+		$this->lang->load('email_lang',$this->selected_lang);		
+		$subject=$subject.$this->lang->line("header_separator").$this->lang->line("main_name");
+		$message=str_replace(
+			array('$content','$slogan','$response_to'),
+			array($content,$this->lang->line("slogan"),"")
+			,$this->lang->line("email_template")
+		);
+
+		$result=burge_cmf_send_mail($email,$subject,$message);
+
+		return $result;
 	}
 
 	private function add_es($status, $customer_id, $module_id, $media, $keyword)
@@ -89,15 +124,19 @@ class ES_manager_model extends CI_Model
 
 	private function update_es_status($es_id, $status)
 	{
+
+		$props=array(
+			"es_status"				=> $status
+			,"es_last_try_time"	=>	get_current_time()
+		);
+
 		$this->db
-			->set("es_status", $status)
+			->set("es_try_count", "es_try_count + 1", FALSE)
+			->set($props)
 			->where("es_id", $es_id)
 			->update($this->es_table_name);
 
-		$props=array(
-			'es_id'			=> $es_id
-			,"es_status"	=> $status
-		);
+		$props['es_id']=$es_id;
 
 		$this->log_manager_model->info("ES_UPDATE",$props);
 

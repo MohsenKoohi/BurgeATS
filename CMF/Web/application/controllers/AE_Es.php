@@ -13,6 +13,8 @@ class AE_Es extends Burge_CMF_Controller {
 
 	public function index()
 	{
+		//$this->es_manager_model->send_email_now(1, "aa","bb", "phpbur@gmail.com", "سلام", "خوبی؟‌ خوب نیستی؟");
+		$this->es_manager_model->send_sms_now(1, "aa","bb", "123", "خوبی؟‌ خوب نیستی؟");
 		//$this->set_footer();
 
 		$this->data['message']=get_message();

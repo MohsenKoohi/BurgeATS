@@ -49,6 +49,31 @@ class ES_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_dashboard_info()
+	{
+		$CI=& get_instance();
+		$lang=$CI->language->get();
+		$CI->lang->load('ae_es',$lang);		
+		
+		$data=array();
+		$data['counts']=$this->db
+			->select("es_status, COUNT(*) as count")
+			->from($this->es_table_name)
+			->group_by("es_status")
+			->get()
+			->result_array();
+
+		foreach($data['counts'] as &$c)
+			if($c['es_status'])
+				$c['name']=$this->lang->line("es_status_".$c['es_status']);
+		
+		$CI->load->library('parser');
+		$ret=$CI->parser->parse($CI->get_admin_view_file("es_dashboard"),$data,TRUE);
+		
+		return $ret;		
+	}
+
+
 	public function cron($remaining_time)
 	{
 		$results=$this->db
@@ -129,16 +154,6 @@ class ES_manager_model extends CI_Model
 		));
 
 		return;
-	}
-
-	public function get_sms_content($customer_id,$keyword)
-	{
-		return "Asd";
-	}
-
-	public function get_sms_subject_and_content($customer_id,$keyword)
-	{
-		return array("subject","content ".$customer_id. " ".$keyword);
 	}
 
 	public function schedule_sms($customer_id, $module_id, $keyword)

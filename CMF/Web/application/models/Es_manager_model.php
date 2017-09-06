@@ -130,9 +130,9 @@ class ES_manager_model extends CI_Model
 
 			if($es['es_media'] == 'email' && $email)
 			{
-				if(method_exists($model, "get_sms_subject_and_content"))
+				if(method_exists($model, "get_email_subject_and_content"))
 				{
-					list($subject, $content)=$model->{"get_sms_subject_and_content"}($customer_id, $keyword);
+					list($subject, $content)=$model->{"get_email_subject_and_content"}($customer_id, $keyword);
 					if($subject && $content )
 					{
 						$result=$this->send_email($email, $subject, $content);

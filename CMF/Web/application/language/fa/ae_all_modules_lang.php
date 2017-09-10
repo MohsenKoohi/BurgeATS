@@ -22,3 +22,4 @@ $lang['task_exec']="اجرای وظایف";
 $lang['message']="پیام‌ها";
 $lang['message_access']="سطح دسترسی پیام‌ها";
 $lang['es']="ایمیل و پیامک";
+$lang['news_letter']="خبرنامه";

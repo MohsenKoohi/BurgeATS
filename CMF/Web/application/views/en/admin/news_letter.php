@@ -4,7 +4,7 @@
 		<div class="row general-buttons">
 			<div class="three columns">
 				<?php echo form_open(get_link("admin_news_letter"),array());?>
-					<input type="hidden" name="post_type" value="add_news_letter"/>
+					<input type="hidden" name="post_type" value="add_template"/>
 					<input type="submit" class="button button-primary full-width" value="{add_news_letter_text}"/>
 				</form>
 			</div>
@@ -116,14 +116,14 @@
 					foreach($news_letters as $n)
 					{ 
 			?>
-						<a target="_blank" href="<?php echo get_admin_news_letter_details_link($post['nlt_id']);?>">
+						<a target="_blank" href="<?php echo get_admin_news_letter_template_link($n['nlt_id']);?>">
 							<div class="row even-odd-bg" >
 								<div class="nine columns">
 									<span>
-										<?php echo $post['nlt_id'];?>)
+										<?php echo $n['nlt_id'];?>)
 										<?php 
-											if($post['nlt_subject']) 
-												echo $post['nlt_subject'];
+											if($n['nlt_subject']) 
+												echo $n['nlt_subject'];
 											else
 												echo $no_title_text;
 										?>

@@ -101,6 +101,11 @@ class Log_manager_model extends CI_Model
 		,"ES_UPDATE"	=> 1172
 		,"ES_CRON"		=> 1173
 
+		,"NEWS_LETTER_TEMPLATE_ADD"		=> 1201
+		,"NEWS_LETTER_TEMPLATE_EDIT"		=> 1202
+		,"NEWS_LETTER_TEMPLATE_DELETE"	=> 1203
+		,"NEWS_LETTER_TEMPLATE_SEND"		=> 1204
+		,"NEWS_LETTER_USER_ADD"				=> 1205
 	);
 
 	public function __construct()

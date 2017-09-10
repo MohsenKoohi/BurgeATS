@@ -96,25 +96,26 @@ class News_letter_manager_model extends CI_Model
 		return array($subject, $content);
 	}
 
-	private function add_es($status, $customer_id, $module_id, $media, $keyword)
+	public function add_template()
 	{
-		$props=array(
-			"es_status"				=> $status
-			,"es_customer_id"		=>	$customer_id
-			,"es_module_id"		=> $module_id
-			,"es_media"				=> $media
-			,"es_sender_keyword"	=> $keyword
-			,"es_submit_time"		=> get_current_time()
-		);
+		$this->db->insert($this->template_table_name, array("nlt_subject"=>""));
+		$nlt_id=$this->db->insert_id();
 
-		$this->db->insert($this->es_table_name, $props);
-		$es_id=$this->db->insert_id();
+		$props=array("nlt_id"=>$nlt_id);
 
-		$props['es_id']=$es_id;
+		$this->log_manager_model->info("NEWS_LETTER_TEMPLATE_ADD",$props);
 
-		$this->log_manager_model->info("ES_ADD",$props);
+		return $nlt_id;
+	}
 
-		return $es_id;
+	public function get_template($nlt_id)
+	{
+		return $this->db
+			->select("*")
+			->from($this->template_table_name)
+			->where("nlt_id",(int)$nlt_id)
+			->get()
+			->row_array();
 	}
 
 	private function update_es_status($es_id, $status)

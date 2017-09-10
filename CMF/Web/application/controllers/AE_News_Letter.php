@@ -14,12 +14,11 @@ class AE_News_Letter extends Burge_CMF_Controller
 
 	public function index()
 	{
-		if($this->input->post("post_type")==="add_news_letter")
-			return $this->add_news_letter();
+		if($this->input->post("news_letter_type")==="add_template")
+			return $this->add_template();
 
 		$this->set_news_letters_info();
 
-		//we may have some messages that our post has been deleted successfully.
 		$this->data['message']=get_message();
 
 		$this->data['raw_page_url']=get_link("admin_news_letter");
@@ -47,13 +46,12 @@ class AE_News_Letter extends Burge_CMF_Controller
 
 			$start=($page-1)*$per_page;
 
-			$filters['group_by']="post_id";
 			$filters['start']=$start;
 			$filters['count']=$per_page;
 			
-			$this->data['news_letters']=$this->news_letters_manager_model->get_news_letters($filters);
+			$this->data['news_letters']=$this->news_letter_manager_model->get_news_letters($filters);
 			
-			$end=$start+sizeof($this->data['posts_info'])-1;
+			$end=$start+sizeof($this->data['news_letters'])-1;
 
 			unset($filters['start']);
 			unset($filters['count']);
@@ -93,131 +91,97 @@ class AE_News_Letter extends Burge_CMF_Controller
 		return;
 	}
 
-	private function add_news_letter()
+	private function add_template()
 	{
-		$nl_id=$this->news_letter_manager_model->add_news_letter();
+		$nl_id=$this->news_letter_manager_model->add_template();
 
-		return redirect(get_admin_news_letter_details_link($nl_id));
+		return redirect(get_admin_news_letter_template_link($nl_id));
 	}
 
-	public function details($post_id)
+	public function template($nl_id)
 	{
-		if($this->input->post("post_type")==="edit_post")
-			return $this->edit_post($post_id);
+		if($this->input->post("post_type")==="edit_edit_template")
+			return $this->edit_template($nl_id);
 
-		if($this->input->post("post_type")==="delete_post")
-			return $this->delete_post($post_id);
+		if($this->input->post("post_type")==="delete_edit_template")
+			return $this->delete_edit_template($nl_id);
 
-		$this->data['post_id']=$post_id;
-		$post_info=$this->post_manager_model->get_post($post_id);
-
-		$this->data['langs']=$this->language->get_languages();
-
-		$this->data['post_contents']=array();
-		foreach($this->data['langs'] as $lang => $val)
-			foreach($post_info as $pi)
-				if($pi['pc_lang_id'] === $lang)
-				{
-					$this->data['post_contents'][$lang]=$pi;
-					break;
-				}
-
-		if($post_info)
-		{
-			$this->data['post_info']=array(
-				"post_date"=>str_replace("-","/",$post_info[0]['post_date'])
-				,"post_allow_comment"=>$post_info[0]['post_allow_comment']
-				,"post_active"=>$post_info[0]['post_active']
-				,"user_name"=>$post_info[0]['user_name']
-				,"user_id"=>$post_info[0]['user_id']
-				,"categories"=>$post_info[0]['categories']
-				,"post_title"=>$this->data['post_contents'][$this->selected_lang]['pc_title']
-			);
-			$this->data['customer_link']=get_customer_post_details_link($post_id,"",$post_info[0]['post_date']);
-		}
-		else
-		{
-			$this->data['post_info']=array();
-			$this->data['customer_link']="";
-		}
-		
-		$this->data['current_time']=get_current_time();
-		$this->load->model("category_manager_model");
-		$this->data['categories']=$this->category_manager_model->get_hierarchy("checkbox",$this->selected_lang);
+		$this->data['nl_id']=$nl_id;
+		$this->data['news_letter_info']=$this->news_letter_manager_model->get_template($nl_id);
 
 		$this->data['message']=get_message();
-		$this->data['lang_pages']=get_lang_pages(get_admin_post_details_link($post_id,TRUE));
-		$this->data['header_title']=$this->lang->line("post_details")." ".$post_id;
+		$this->data['lang_pages']=get_lang_pages(get_admin_news_letter_template_link($nl_id,TRUE));
+		$this->data['header_title']=$this->lang->line("news_letter_details")." ".$nl_id;
 
-		$this->send_admin_output("post_details");
+		$this->send_admin_output("news_letter_template");
 
 		return;
 	}
 
-	private function delete_post($post_id)
+	private function delete_news_letter($news_letter_id)
 	{
-		$props=$this->post_manager_model->get_post($post_id);
+		$props=$this->news_letter_manager_model->get_news_letter($news_letter_id);
 		foreach($props as $p)
 		{
 			$gallery=$p['pc_gallery']['images'];
 			if($gallery)
 				foreach($gallery as $i)
-					unlink(get_post_gallery_image_path($i['image']));
+					unlink(get_news_letter_gallery_image_path($i['image']));
 		}
 		
-		$this->post_manager_model->delete_post($post_id);
+		$this->news_letter_manager_model->delete_news_letter($news_letter_id);
 
-		set_message($this->lang->line('post_deleted_successfully'));
+		set_message($this->lang->line('news_letter_deleted_successfully'));
 
-		return redirect(get_link("admin_post"));
+		return redirect(get_link("admin_news_letter"));
 	}
 
-	private function edit_post($post_id)
+	private function edit_news_letter($news_letter_id)
 	{
-		$post_props=array();
-		$post_props['categories']=$this->input->post("categories");
+		$news_letter_props=array();
+		$news_letter_props['categories']=$this->input->news_letter("categories");
 
-		$post_props['post_date']=$this->input->post('post_date');
-		persian_normalize($post_props['post_date']);
+		$news_letter_props['news_letter_date']=$this->input->news_letter('news_letter_date');
+		persian_normalize($news_letter_props['news_letter_date']);
 		if( DATE_FUNCTION === 'jdate')
-			validate_persian_date_time($post_props['post_date']);
+			validate_persian_date_time($news_letter_props['news_letter_date']);
 		
-		$post_props['post_active']=(int)($this->input->post('post_active') === "on");
-		$post_props['post_allow_comment']=(int)($this->input->post('post_allow_comment') === "on");
+		$news_letter_props['news_letter_active']=(int)($this->input->news_letter('news_letter_active') === "on");
+		$news_letter_props['news_letter_allow_comment']=(int)($this->input->news_letter('news_letter_allow_comment') === "on");
 		
-		$post_content_props=array();
+		$news_letter_content_props=array();
 		foreach($this->language->get_languages() as $lang=>$name)
 		{
-			$post_content=$this->input->post($lang);
-			$post_content['pc_content']=$_POST[$lang]['pc_content'];
-			$post_content['pc_lang_id']=$lang;
+			$news_letter_content=$this->input->news_letter($lang);
+			$news_letter_content['pc_content']=$_news_letter[$lang]['pc_content'];
+			$news_letter_content['pc_lang_id']=$lang;
 
-			if(isset($post_content['pc_active']))
-				$post_content['pc_active']=(int)($post_content['pc_active']=== "on");
+			if(isset($news_letter_content['pc_active']))
+				$news_letter_content['pc_active']=(int)($news_letter_content['pc_active']=== "on");
 			else
-				$post_content['pc_active']=0;
+				$news_letter_content['pc_active']=0;
 
-			$post_content['pc_gallery']=$this->get_post_gallery($post_id,$lang);
+			$news_letter_content['pc_gallery']=$this->get_news_letter_gallery($news_letter_id,$lang);
 
-			$post_content_props[$lang]=$post_content;
+			$news_letter_content_props[$lang]=$news_letter_content;
 		}
 
 		foreach($this->language->get_languages() as $lang=>$name)
 		{
-			$copy_from=$this->input->post($lang."[copy]");
+			$copy_from=$this->input->news_letter($lang."[copy]");
 			if(!$copy_from)
 				continue;
 
-			$post_content_props[$lang]=$post_content_props[$copy_from];
-			$post_content_props[$lang]['pc_lang_id']=$lang;
+			$news_letter_content_props[$lang]=$news_letter_content_props[$copy_from];
+			$news_letter_content_props[$lang]['pc_lang_id']=$lang;
 		}
 
 
-		$this->post_manager_model->set_post_props($post_id,$post_props,$post_content_props);
+		$this->news_letter_manager_model->set_news_letter_props($news_letter_id,$news_letter_props,$news_letter_content_props);
 		
 		set_message($this->lang->line("changes_saved_successfully"));
 
-		redirect(get_admin_post_details_link($post_id));
+		redirect(get_admin_news_letter_details_link($news_letter_id));
 
 		return;
 	}

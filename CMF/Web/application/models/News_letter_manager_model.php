@@ -151,6 +151,19 @@ class News_letter_manager_model extends CI_Model
 			->result_array();
 	}
 
+	public function set_template($nlt_id, $props)
+	{
+		$this->db
+			->set($props)
+			->where("nlt_id",$nlt_id)
+			->update($this->template_table_name);
+
+		$props['nlt_id']=$nlt_id;
+		$this->log_manager_model->info("NEWS_LETTER_TEMPLATE_EDIT",$props);
+
+		return;
+	}
+
 	public function get_total_news_letters($filter)
 	{
 		$this->db

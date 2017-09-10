@@ -33,7 +33,7 @@
 				</div>
 				<br>
 				<?php echo form_open(get_admin_news_letter_template_link($nl_id)); ?>
-					<input type="hidden" name="news_letter_type" value="edit_news_letter" />
+					<input type="hidden" name="post_type" value="edit_template" />
 						
 					
 					<div class="row even-odd-bg" >

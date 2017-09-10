@@ -100,11 +100,11 @@ class AE_News_Letter extends Burge_CMF_Controller
 
 	public function template($nl_id)
 	{
-		if($this->input->post("post_type")==="edit_edit_template")
+		if($this->input->post("post_type")==="edit_template")
 			return $this->edit_template($nl_id);
 
-		if($this->input->post("post_type")==="delete_edit_template")
-			return $this->delete_edit_template($nl_id);
+		if($this->input->post("post_type")==="delete_template")
+			return $this->delete_template($nl_id);
 
 		$this->data['nl_id']=$nl_id;
 		$this->data['news_letter_info']=$this->news_letter_manager_model->get_template($nl_id);
@@ -136,52 +136,18 @@ class AE_News_Letter extends Burge_CMF_Controller
 		return redirect(get_link("admin_news_letter"));
 	}
 
-	private function edit_news_letter($news_letter_id)
+	private function edit_template($nl_id)
 	{
-		$news_letter_props=array();
-		$news_letter_props['categories']=$this->input->news_letter("categories");
+		$props=array(
+			"nlt_subject"		=> $this->input->post("subject")
+			,"nlt_content"		=> $this->input->post("content")
+		);
 
-		$news_letter_props['news_letter_date']=$this->input->news_letter('news_letter_date');
-		persian_normalize($news_letter_props['news_letter_date']);
-		if( DATE_FUNCTION === 'jdate')
-			validate_persian_date_time($news_letter_props['news_letter_date']);
-		
-		$news_letter_props['news_letter_active']=(int)($this->input->news_letter('news_letter_active') === "on");
-		$news_letter_props['news_letter_allow_comment']=(int)($this->input->news_letter('news_letter_allow_comment') === "on");
-		
-		$news_letter_content_props=array();
-		foreach($this->language->get_languages() as $lang=>$name)
-		{
-			$news_letter_content=$this->input->news_letter($lang);
-			$news_letter_content['pc_content']=$_news_letter[$lang]['pc_content'];
-			$news_letter_content['pc_lang_id']=$lang;
-
-			if(isset($news_letter_content['pc_active']))
-				$news_letter_content['pc_active']=(int)($news_letter_content['pc_active']=== "on");
-			else
-				$news_letter_content['pc_active']=0;
-
-			$news_letter_content['pc_gallery']=$this->get_news_letter_gallery($news_letter_id,$lang);
-
-			$news_letter_content_props[$lang]=$news_letter_content;
-		}
-
-		foreach($this->language->get_languages() as $lang=>$name)
-		{
-			$copy_from=$this->input->news_letter($lang."[copy]");
-			if(!$copy_from)
-				continue;
-
-			$news_letter_content_props[$lang]=$news_letter_content_props[$copy_from];
-			$news_letter_content_props[$lang]['pc_lang_id']=$lang;
-		}
-
-
-		$this->news_letter_manager_model->set_news_letter_props($news_letter_id,$news_letter_props,$news_letter_content_props);
+		$this->news_letter_manager_model->set_template($nl_id, $props);
 		
 		set_message($this->lang->line("changes_saved_successfully"));
 
-		redirect(get_admin_news_letter_details_link($news_letter_id));
+		redirect(get_admin_news_letter_template_link($nl_id));
 
 		return;
 	}

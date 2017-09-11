@@ -96,6 +96,19 @@ class News_letter_manager_model extends CI_Model
 		return array($subject, $content);
 	}
 
+	public function delete_template($nlt_id)
+	{
+		$this->db
+			->where("nlt_id",$nlt_id)
+			->where("nlt_sent",0)
+			->delete($this->template_table_name);
+
+		$props['nlt_id']=$nlt_id;
+		$this->log_manager_model->info("NEWS_LETTER_TEMPLATE_DELETE",$props);
+
+		return;
+	}
+
 	public function add_template()
 	{
 		$this->db->insert($this->template_table_name, array("nlt_subject"=>""));
@@ -116,27 +129,6 @@ class News_letter_manager_model extends CI_Model
 			->where("nlt_id",(int)$nlt_id)
 			->get()
 			->row_array();
-	}
-
-	private function update_es_status($es_id, $status)
-	{
-
-		$props=array(
-			"es_status"				=> $status
-			,"es_last_try_time"	=>	get_current_time()
-		);
-
-		$this->db
-			->set("es_try_count", "es_try_count + 1", FALSE)
-			->set($props)
-			->where("es_id", $es_id)
-			->update($this->es_table_name);
-
-		$props['es_id']=$es_id;
-
-		$this->log_manager_model->info("ES_UPDATE",$props);
-
-		return;
 	}
 
 	public function get_news_letters($filter)

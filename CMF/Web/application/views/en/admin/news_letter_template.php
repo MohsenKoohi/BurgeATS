@@ -23,15 +23,38 @@
 							</div>
 						</a>
 					</div>
+				
+					<div class="row general-buttons">
+						<a  class="two columns"  onclick="delete_news_letter()">
+							<div class="full-width button sub-primary button-type2">
+								{delete_text}
+							</div>
+						</a>
+					</div>
+					<br>
+
+					<div style="display:none">
+						<?php echo form_open(get_admin_news_letter_template_link($nl_id),array("id"=>"delete")); ?>
+							<input type="hidden" name="post_type" value="delete_template"/>
+							<input type="hidden" name="nl_id" value="{nl_id}"/>
+						</form>
+
+						<?php echo form_open(get_admin_news_letter_template_link($nl_id),array("id"=>"send")); ?>
+							<input type="hidden" name="post_type" value="send_news_letter"/>
+							<input type="hidden" name="nl_id" value="{nl_id}"/>
+						</form>
+
+						<script type="text/javascript">
+							function delete_news_letter()
+							{
+								if(!confirm("{are_you_sure_to_delete_this_news_letter_text}"))
+									return;
+
+								$("form#delete").submit();
+							}
+						</script>
+					</div>
 				<?php } ?>
-				<div class="row general-buttons">
-					<a  class="two columns"  onclick="delete_news_letter()">
-						<div class="full-width button sub-primary button-type2">
-							{delete_text}
-						</div>
-					</a>
-				</div>
-				<br>
 				<?php echo form_open(get_admin_news_letter_template_link($nl_id)); ?>
 					<input type="hidden" name="post_type" value="edit_template" />
 						
@@ -73,14 +96,8 @@
 						<input type="submit" class="button-primary four columns" value="{submit_text}"/>
 					</div>				
 				</form>
-
-				<div style="display:none">
-					<?php echo form_open(get_admin_news_letter_template_link($news_letter_id),array("id"=>"delete")); ?>
-						<input type="hidden" name="news_letter_type" value="delete_news_letter"/>
-						<input type="hidden" name="news_letter_id" value="{news_letter_id}"/>
-					</form>
-
-					<script type="text/javascript">
+				
+				<script type="text/javascript">
 
 					var tineMCEFontFamilies=
 						"Mitra= b mitra, mitra;Yagut= b yagut, yagut; Titr= b titr, titr; Zar= b zar, zar; Koodak= b koodak, koodak;"+
@@ -148,16 +165,8 @@
 							,font_formats:tineMCEFontFamilies
 							,media_live_embeds: true
                	});
-					})
-
-              	function delete_news_letter()
-					{
-						if(!confirm("{are_you_sure_to_delete_this_news_letter_text}"))
-							return;
-
-						$("form#delete").submit();
-					}
-					</script>
+					});              	
+				</script>
 				</div>
 			</div>
 		<?php 

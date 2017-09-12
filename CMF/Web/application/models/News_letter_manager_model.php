@@ -79,55 +79,6 @@ class News_letter_manager_model extends CI_Model
 		return $ret;		
 	}
 
-	public function get_email_subject_and_content($customer_id, $keyword)
-	{
-		list($type,$id)=explode("=", $keyword);
-
-		if($type == 'order')
-			return $this->get_order_invoice($id);
-
-		if($type == 'order_status')
-			return $this->get_email_status($id);
-	}
-
-	private function get_order_invoice($order_id, $order=NULL)
-	{
-		if(!$order)
-		{
-			$orders=$this->get_orders(array("order_id"=>$order_id));
-			if(!$orders)
-				return;
-			$order=$orders[0];
-		}
-
-		$CI=& get_instance();
-
-		$CI->load->model("cart_manager_model");
-		$data=array();
-		$data['order_id']=$order_id;
-		$data['order_info']=$order;
-		$data['cart_info']=$CI->cart_manager_model->get_order_cart($order_id, $CI->selected_lang);
-		$data['styles_url']=get_link("styles_url");
-		
-		$CI->lang->load('ae_order',$CI->selected_lang);
-		$CI->lang->load('ae_general',$CI->selected_lang);
-		$CI->load->library('parser');
-		$words=array(
-			"order_number","name","date","total","status","currency","status","product_name"
-			,"quantity","unit_price","total_price","invoice");
-		foreach($this->order_statuses as $s)
-			$words[]='order_status_'.$s;
-
-		foreach($words as $w)
-			$data[$w."_text"]=$CI->lang->line($w);
-		
-		$content=$CI->parser->parse($CI->get_admin_view_file("order_invoice"),$data,TRUE);
-
-		$subject=$CI->lang->line("order")." ".$order_id;
-
-		return array($subject, $content);
-	}
-
 	public function delete_template($nlt_id)
 	{
 		$this->db
@@ -204,6 +155,35 @@ class News_letter_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_email_address($nle_id)
+	{
+		$result=$this->db
+			->where("nle_id",-$nle_id)
+			->get($this->email_table_name)
+			->row_array();
+
+		if(!$result)
+			return NULL;
+
+		return $result['nle_email'];
+	}
+
+	public function get_email_subject_and_content($customer_id, $keyword)
+	{
+		$subject="";
+		$content="";
+		list($a,$nlt_id)=explode("=", $keyword);
+
+		$template=$this->get_template($nlt_id);
+		if($template)
+		{
+			$subject=$template['nlt_subject'];
+			$content=$template['nlt_content'];
+		}
+
+		return array($subject, $content);
+	}
+
 	public function send_news_letter($nlt_id)
 	{
 		$this->load->model("es_manager_model");
@@ -214,7 +194,7 @@ class News_letter_manager_model extends CI_Model
 
 		foreach($emails as $e)
 			$this->es_manager_model->schedule_email(-$e['nle_id'], "news_letter", "nlt_id=".$nlt_id);	
-		
+
 		$this->db
 			->set("nlt_sent",1)
 			->where("nlt_id",$nlt_id)

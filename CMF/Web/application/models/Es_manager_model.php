@@ -140,7 +140,7 @@ class ES_manager_model extends CI_Model
 					if($customer_id<0)
 						if(method_exists($model, "get_email_address"))
 							$email=$model->{"get_email_address"}($customer_id);
-
+				
 				if($email)
 					if(method_exists($model, "get_email_subject_and_content"))
 					{

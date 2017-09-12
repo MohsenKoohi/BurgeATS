@@ -153,7 +153,7 @@ class AE_News_Letter extends Burge_CMF_Controller
 		
 		set_message($this->lang->line("news_letter_sent_successfully"));
 
-		//redirect(get_admin_news_letter_template_link($nl_id));
+		redirect(get_admin_news_letter_template_link($nl_id));
 
 		return;
 	}

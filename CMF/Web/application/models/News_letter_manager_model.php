@@ -47,6 +47,38 @@ class News_letter_manager_model extends CI_Model
 		return;
 	}
 
+	public function get_dashboard_info()
+	{
+		$CI=& get_instance();
+		$lang=$CI->language->get();
+		$CI->lang->load('ae_news_letter',$lang);		
+		
+		$data=array();
+		
+		$rows=$this->db
+			->select("COUNT(*) as count, nlt_sent")
+			->from($this->template_table_name)
+			->group_by("nlt_sent")
+			->get()
+			->result_array();
+		$nls=array();
+		foreach($rows as $r)
+		{
+			$count=$r['count'];
+			if($r['nlt_sent'])
+				$nls[$CI->lang->line('sent')]=$count;
+			else
+				$nls[$CI->lang->line('not_sent')]=$count;
+		}
+		
+		$data['nls']=$nls;
+		
+		$CI->load->library('parser');
+		$ret=$CI->parser->parse($CI->get_admin_view_file("news_letter_dashboard"),$data,TRUE);
+		
+		return $ret;		
+	}
+
 	public function get_email_subject_and_content($customer_id, $keyword)
 	{
 		list($type,$id)=explode("=", $keyword);

@@ -23,4 +23,7 @@ $lang['to']="تا";
 $lang['total_results']="تعداد کل";
 $lang['search_again']="جستجو";
 $lang['page']="صفحه";
+
+$lang['sent']="ارسال شده";
+$lang['not_sent']="ارسال نشده";
 $lang['']="";

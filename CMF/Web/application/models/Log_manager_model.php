@@ -105,7 +105,7 @@ class Log_manager_model extends CI_Model
 		,"NEWS_LETTER_TEMPLATE_EDIT"		=> 1202
 		,"NEWS_LETTER_TEMPLATE_DELETE"	=> 1203
 		,"NEWS_LETTER_TEMPLATE_SEND"		=> 1204
-		,"NEWS_LETTER_USER_ADD"				=> 1205
+		,"NEWS_LETTER_EMAIL_ADD"			=> 1205
 	);
 
 	public function __construct()

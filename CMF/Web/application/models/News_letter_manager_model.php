@@ -70,7 +70,7 @@ class News_letter_manager_model extends CI_Model
 			else
 				$nls[$CI->lang->line('not_sent')]=$count;
 		}
-		
+
 		$data['nls']=$nls;
 		
 		$CI->load->library('parser');
@@ -152,6 +152,22 @@ class News_letter_manager_model extends CI_Model
 
 		return $nlt_id;
 	}
+
+	public function add_email($props)
+	{
+		$result=$this->db->get_where($this->email_table_name,array("nle_email"=>$props['email']))->row_array();
+		if($result)
+			return;
+
+		$this->db->insert($this->email_table_name, array("nle_email"=>$props['email']));
+		$props["nle_id"]=$this->db->insert_id();
+
+		$this->log_manager_model->info("NEWS_LETTER_EMAIL_ADD",$props);
+
+		return ;
+	}
+
+	
 
 	public function get_template($nlt_id)
 	{

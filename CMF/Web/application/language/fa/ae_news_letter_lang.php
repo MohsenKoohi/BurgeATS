@@ -26,4 +26,9 @@ $lang['page']="صفحه";
 
 $lang['sent']="ارسال شده";
 $lang['not_sent']="ارسال نشده";
-$lang['']="";
+$lang['email']="پست الکترونیک";
+$lang['submit']="ثبت";
+$lang['fill_all_fields']="لطفا فیلدها را تکمیل کنید.";
+$lang['captcha_incorrect']="لطفا حروف تصویر را مجددا ثبت نمایید.";
+$lang['email_added_successfully']="پست الکترونیک شما با موفقیت به خبرنامه اضافه شد.";
+

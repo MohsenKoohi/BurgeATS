@@ -191,7 +191,7 @@ class News_letter_manager_model extends CI_Model
 			->result_array();
 	}
 
-	public function set_template($nlt_id, $props)
+	public function set_template_props($nlt_id, $props)
 	{
 		$this->db
 			->set($props)
@@ -200,6 +200,28 @@ class News_letter_manager_model extends CI_Model
 
 		$props['nlt_id']=$nlt_id;
 		$this->log_manager_model->info("NEWS_LETTER_TEMPLATE_EDIT",$props);
+
+		return;
+	}
+
+	public function send_news_letter($nlt_id)
+	{
+		$this->load->model("es_manager_model");
+
+		$emails=$this->db
+			->get($this->email_table_name)
+			->result_array();
+
+		foreach($emails as $e)
+			$this->es_manager_model->schedule_email(-$e['nle_id'], "news_letter", "nlt_id=".$nlt_id);	
+		
+		$this->db
+			->set("nlt_sent",1)
+			->where("nlt_id",$nlt_id)
+			->update($this->template_table_name);
+
+		$props['nlt_id']=$nlt_id;
+		$this->log_manager_model->info("NEWS_LETTER_TEMPLATE_SEND",$props);
 
 		return;
 	}

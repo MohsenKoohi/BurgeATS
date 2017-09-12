@@ -88,7 +88,7 @@ class ES_manager_model extends CI_Model
 		$results=$this->db
 			->select("es.*, customer_mobile, customer_email, model_name")
 			->from($this->es_table_name)
-			->join("customer","es_customer_id = customer_id","INNER")
+			->join("customer","es_customer_id = customer_id","LEFT")
 			->join("module","es_module_id = module_id","INNER")
 			->where("es_status",'waiting')
 			->where("model_name != '' ")
@@ -114,32 +114,44 @@ class ES_manager_model extends CI_Model
 			$mobile=$es['customer_mobile'];
 			$email=$es['customer_email'];
 
-			if($es['es_media'] == 'sms' && $mobile)
+			if($es['es_media'] == 'sms')
 			{
-				if(method_exists($model, "get_sms_content"))
-				{
-					$content=$model->{"get_sms_content"}($customer_id, $keyword);
-					if($content)
+				if(!$mobile)
+					if($customer_id<0)
+						if(method_exists($model, "get_mobile_number"))
+							$mobile=$model->{"get_mobile_number"}($customer_id);
+
+				if($mobile)
+					if(method_exists($model, "get_sms_content"))
 					{
-						$result=$this->send_sms($mobile,$content);
-						if($result)
-							$res=TRUE;
+						$content=$model->{"get_sms_content"}($customer_id, $keyword);
+						if($content)
+						{
+							$result=$this->send_sms($mobile,$content);
+							if($result)
+								$res=TRUE;
+						}
 					}
-				}
 			}
 
-			if($es['es_media'] == 'email' && $email)
+			if($es['es_media'] == 'email')
 			{
-				if(method_exists($model, "get_email_subject_and_content"))
-				{
-					list($subject, $content)=$model->{"get_email_subject_and_content"}($customer_id, $keyword);
-					if($subject && $content )
+				if(!$email)
+					if($customer_id<0)
+						if(method_exists($model, "get_email_address"))
+							$email=$model->{"get_email_address"}($customer_id);
+
+				if($email)
+					if(method_exists($model, "get_email_subject_and_content"))
 					{
-						$result=$this->send_email($email, $subject, $content);
-						if($result)
-							$res=TRUE;
+						list($subject, $content)=$model->{"get_email_subject_and_content"}($customer_id, $keyword);
+						if($subject && $content )
+						{
+							$result=$this->send_email($email, $subject, $content);
+							if($result)
+								$res=TRUE;
+						}
 					}
-				}
 			}
 
 			if($res)

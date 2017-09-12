@@ -138,11 +138,15 @@
 					<div class='two columns'>
 						<label>{customer_text}</label>
 						<span>
-							<a href="<?php echo get_admin_customer_details_link($e['es_customer_id']);?>"
-								target='_blank'
-							>
-								<?php echo $e['customer_name'];?>
-							</a>
+							<?php if($e['es_customer_id']>0){ ?>
+								<a href="<?php echo get_admin_customer_details_link($e['es_customer_id']);?>"
+									target='_blank'
+								>
+									<?php echo $e['customer_name'];?>
+								</a>
+							<?php } else { ?>
+								<span class='date'><?php echo $e['es_customer_id'];?></span>
+							<?php } ?>
 						</span>
 					</div>
 

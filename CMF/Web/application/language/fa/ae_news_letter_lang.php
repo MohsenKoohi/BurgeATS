@@ -16,7 +16,9 @@ $lang['sent']="ارسال شده";
 $lang['image']="تصویر";
 
 $lang['are_you_sure_to_delete_this_news_letter']="آیا از حذف این خبرنامه مطمئن هستید؟";
+$lang['are_you_sure_to_send_this_news_letter']="خبرنامه برای اعضا ارسال شود؟";
 $lang['news_letter_deleted_successfully']="خبرنامه موردنظر حذف شد.";
+$lang['news_letter_sent_successfully']="این خبرنامه با موفقیت برای ارسال فرستاده شد.";
 
 $lang['results']="نتایج";
 $lang['to']="تا";

@@ -52,6 +52,14 @@
 
 								$("form#delete").submit();
 							}
+
+							function send_news_letter()
+							{
+								if(!confirm("{are_you_sure_to_send_this_news_letter_text}"))
+									return;
+
+								$("form#send").submit();
+							}
 						</script>
 					</div>
 				<?php } ?>

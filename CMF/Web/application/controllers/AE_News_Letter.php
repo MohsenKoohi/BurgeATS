@@ -106,6 +106,9 @@ class AE_News_Letter extends Burge_CMF_Controller
 		if($this->input->post("post_type")==="delete_template")
 			return $this->delete_template($nl_id);
 
+		if($this->input->post("post_type")==="send_news_letter")
+			return $this->send_news_letter($nl_id);
+
 		$this->data['nl_id']=$nl_id;
 		$this->data['news_letter_id']=$nl_id;
 		$this->data['news_letter_info']=$this->news_letter_manager_model->get_template($nl_id);
@@ -135,11 +138,22 @@ class AE_News_Letter extends Burge_CMF_Controller
 			,"nlt_content"		=> $this->input->post("content")
 		);
 
-		$this->news_letter_manager_model->set_template($nl_id, $props);
+		$this->news_letter_manager_model->set_template_props($nl_id, $props);
 		
 		set_message($this->lang->line("changes_saved_successfully"));
 
 		redirect(get_admin_news_letter_template_link($nl_id));
+
+		return;
+	}
+
+	private function send_news_letter($nl_id)
+	{
+		$this->news_letter_manager_model->send_news_letter($nl_id);
+		
+		set_message($this->lang->line("news_letter_sent_successfully"));
+
+		//redirect(get_admin_news_letter_template_link($nl_id));
 
 		return;
 	}

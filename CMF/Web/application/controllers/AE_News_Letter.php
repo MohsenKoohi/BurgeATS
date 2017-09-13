@@ -135,7 +135,7 @@ class AE_News_Letter extends Burge_CMF_Controller
 	{
 		$props=array(
 			"nlt_subject"		=> $this->input->post("subject")
-			,"nlt_content"		=> $this->input->post("content")
+			,"nlt_content"		=> $_POST["content"]
 		);
 
 		$this->news_letter_manager_model->set_template_props($nl_id, $props);

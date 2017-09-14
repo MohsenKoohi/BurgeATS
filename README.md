@@ -17,6 +17,7 @@
 * A comprehensive **Ticketing and Messaging System (TMS)**, defined as *Message Manager* module, which allows messaging between different parts of organizations including departments, customers, and users. It also allow adding participants from another departments to a message, in-organization commenting on messages (private to the customers), and specifying access level of each user to messages.
 * An  **Email and SMS Manager**, to accept requests to send email/sms to customers from other modules and 
 sending email/sms asynchronously through cron job or synchronously.
+* A  **Newsletter** module, which provides defining and sending newsletter.
 
 ## License
 * GNU GPL2

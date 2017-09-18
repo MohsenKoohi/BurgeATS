@@ -50,6 +50,9 @@ class CE_News_Letter extends Burge_CMF_Controller
 		else
 			set_message($this->lang->line("captcha_incorrect"));
 
+		if($this->input->post("back_url"))
+			return redirect($this->input->post("back_url"));
+
 		return redirect(get_link("customer_news_letter"));
 	}
 }

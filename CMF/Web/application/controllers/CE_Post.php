@@ -24,6 +24,10 @@ class CE_Post extends Burge_CMF_Controller {
 		if(!$post_info || !($post_hash === get_customer_post_link_hash($post_info['post_date'])))
 			redirect(get_link("home_url"));
 
+		if($post_info['post_allow_comment'])
+			if($this->input->post("post_type") == 'add_comment')
+				return $this->add_comment($post_id, $post_info);
+
 		$this->data['post_gallery']=$post_info['pc_gallery']['images'];
 
 		$cat_ids=explode(',',$post_info['categories']);
@@ -45,6 +49,21 @@ class CE_Post extends Burge_CMF_Controller {
 				$this->data['page_main_image']=get_link("post_gallery_url").'/'.$img['image'];
 				$this->data['post_info']['pc_image']=$this->data['page_main_image'];
 			}
+
+		if($post_info['post_allow_comment'])
+		{
+			$comments=$this->post_manager_model->get_comments($post_id);
+			if($this->post_manager_model->show_post_comment_after_verification())
+				foreach($commments as $index => $comment)
+					if($comment['pcom_status'] != 'verified')
+						unset($comments[$index]);
+			else
+				foreach($commments as $index => $comment)
+					if($comment['pcom_status'] == 'not_verified')
+						unset($comments[$index]);
+
+			$this->data['comments']=$comments;
+		}
 			
 		$this->data['message']=get_message();
 
@@ -59,5 +78,30 @@ class CE_Post extends Burge_CMF_Controller {
 		$this->send_customer_output("post");
 
 		return;
+	}
+
+	private function add_comment($post_id, $post_info)
+	{
+		$page_link=get_customer_post_details_link($post_id,$post_info['pc_title'],$post_info['post_date']);
+
+		$text=trim($this->input->post("text"));
+		$name=trim($this->input->post("name"));
+		if(!$text || !$name)
+		{
+			set_message($this->lang->line("please_fill_all_fields"));
+			return redirect($page_link);
+		}
+
+		$ip=$this->input->ip_address();
+
+		$this->post_manager_model->add_comment($post_id, array(
+			"name"		=> $name
+			,"text"		=> $text
+			,"ip"			=> $ip
+		));
+
+		set_message($this->lang->line("your_comment_submitted_successfully"));
+		
+		return redirect($page_link);
 	}
 }

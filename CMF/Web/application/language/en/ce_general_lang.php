@@ -15,6 +15,14 @@ $lang['contact_us']="Contact us";
 $lang['image']="Image";
 $lang['from']="from";
 
+$lang['please_fill_all_fields']="Please fill all fields.";
+$lang['your_comment_submitted_successfully']="Your comment submitted successfully.";
+$lang['comments']="Comments";
+$lang['add_comment']="Add Comment";
+$lang['name']="Name";
+$lang['comment']="Comment";
+$lang['submit']="Submit";
+
 //added for BurgeATS
 $lang['dashboard']="Account";
 $lang['messages']="Messages";

@@ -4,12 +4,18 @@ class Post_manager_model extends CI_Model
 	private $post_table_name="post";
 	private $post_content_table_name="post_content";
 	private $post_category_table_name="post_category";
+	private $post_comment_table_name="post_comment";
+
 	private $post_writable_props=array(
 		"post_date","post_active","post_allow_comment"
 	);
 	private $post_content_writable_props=array(
 		"pc_active","pc_image","pc_keywords","pc_description","pc_title","pc_content","pc_gallery"
 		);
+
+	private $post_comment_statuses=array(
+		"waiting","not_verified","verified"
+	);
 
 	public function __construct()
 	{
@@ -58,10 +64,29 @@ class Post_manager_model extends CI_Model
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 		);
 
+		$post_comment_table=$this->db->dbprefix($this->post_comment_table_name); 
+		$statuses=$this->post_comment_statuses;
+		$default_status=$statuses[0];
+		$this->db->query(
+			"CREATE TABLE IF NOT EXISTS $post_comment_table (
+				`pcom_id` INT AUTO_INCREMENT
+				,`pcom_post_id` INT
+				,`pcom_visitor_name` CHAR(63)
+				,`pcom_visitor_ip` CHAR(15)
+				,`pcom_date` CHAR(20)
+				,`pcom_text` VARCHAR(1023)
+				,`pcom_status` ENUM ('".implode("','", $statuses)."') DEFAULT '$default_status'
+				,PRIMARY KEY (pcom_id)	
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+		);
+
 		$this->load->model("module_manager_model");
 
 		$this->module_manager_model->add_module("post","post_manager");
 		$this->module_manager_model->add_module_names_from_lang_file("post");
+
+		$this->load->model("constant_manager_model");
+		$this->constant_manager_model->set("show_post_comment_after_verification",0);
 		
 		return;
 	}
@@ -357,5 +382,79 @@ class Post_manager_model extends CI_Model
 
 		return;
 
+	}
+
+	public function get_comments_statuses()
+	{
+		return $this->post_comment_statuses;
+	}
+
+	public function get_comments($post_id)
+	{
+		return $this->db
+			->select("*")
+			->from($this->post_comment_table_name)
+			->where("pcom_post_id", $post_id)
+			->order_by("pcom_post_id ASC")
+			->get()
+			->result_array();
+	}
+
+	public function show_post_comment_after_verification()
+	{
+		$this->load->model("constant_manager_model");
+		return $this->constant_manager_model->get("show_post_comment_after_verification");
+	}
+
+	public function add_comment($post_id, $in_props)
+	{
+		$props=array(
+			"pcom_post_id"				=> $post_id
+			,"pcom_visitor_name"		=> $in_props['name']
+			,"pcom_visitor_ip"		=> $in_props['ip']
+			,"pcom_text"				=> $in_props['text']
+			,"pcom_date"				=> get_current_time()
+		);
+
+		$this->db->insert($this->post_comment_table_name, $props);
+
+		$pcom_id=$this->db->insert_id();
+
+		$props['pcom_id']=$pcom_id;
+		$this->log_manager_model->info("POST_COMMENT_ADD", $props);
+
+		return $pcom_id;
+	}
+
+	public function update_comments($post_id, $comment_updates, $deleted_comment_ids)
+	{
+		if($comment_updates)		
+		{
+			$this->db
+				->where("pcom_post_id" , $post_id)
+				->update_batch($this->post_comment_table_name, $comment_updates, "pcom_id");
+
+			foreach($comment_updates as $c)
+			{
+				$c['pcom_post_id']=$post_id;
+				$this->log_manager_model->info("POST_COMMENT_CHANGE", $c);
+			}
+		}
+
+		if($deleted_comment_ids)
+		{
+			$this->db
+				->where("pcom_post_id", $post_id)
+				->where_in("pcom_id",$deleted_comment_ids)
+				->delete($this->post_comment_table_name);
+
+			$props=array(
+				"pcom_post_id"	=> $post_id
+				,"pcom_ids"		=> implode(",", $deleted_comment_ids)
+			);
+			$this->log_manager_model->info("POST_COMMENT_DELETE", $props);
+		}
+
+		return;
 	}
 }

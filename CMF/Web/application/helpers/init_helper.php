@@ -73,6 +73,7 @@ function &get_links($just_common=FALSE)
 			,'customer_login'						=> HOME_SURL_LANG."/login"
 			,'customer_login_yahoo'				=> HOME_SURL_LANG."/login/yahoo"
 			,'customer_login_google'			=> HOME_SURL_LANG."/login/google"
+			,'customer_login_microsoft'		=> HOME_SURL_LANG."/login/microsoft"
 			,'customer_login_facebook'			=> HOME_SURL_LANG."/login/facebook"
 			,'customer_logout'					=> HOME_SURL_LANG."/logout"
 			,'customer_signup'					=> HOME_SURL_LANG."/signup"

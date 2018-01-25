@@ -66,6 +66,7 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->data['yahoo_login_page']=get_link("customer_login_yahoo");
 		$this->data['facebook_login_page']=get_link("customer_login_facebook");
 		$this->data['google_login_page']=get_link("customer_login_google");
+		$this->data['microsoft_login_page']=get_link("customer_login_microsoft");
 		
 		$this->data['captcha']=get_captcha();
 
@@ -295,12 +296,56 @@ class CE_Login extends Burge_CMF_Controller {
 		}
 
 		$redirect_link=$this->google_login_model->getAuthenticationUrl();
+
 		$this->data=get_initialized_data();
 		$this->data['header_title']='Login by Google';
 		$this->data['redirect_link']=$redirect_link;
 
 		$this->data['social_network_name']="Google";
 		$this->data['image_name']="login-gm.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
+
+
+		return;
+	}
+
+	public function microsoft()
+	{
+		$this->load->model('login/microsoft_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$email=$this->microsoft_login_model->verifyUserAndGetEmail();
+			
+			if ($email)
+			{ 	
+				if($this->customer_manager_model->login_openid($email,"microsoft"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$redirect_link=$this->microsoft_login_model->getAuthenticationUrl();
+
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Login by Micrsoft Live Connect';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Micrsoft Live Connect";
+		$this->data['image_name']="login-ms.jpg";
 
 		$this->load->library('parser');
 		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);

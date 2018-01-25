@@ -48,7 +48,7 @@
 			<style type="text/css">
 				.openid-login
 				{
-					width:calc(33.33% - 10px);
+					width:calc(25% - 10px);
 					margin:0px 5px;
 					direction:ltr;
 					cursor: pointer;
@@ -69,8 +69,14 @@
 			<img class="openid-login" src="{images_url}/login-ym.jpg" title="Yahoo!" onclick="yahooLogin();" />
 			<img class="openid-login" src="{images_url}/login-gm.jpg" title="Google" onclick="googleLogin();" />
 			<img class="openid-login" src="{images_url}/login-fb.jpg" title="Facebook" onclick="facebookLogin();" />
+			<img class="openid-login" src="{images_url}/login-ms.jpg" title="Microsoft Live Connect" onclick="microsoftLogin();" />
 		</div>
 			<script type="text/javascript">
+				function microsoftLogin()
+				{
+					window.open("{microsoft_login_page}","_blank","width=600, height=400");
+				}
+
 				function yahooLogin()
 				{
 					window.open("{yahoo_login_page}","_blank","width=600, height=400");

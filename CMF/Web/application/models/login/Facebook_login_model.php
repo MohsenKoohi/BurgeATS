@@ -1,4 +1,11 @@
 <?php
+
+// After creating in https://developers.facebook.com/apps/
+// go to https://developers.facebook.com/tools/explorer
+// Graph Api Explorer -> Select your app
+// Get Token -> Select "Get Use Access Token"
+// On the shown menu select "email" -> Click "Get Access Token"
+
 class Facebook_login_model extends CI_Model
 {
 	var $client_id = '';

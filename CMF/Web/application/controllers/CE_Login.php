@@ -67,6 +67,7 @@ class CE_Login extends Burge_CMF_Controller {
 		$this->data['facebook_login_page']=get_link("customer_login_facebook");
 		$this->data['google_login_page']=get_link("customer_login_google");
 		$this->data['microsoft_login_page']=get_link("customer_login_microsoft");
+		$this->data['linkedin_login_page']=get_link("customer_login_linkedin");
 		
 		$this->data['captcha']=get_captcha();
 
@@ -393,6 +394,48 @@ class CE_Login extends Burge_CMF_Controller {
 
 		$this->data['social_network_name']="Facebook";
 		$this->data['image_name']="login-fb.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
+
+		return;
+	}
+
+	public function linkedin()
+	{
+		$this->load->model('login/linkedin_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$email=$this->linkedin_login_model->verifyUserAndGetEmail();
+			
+			if ($email)
+			{ 	
+				if($this->customer_manager_model->login_openid($email,"linkedin"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$redirect_link=$this->linkedin_login_model->getAuthenticationUrl();
+
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Login by Linkedin';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Linkedin";
+		$this->data['image_name']="login-in.jpg";
 
 		$this->load->library('parser');
 		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);

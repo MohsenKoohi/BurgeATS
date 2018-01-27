@@ -106,6 +106,7 @@ $route['login/yahoo']			= "CE_Login/yahoo";
 $route['login/facebook']		= "CE_Login/facebook";
 $route['login/google']			= "CE_Login/google";
 $route['login/microsoft']		= "CE_Login/microsoft";
+$route['login/linkedin']		= "CE_Login/linkedin";
 $route['logout']					= "CE_Login/logout";
 $route['signup']					= "CE_Login/signup";
 $route['forgotten_password']	= "CE_Login/forgotten_password";

@@ -75,6 +75,7 @@ function &get_links($just_common=FALSE)
 			,'customer_login_google'			=> HOME_SURL_LANG."/login/google"
 			,'customer_login_microsoft'		=> HOME_SURL_LANG."/login/microsoft"
 			,'customer_login_facebook'			=> HOME_SURL_LANG."/login/facebook"
+			,'customer_login_linkedin'			=> HOME_SURL_LANG."/login/linkedin"
 			,'customer_logout'					=> HOME_SURL_LANG."/logout"
 			,'customer_signup'					=> HOME_SURL_LANG."/signup"
 			,'customer_forgotten_password'	=> HOME_SURL_LANG."/forgotten_password"

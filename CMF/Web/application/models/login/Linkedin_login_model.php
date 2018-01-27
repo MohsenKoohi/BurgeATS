@@ -8,8 +8,8 @@
 
 class Linkedin_login_model extends CI_Model
 {
-	var $client_id = '86s38tmw0y9wmt';
-	var $client_secret = 'H9dvopve5BF7pctl';
+	var $client_id = '';
+	var $client_secret = '';
  	var $redirect_uri;
 
 	public function __construct()

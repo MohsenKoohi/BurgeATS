@@ -4,13 +4,12 @@
 //2) Get client_id, client secret
 // https://developer.linkedin.com/docs/oauth2
 // https://developer.linkedin.com/docs/fields/basic-profile
-
+//Select r_basicprofile, r_emailaddress for Default Application Permissions
 
 class Linkedin_login_model extends CI_Model
 {
 	var $client_id = '';
 	var $client_secret = '';
- 	var $redirect_uri;
 
 	public function __construct()
 	{
@@ -19,17 +18,17 @@ class Linkedin_login_model extends CI_Model
 	}
 
 
-	public function getAuthenticationUrl()
+	public function getAuthenticationUrl($redirect_uri)
 	{
 		return 'https://www.linkedin.com/oauth/v2/authorization'
 			.'?client_id='.$this->client_id
-			.'&scope=r_emailaddress'
+			.'&scope=r_emailaddress,r_basicprofile'
 			.'&response_type=code'
 			.'&state='.date("YmdHis").time()
-			.'&redirect_uri='.$this->redirect_uri;
+			.'&redirect_uri='.$redirect_uri;
 	}
 
-	public function verifyUserAndGetEmail()
+	public function verifyUserAndGetInfo($redirect_uri)
 	{
 		$code=$this->input->get("code");
 		if(!$code)
@@ -39,7 +38,7 @@ class Linkedin_login_model extends CI_Model
 		$in_data=array(
 			"client_id"		 	=> $this->client_id
 			,"client_secret" 	=> $this->client_secret
-			,"redirect_uri"	=> $this->redirect_uri
+			,"redirect_uri"	=> $redirect_uri
 			,"code"				=> $code
 			,"grant_type"		=>"authorization_code"
 		);
@@ -62,7 +61,7 @@ class Linkedin_login_model extends CI_Model
 
 		$access_token= $output['access_token'];
 		
-		$url="https://api.linkedin.com/v1/people/~:(email-address)?format=json";
+		$url="https://api.linkedin.com/v1/people/~:(email-address,formatted-name)?format=json";
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Bearer ".$access_token ));
@@ -79,7 +78,10 @@ class Linkedin_login_model extends CI_Model
 		if(!isset($output['emailAddress']) || !$output['emailAddress'])
 			return FALSE;
 
-		return $output['emailAddress'];
+		return array(
+			"email" 		=> $output['emailAddress']
+			,"name"		=> $output['formattedName']
+		);
 	}	
 
 }

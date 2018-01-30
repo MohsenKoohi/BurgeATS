@@ -6,26 +6,25 @@
 //	Server-side scenarios	https://msdn.microsoft.com/en-us/library/hh243649.aspx
 // OAuth 2.0					https://msdn.microsoft.com/en-us/library/hh243647.aspx
 // Scopes and permissions 	https://msdn.microsoft.com/en-us/library/hh243646.aspx
+// Add "email", "profile" to  Delegated Permissions    
 
 class Microsoft_login_model extends CI_Model
 {
 	var $client_id = '';
 	var $client_secret = '';
- 	var $redirect_uri;
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->redirect_uri = get_link("customer_login_microsoft");
 	}
 
 
-	public function getAuthenticationUrl()
+	public function getAuthenticationUrl($redirect_uri)
 	{
-		return 'https://login.live.com/oauth20_authorize.srf?client_id='.$this->client_id.'&scope=wl.emails&response_type=code&redirect_uri='.$this->redirect_uri;
+		return 'https://login.live.com/oauth20_authorize.srf?client_id='.$this->client_id.'&scope=wl.emails&response_type=code&redirect_uri='.$redirect_uri;
 	}
 
-	public function verifyUserAndGetEmail()
+	public function verifyUserAndGetInfo($redirect_uri)
 	{
 		$code=$this->input->get("code");
 		if(!$code)
@@ -35,7 +34,7 @@ class Microsoft_login_model extends CI_Model
 		$in_data=array(
 			"client_id"		 	=> $this->client_id
 			,"client_secret" 	=> $this->client_secret
-			,"redirect_uri"	=> $this->redirect_uri
+			,"redirect_uri"	=> $redirect_uri
 			,"code"				=> $code
 			,"grant_type"		=>"authorization_code"
 		);
@@ -69,9 +68,9 @@ class Microsoft_login_model extends CI_Model
 
 		foreach($output['emails'] as $email)
 			if($email)
-				return $email;
+				break;
 
-		return FALSE;
+		return array("email"=>$email, "name"=>$output['name']);
 	}	
 
 }

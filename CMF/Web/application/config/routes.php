@@ -102,13 +102,18 @@ $route[ADMIN_URL_FOLDER."/task_exec/get_file/(\d+)/(.+)"]= "AE_Task_Exec/get_fil
 
 $route['dashboard']				= "CE_Dashboard";
 $route['login']					= "CE_Login/login";
-$route['login/yahoo']			= "CE_Login/yahoo";
-$route['login/facebook']		= "CE_Login/facebook";
-$route['login/google']			= "CE_Login/google";
-$route['login/microsoft']		= "CE_Login/microsoft";
-$route['login/linkedin']		= "CE_Login/linkedin";
+$route['login/yahoo']			= "CE_Login/login_yahoo";
+$route['login/facebook']		= "CE_Login/login_facebook";
+$route['login/google']			= "CE_Login/login_google";
+$route['login/microsoft']		= "CE_Login/login_microsoft";
+$route['login/linkedin']		= "CE_Login/login_linkedin";
 $route['logout']					= "CE_Login/logout";
 $route['signup']					= "CE_Login/signup";
+$route['signup/yahoo']			= "CE_Login/signup_yahoo";
+$route['signup/facebook']		= "CE_Login/signup_facebook";
+$route['signup/google']			= "CE_Login/signup_google";
+$route['signup/microsoft']		= "CE_Login/signup_microsoft";
+$route['signup/linkedin']		= "CE_Login/signup_linkedin";
 $route['forgotten_password']	= "CE_Login/forgotten_password";
 
 $route[ADMIN_URL_FOLDER."/message"]										= "AE_Message/index";

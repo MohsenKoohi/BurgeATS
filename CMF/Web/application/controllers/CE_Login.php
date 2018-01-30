@@ -143,7 +143,6 @@ class CE_Login extends Burge_CMF_Controller {
 
 	public function signup()
 	{				
-		
 		$backurl=$this->session->userdata("backurl");
 		if(!$backurl)
 			$backurl=get_link("customer_dashboard");
@@ -151,7 +150,7 @@ class CE_Login extends Burge_CMF_Controller {
 		if($this->customer_manager_model->has_customer_logged_in())
 		{	
 			$this->session->unset_userdata("backurl");
-			set_message($this->data['message']);
+			set_message(get_message());
 			redirect($backurl);
 			return;
 		}
@@ -197,6 +196,12 @@ class CE_Login extends Burge_CMF_Controller {
 			return redirect(get_link("customer_signup"));
 		}	
 
+		$this->data['yahoo_signup_page']=get_link("customer_signup_yahoo");
+		$this->data['facebook_signup_page']=get_link("customer_signup_facebook");
+		$this->data['google_signup_page']=get_link("customer_signup_google");
+		$this->data['microsoft_signup_page']=get_link("customer_signup_microsoft");
+		$this->data['linkedin_signup_page']=get_link("customer_signup_linkedin");
+
 		$this->data['captcha']=get_captcha(rand(4,5));
 
 		$this->data['lang_pages']=get_lang_pages(get_link("customer_signup",TRUE));
@@ -213,19 +218,18 @@ class CE_Login extends Burge_CMF_Controller {
 		return;				 
 	}
 
-	public function yahoo()
+	public function login_yahoo()
 	{
 		$this->load->model('login/yahoo_login_model');
 
-	 	if($this->input->get('openid_mode') === 'id_res')
+	 	if($this->input->get('code'))
 	 	{ 	
-			$this->yahoo_login_model->SetIdentity(urldecode($_GET['openid_identity']));
+			$info=$this->yahoo_login_model->verifyUserAndGetInfo(get_link("customer_login_yahoo"));
 			
-			$openid_validation_result = $this->yahoo_login_model->ValidateWithServer();
-			
-			if ($openid_validation_result == true)
+			if ($info)
 			{ 	
-				$email=urldecode($_GET['openid_ax_value_email']);;
+				$email=$info['email'];
+
 				if($this->customer_manager_model->login_openid($email,"yahoo"))
 					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
 				else
@@ -243,42 +247,33 @@ class CE_Login extends Burge_CMF_Controller {
 			return;
 		}
 
-		$this->yahoo_login_model->SetIdentity('https://me.yahoo.com');
-		$realm_link=get_link("home_url");
-		$return_link=get_link("customer_login_yahoo");	
+		$redirect_link=$this->yahoo_login_model->getAuthenticationUrl(get_link("customer_login_yahoo"));
 
-		$redirect_link=$this->yahoo_login_model->RedirectToYahooServer($realm_link,$return_link);
-		if(!$redirect_link)
-			$error = $this->yahoo_login_model->GetError();
-		
 		$this->data=get_initialized_data();
-		$this->data['header_title']='Login by Yahoo';
+		$this->data['header_title']='Login by Yahoo!';
 		$this->data['redirect_link']=$redirect_link;
-		if(!$redirect_link)
-		{
-			$this->data['redirect_error_code']=$error['code'];;
-			$this->data['redirect_error_desc']=$error['description'];
-		}
 
-		$this->data['social_network_name']="Yahoo";
+		$this->data['social_network_name']="Yahoo!";
 		$this->data['image_name']="login-ym.jpg";
 
 		$this->load->library('parser');
 		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
 
-		return;
-	}
 
-	public function google()
+		return;
+	}	
+
+	public function login_google()
 	{
 		$this->load->model('login/google_login_model');
 
 	 	if($this->input->get('code'))
 	 	{ 	
-			$email=$this->google_login_model->verifyUserAndGetEmail();
-			
-			if ($email)
+			$info=$this->google_login_model->verifyUserAndGetInfo(get_link("customer_login_google"));
+			if ($info)
 			{ 	
+				$email=$info['email'];
+
 				if($this->customer_manager_model->login_openid($email,"google"))
 					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
 				else
@@ -296,7 +291,7 @@ class CE_Login extends Burge_CMF_Controller {
 			return;
 		}
 
-		$redirect_link=$this->google_login_model->getAuthenticationUrl();
+		$redirect_link=$this->google_login_model->getAuthenticationUrl(get_link("customer_login_google"));
 
 		$this->data=get_initialized_data();
 		$this->data['header_title']='Login by Google';
@@ -312,16 +307,18 @@ class CE_Login extends Burge_CMF_Controller {
 		return;
 	}
 
-	public function microsoft()
+	public function login_microsoft()
 	{
 		$this->load->model('login/microsoft_login_model');
 
 	 	if($this->input->get('code'))
 	 	{ 	
-			$email=$this->microsoft_login_model->verifyUserAndGetEmail();
+			$info=$this->microsoft_login_model->verifyUserAndGetInfo(get_link("customer_login_microsoft"));
 			
-			if ($email)
-			{ 	
+			if($info)
+			{ 
+				$email = $info['email'];
+
 				if($this->customer_manager_model->login_openid($email,"microsoft"))
 					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
 				else
@@ -339,13 +336,13 @@ class CE_Login extends Burge_CMF_Controller {
 			return;
 		}
 
-		$redirect_link=$this->microsoft_login_model->getAuthenticationUrl();
+		$redirect_link=$this->microsoft_login_model->getAuthenticationUrl(get_link("customer_login_microsoft"));
 
 		$this->data=get_initialized_data();
-		$this->data['header_title']='Login by Micrsoft Live Connect';
+		$this->data['header_title']='Login by Microsoft Live Connect';
 		$this->data['redirect_link']=$redirect_link;
 
-		$this->data['social_network_name']="Micrsoft Live Connect";
+		$this->data['social_network_name']="Microsoft Live Connect";
 		$this->data['image_name']="login-ms.jpg";
 
 		$this->load->library('parser');
@@ -355,15 +352,17 @@ class CE_Login extends Burge_CMF_Controller {
 		return;
 	}
 
-	public function facebook()
+	public function login_facebook()
 	{
 		$this->load->model('login/facebook_login_model');
 
 	 	if($this->input->get('code'))
 	 	{ 	
-			$email=$this->facebook_login_model->verifyUserAndGetEmail();
-			if ($email)
+			$info=$this->facebook_login_model->verifyUserAndGetInfo(get_link("customer_login_facebook"));
+			if($info)
 			{ 	
+				$email=$info['email'];
+
 				if($this->customer_manager_model->login_openid($email,"facebook"))
 					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
 				else
@@ -387,7 +386,7 @@ class CE_Login extends Burge_CMF_Controller {
 			return;
 		}
 
-		$redirect_link=$this->facebook_login_model->getAuthenticationUrl();
+		$redirect_link=$this->facebook_login_model->getAuthenticationUrl(get_link("customer_login_facebook"));
 		$this->data=get_initialized_data();
 		$this->data['header_title']='Login by Facebook';
 		$this->data['redirect_link']=$redirect_link;
@@ -401,16 +400,17 @@ class CE_Login extends Burge_CMF_Controller {
 		return;
 	}
 
-	public function linkedin()
+	public function login_linkedin()
 	{
 		$this->load->model('login/linkedin_login_model');
 
 	 	if($this->input->get('code'))
 	 	{ 	
-			$email=$this->linkedin_login_model->verifyUserAndGetEmail();
+			$info=$this->linkedin_login_model->verifyUserAndGetInfo(get_link("customer_login_linkedin"));
 			
-			if ($email)
+			if ($info)
 			{ 	
+				$email=$info['email'];
 				if($this->customer_manager_model->login_openid($email,"linkedin"))
 					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
 				else
@@ -428,7 +428,7 @@ class CE_Login extends Burge_CMF_Controller {
 			return;
 		}
 
-		$redirect_link=$this->linkedin_login_model->getAuthenticationUrl();
+		$redirect_link=$this->linkedin_login_model->getAuthenticationUrl(get_link("customer_login_linkedin"));
 
 		$this->data=get_initialized_data();
 		$this->data['header_title']='Login by Linkedin';
@@ -442,5 +442,311 @@ class CE_Login extends Burge_CMF_Controller {
 
 		return;
 	}
+
+	public function signup_yahoo()
+	{
+		$this->load->model('login/yahoo_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$info=$this->yahoo_login_model->verifyUserAndGetInfo(get_link("customer_signup_yahoo"));			
+			if($info)
+			{ 	
+				$result=$this->customer_manager_model->add_customer(
+					array(
+						"customer_email"	=> $info['email']
+						,"customer_name"	=> $info['name']
+					)
+					,"registerd in customer env using Yahoo"
+					,TRUE
+				);
+
+				if($result)
+				{
+					set_message($this->lang->line("regiestered_successfully"));
+					
+					echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+					
+					return;
+				}
+				
+				$email=$info['email'];
+
+				if($this->customer_manager_model->login_openid($email,"yahoo"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$redirect_link=$this->yahoo_login_model->getAuthenticationUrl(get_link("customer_signup_yahoo"));
+
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Signup by Yahoo!';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Yahoo!";
+		$this->data['image_name']="login-ym.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
+
+		return;
+	}
+
+	public function signup_google()
+	{
+		$this->load->model('login/google_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$info=$this->google_login_model->verifyUserAndGetInfo(get_link("customer_signup_google"));			
+			if($info)
+			{ 	
+				$result=$this->customer_manager_model->add_customer(
+					array(
+						"customer_email"	=> $info['email']
+						,"customer_name"	=> $info['name']
+					)
+					,"registerd in customer env using Google"
+					,TRUE
+				);
+
+				if($result)
+				{
+					set_message($this->lang->line("regiestered_successfully"));
+					
+					echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+					
+					return;
+				}
+				
+				$email=$info['email'];
+
+				if($this->customer_manager_model->login_openid($email,"google"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$redirect_link=$this->google_login_model->getAuthenticationUrl(get_link("customer_signup_google"));
+
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Signup by Google';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Google";
+		$this->data['image_name']="login-gm.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
+
+		return;
+	}
+
+	public function signup_facebook()
+	{
+		$this->load->model('login/facebook_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$info=$this->facebook_login_model->verifyUserAndGetInfo(get_link("customer_signup_facebook"));			
+			if($info)
+			{ 	
+				$result=$this->customer_manager_model->add_customer(
+					array(
+						"customer_email"	=> $info['email']
+						,"customer_name"	=> $info['name']
+					)
+					,"registerd in customer env using Facebook"
+					,TRUE
+				);
+
+				if($result)
+				{
+					set_message($this->lang->line("regiestered_successfully"));
+					
+					echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+					
+					return;
+				}
+				
+				$email=$info['email'];
+
+				if($this->customer_manager_model->login_openid($email,"facebook"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$redirect_link=$this->facebook_login_model->getAuthenticationUrl(get_link("customer_signup_facebook"));
+
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Signup by Facebook';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Facebook";
+		$this->data['image_name']="login-fb.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
+
+		return;
+	}
+
+	public function signup_microsoft()
+	{
+		$this->load->model('login/microsoft_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$info=$this->microsoft_login_model->verifyUserAndGetInfo(get_link("customer_signup_microsoft"));			
+			if($info)
+			{ 	
+				$result=$this->customer_manager_model->add_customer(
+					array(
+						"customer_email"	=> $info['email']
+						,"customer_name"	=> $info['name']
+					)
+					,"registerd in customer env using Microsoft"
+					,TRUE
+				);
+
+				if($result)
+				{
+					set_message($this->lang->line("regiestered_successfully"));
+					
+					echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+					
+					return;
+				}
+				
+				$email=$info['email'];
+
+				if($this->customer_manager_model->login_openid($email,"microsoft"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$redirect_link=$this->microsoft_login_model->getAuthenticationUrl(get_link("customer_signup_microsoft"));
+
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Signup by Microsoft Live Connect';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Microsoft Live Connect";
+		$this->data['image_name']="login-ms.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
+
+		return;
+	}
+
+	public function signup_linkedin()
+	{
+		$this->load->model('login/linkedin_login_model');
+
+	 	if($this->input->get('code'))
+	 	{ 	
+			$info=$this->linkedin_login_model->verifyUserAndGetInfo(get_link("customer_signup_linkedin"));			
+			if($info)
+			{ 	
+				$result=$this->customer_manager_model->add_customer(
+					array(
+						"customer_email"	=> $info['email']
+						,"customer_name"	=> $info['name']
+					)
+					,"registerd in customer env using Linkedin"
+					,TRUE
+				);
+
+				if($result)
+				{
+					set_message($this->lang->line("regiestered_successfully"));
+					
+					echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+					
+					return;
+				}
+				
+				$email=$info['email'];
+
+				if($this->customer_manager_model->login_openid($email,"linkedin"))
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_success")));
+				else
+					set_message(str_replace('$email', $email,$this->lang->line("social_login_fail")));
+
+				echo "<script type='text/javascript'>window.opener.location.reload();window.close();</script>";
+				
+				return;
+			}
+			else
+			{
+				echo "<script type='text/javascript'>window.close();</script>";
+			}
+
+			return;
+		}
+
+		$redirect_link=$this->linkedin_login_model->getAuthenticationUrl(get_link("customer_signup_linkedin"));
+
+		$this->data=get_initialized_data();
+		$this->data['header_title']='Signup by Linkedin';
+		$this->data['redirect_link']=$redirect_link;
+
+		$this->data['social_network_name']="Linkedin";
+		$this->data['image_name']="login-in.jpg";
+
+		$this->load->library('parser');
+		$this->parser->parse($this->get_customer_view_file('login_social'),$this->data);
+
+		return;
+	}
+
 
 }

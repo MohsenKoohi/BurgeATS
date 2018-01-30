@@ -78,6 +78,11 @@ function &get_links($just_common=FALSE)
 			,'customer_login_linkedin'			=> HOME_SURL_LANG."/login/linkedin"
 			,'customer_logout'					=> HOME_SURL_LANG."/logout"
 			,'customer_signup'					=> HOME_SURL_LANG."/signup"
+			,'customer_signup_yahoo'			=> HOME_SURL_LANG."/signup/yahoo"
+			,'customer_signup_google'			=> HOME_SURL_LANG."/signup/google"
+			,'customer_signup_facebook'		=> HOME_SURL_LANG."/signup/facebook"
+			,'customer_signup_microsoft'		=> HOME_SURL_LANG."/signup/microsoft"
+			,'customer_signup_linkedin'		=> HOME_SURL_LANG."/signup/linkedin"
 			,'customer_forgotten_password'	=> HOME_SURL_LANG."/forgotten_password"
 
 			,'admin_message'								=> ADMIN_SURL_LANG."/message"

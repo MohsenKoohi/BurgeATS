@@ -10,6 +10,7 @@ class Facebook_login_model extends CI_Model
 {
 	var $client_id = '';
 	var $client_secret = '';
+	var $api_version='v2.3';
 
 	public function __construct()
 	{
@@ -19,12 +20,12 @@ class Facebook_login_model extends CI_Model
 
 	public function getAuthenticationUrl($redirect_uri)
 	{
-		return 'https://www.facebook.com/dialog/oauth?client_id='.$this->client_id."&redirect_uri=".$redirect_uri;
+		return 'https://www.facebook.com/dialog/oauth?scope=email&client_id='.$this->client_id."&redirect_uri=".$redirect_uri;
 	}
 
 	public function verifyUserAndGetInfo($redirect_uri)
 	{
-		$auth_url='https://graph.facebook.com/v2.3/oauth/access_token?';
+		$auth_url='https://graph.facebook.com/'.$this->api_version.'/oauth/access_token?';
 		$auth_url.='client_id='.$this->client_id;
 		$auth_url.='&redirect_uri='.$redirect_uri;
 		$auth_url.='&client_secret='.$this->client_secret;

@@ -45,7 +45,8 @@ class Facebook_login_model extends CI_Model
 		if(!$content)
 			return false;
 		$json_prop=json_decode($content,TRUE);
-		bprint_r($json_prop);
+		//bprint_r($json_prop);exit();
+		
 		if(!isset($json_prop['name']))
 			return false;
 

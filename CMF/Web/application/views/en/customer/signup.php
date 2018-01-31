@@ -43,35 +43,35 @@
 			<!--<labeL>{social_media_signup_text}</label>-->
 			<br>
 			<div style="font-size:0">
-			<img class="openid-login" src="{images_url}/login-ym.jpg" title="Yahoo!" onclick="yahooSinup();" />
-			<img class="openid-login" src="{images_url}/login-gm.jpg" title="Google" onclick="googleSinup();" />
-			<img class="openid-login" src="{images_url}/login-fb.jpg" title="Facebook" onclick="facebookSinup();" />
-			<img class="openid-login" src="{images_url}/login-ms.jpg" title="Microsoft Live Connect" onclick="microsoftSinup();" />
-			<img class="openid-login" src="{images_url}/login-in.jpg" title="Linkedin" onclick="linkedinSinup();" />
+			<img class="openid-login" src="{images_url}/login-ym.jpg" title="Yahoo!" onclick="yahooSingup();" />
+			<img class="openid-login" src="{images_url}/login-gm.jpg" title="Google" onclick="googleSingup();" />
+			<img class="openid-login" src="{images_url}/login-fb.jpg" title="Facebook" onclick="facebookSingup();" />
+			<img class="openid-login" src="{images_url}/login-ms.jpg" title="Microsoft Live Connect" onclick="microsoftSingup();" />
+			<img class="openid-login" src="{images_url}/login-in.jpg" title="Linkedin" onclick="linkedinSingup();" />
 		</div>
 			<script type="text/javascript">
 
-				function linkedinSinup()
+				function linkedinSingup()
 				{
 					window.open("{linkedin_signup_page}","_blank","width=600, height=400");
 				}
 
-				function microsoftSinup()
+				function microsoftSingup()
 				{
 					window.open("{microsoft_signup_page}","_blank","width=600, height=400");
 				}
 
-				function yahooSinup()
+				function yahooSingup()
 				{
 					window.open("{yahoo_signup_page}","_blank","width=600, height=400");
 				}
 
-				function googleSinup()
+				function googleSingup()
 				{
 					window.open("{google_signup_page}","_blank","width=600, height=400");
 				}
 
-				function facebookSinup()
+				function facebookSingup()
 				{
 					window.open("{facebook_signup_page}","_blank","width=600, height=400");
 				}

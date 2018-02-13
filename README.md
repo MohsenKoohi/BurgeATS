@@ -18,6 +18,7 @@
 * An  **Email and SMS Manager**, to accept requests to send email/sms to customers from other modules and 
 sending email/sms asynchronously through cron job or synchronously.
 * A  **Newsletter** module, which provides defining and sending newsletter.
+* Social media login/signup (OAUTH2): Yahoo!, MSN Live, Facebook, Linkedin, Google
 
 ## License
 * GNU GPL2

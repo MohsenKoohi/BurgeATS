@@ -26,6 +26,16 @@ class Message_manager_model extends CI_Model
 
 	public function install()
 	{
+		$this->load->helper("init");
+		$cdp_message="";
+		$result=check_directory_permission(MESSAGE_ATTACHMENT_DIR, $cdp_message);
+		echo $cdp_message;
+		if(!$result)
+		{
+			echo "<h2>Please check the errors, and try again.";
+			exit;
+		}
+
 		$tbl_name=$this->db->dbprefix($this->message_user_access_table_name); 
 		$this->db->query(
 			"CREATE TABLE IF NOT EXISTS $tbl_name (

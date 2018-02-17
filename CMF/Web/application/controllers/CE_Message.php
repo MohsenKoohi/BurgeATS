@@ -1,7 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class CE_Message extends Burge_CMF_Controller {
-
+	protected $hit_level=-1;
+	
 	private $attachment_max_size=0;
 	private $attachment_extenstions=NULL;
 

@@ -100,7 +100,7 @@ function &get_links($just_common=FALSE)
 
 			,'admin_news_letter'							=> ADMIN_SURL_LANG."/news_letter"
 			,'admin_news_letter_template_format'	=> ADMIN_SURL_LANG."/news_letter/template_id"
-			,'customer_news_letter'						=> "news_letter"
+			,'customer_news_letter'						=> HOME_SURL_LANG."/news_letter"
 		));
 	}
 

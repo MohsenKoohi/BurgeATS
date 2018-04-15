@@ -32,4 +32,6 @@ $lang['submit']="Submit";
 $lang['fill_all_fields']="Please fill all fields.";
 $lang['captcha_incorrect']="Incorrect Captcha.";
 $lang['email_added_successfully']="Your email added successfully to the newsletter.";
-
+$lang['email_removed_successfully']="Your email removed successfully.";
+$lang['subscribe']="Subscribe";
+$lang['unsubscribe']="Unsubscribe";

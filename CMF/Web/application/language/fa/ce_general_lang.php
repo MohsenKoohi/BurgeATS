@@ -31,4 +31,3 @@ $lang['total_results']="تعداد کل";
 $lang['to']="تا";
 $lang['not_found']="پیدا نشد";
 $lang['language']="زبان";
-$lang['']="";

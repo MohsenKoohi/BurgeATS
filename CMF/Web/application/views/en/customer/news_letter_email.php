@@ -3,7 +3,7 @@
 		<h1>{news_letter_text}</h1>
 
 		<div class="container">
-			<?php echo form_open($raw_page_url,array()); ?>
+			<?php echo form_open($raw_page_url,array("id"=>"nlform")); ?>
 				<input type='hidden' name='post_type' value='add_email'/>
 				<div class="row">
 					<div class="three columns">
@@ -23,9 +23,30 @@
 				</div>
 				<div class="row">
 					<div class="six columns">&nbsp;</div>
-					<input type="submit" class=" button-primary three columns" value="{submit_text}"/>
+					<input type="button" class=" button-primary two columns" value="{subscribe_text}"
+						onclick="subscribe();"
+					/>
+
+					<div class="one columns">&nbsp;</div>
+					<input type="button" class=" button-primary button-type2 two columns" value="{unsubscribe_text}"
+						onclick="unsubscribe();"
+					/>
 				</div>
 			</form>
+
+			<script type="text/javascript">
+				function subscribe()
+				{
+					$("input[name=post_type]").val("add_email");
+					$("#nlform").submit();
+				}
+
+				function unsubscribe()
+				{
+					$("input[name=post_type]").val("remove_email");
+					$("#nlform").submit();
+				}
+			</script>
 		</div>
 	</div>
 </div>

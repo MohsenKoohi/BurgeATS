@@ -109,9 +109,18 @@ class News_letter_manager_model extends CI_Model
 	{
 		$result=$this->db->get_where($this->email_table_name,array("nle_email"=>$props['email']))->row_array();
 		if($result)
+		{
+			$this->db
+				->where(array("nle_email"=>$props['email']))
+				->set("nle_active", 1)
+				->update($this->email_table_name);
 			return;
+		}
 
-		$this->db->insert($this->email_table_name, array("nle_email"=>$props['email']));
+		$this->db->insert($this->email_table_name, array(
+			"nle_email"=>$props['email']
+			,"nle_active"	=> 1
+		));
 		$props["nle_id"]=$this->db->insert_id();
 
 		$this->log_manager_model->info("NEWS_LETTER_EMAIL_ADD",$props);

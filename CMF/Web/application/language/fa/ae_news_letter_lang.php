@@ -33,4 +33,7 @@ $lang['submit']="ثبت";
 $lang['fill_all_fields']="لطفا فیلدها را تکمیل کنید.";
 $lang['captcha_incorrect']="لطفا حروف تصویر را مجددا ثبت نمایید.";
 $lang['email_added_successfully']="پست الکترونیک شما با موفقیت به خبرنامه اضافه شد.";
+$lang['email_removed_successfully']="پست الکترونیک شما با موفقیت از لیست خبرنامه حذف شد.";
+$lang['subscribe']="اشتراک";
+$lang['unsubscribe']="لغو اشتراک";
 

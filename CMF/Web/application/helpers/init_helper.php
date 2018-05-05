@@ -1182,3 +1182,12 @@ function burge_cmf_send_sms($receiver, $content)
 
 	return $result;
 }
+
+function j2gdate($g)
+{
+	list($d,$t)=explode(" ", $g);
+	list($y,$m,$d)=explode("/", $d);
+	list($y, $m, $d)=jalali_to_gregorian($y, $m, $d);
+
+	return sprintf("%s/%02d/%02d ", $y, $m, $d).$t;
+}
